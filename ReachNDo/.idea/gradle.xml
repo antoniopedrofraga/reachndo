@@ -10,6 +10,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/FloatingActionButton" />
+            <option value="$PROJECT_DIR$/FloatingActionButton-Sample" />
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>

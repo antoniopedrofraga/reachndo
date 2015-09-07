@@ -1,6 +1,8 @@
 package com.reachndo;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -9,6 +11,8 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,8 +20,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -27,9 +37,6 @@ public class MainMenu extends AppCompatActivity
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
     private CharSequence mTitle;
 
     @Override
@@ -37,9 +44,12 @@ public class MainMenu extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         //Setting style according to API
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        if (/*Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP*/ false) {
             setTheme(R.style.MaterialDesign);
-        else
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.FabulousGreen));
+        }else
             setTheme(R.style.AppTheme);
 
         setContentView(R.layout.activity_main_menu);
@@ -54,6 +64,9 @@ public class MainMenu extends AppCompatActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         getActionBar().hide();
+
+        setKitKatTheme(findViewById(R.id.statusBarBackground));
+
     }
 
     @Override
@@ -90,11 +103,10 @@ public class MainMenu extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
+
             getMenuInflater().inflate(R.menu.main_menu, menu);
-           updateActionBar();
+
+            updateActionBar();
             return true;
         }
         return super.onCreateOptionsMenu(menu);
@@ -144,8 +156,30 @@ public class MainMenu extends AppCompatActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main_menu, container, false);
+            showFloatingActionButton(rootView);
             return rootView;
         }
+
+
+        public void showFloatingActionButton(View v) {
+            FloatingActionButton mFab = (FloatingActionButton) v.findViewById(R.id.fab);
+            if(mFab != null) {
+                mFab.setDrawable(getResources().getDrawable(R.drawable.plus));
+
+                mFab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getActivity(), "Click", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            else
+                Log.d("Debug", "Error in mFab (NULL)");
+
+        }
+
+
+
 
         @Override
         public void onAttach(Activity activity) {
@@ -153,6 +187,45 @@ public class MainMenu extends AppCompatActivity
             ((MainMenu) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
+
+
     }
+
+    private void setKitKatTheme(View statusBarBackground){ //Tema do kitkat
+
+        if (/*android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT &&
+                    android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP*/ true) {
+            Window w = getWindow();
+            w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+            int statusBarHeight = getStatusBarHeight();
+
+            statusBarBackground.getLayoutParams().height = statusBarHeight;
+            statusBarBackground.setBackgroundColor(getResources().getColor(R.color.FabulousGreen));
+        }
+
+    }
+
+    private int getActionBarHeight() {
+        int actionBarHeight = 0;
+        TypedValue tv = new TypedValue();
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+        {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+        }
+        return actionBarHeight;
+    }
+
+    private int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
+
+
 
 }
