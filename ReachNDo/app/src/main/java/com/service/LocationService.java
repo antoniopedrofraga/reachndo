@@ -1,6 +1,8 @@
 package com.service;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +13,7 @@ import android.location.LocationManager;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
@@ -22,6 +25,9 @@ import static android.support.v4.app.ActivityCompat.requestPermissions;
  * Created by Joao Nogueira on 08/09/2015.
  */
 public class LocationService extends Service {
+
+    long minTime;
+    float minDistance;
 
     LocationManager lm;
     LocationListener ll;
@@ -35,7 +41,7 @@ public class LocationService extends Service {
     @Override
     public void onCreate() {
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        ll = new MyLocationListener();
+        ll = new MyLocationListener(this);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
@@ -46,7 +52,10 @@ public class LocationService extends Service {
             // for Activity#requestPermissions for more details.
             return;
         }
-        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, ll);
+
+        minTime = 0;
+        minDistance = 0;
+        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, minTime, minDistance, ll);
 
         Log.d("Location Service", "First Created");
     }
