@@ -11,13 +11,16 @@ import android.util.Log;
 public class MyLocationListener implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
+
+        Log.v("Location Service", "location changed");
+
         if (location != null)
         {
             double longitude = location.getLongitude();
             double latitude = location.getLatitude();
 
             //To test
-            Log.v("Location", "Longitude: " + longitude + "\tLatitude: " + latitude);
+            Log.v("Location Service", "Longitude: " + longitude + "\tLatitude: " + latitude);
         }
     }
 
@@ -28,11 +31,11 @@ public class MyLocationListener implements LocationListener {
 
     @Override
     public void onProviderEnabled(String provider) {
-
+        Log.d("Location Service", "Provider Enabled");
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-
+        Log.d("Location Service", "Provider Disabled");
     }
 }
