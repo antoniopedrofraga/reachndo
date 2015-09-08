@@ -1,0 +1,61 @@
+package com.service;
+
+import android.Manifest;
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
+import android.util.Log;
+import com.service.MyLocationListener;
+
+/**
+ * Created by Joao Nogueira on 08/09/2015.
+ */
+public class LocationService extends Service {
+
+    LocationManager lm;
+    LocationListener ll;
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public void onCreate() {
+        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        ll = new MyLocationListener();
+
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for Activity#requestPermissions for more details.
+            return;
+        }
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
+
+        Log.d("Location Service", "First Created");
+    }
+
+    @Override
+    public void onDestroy() {
+        //TODO
+        }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startid) {
+
+        Log.d("Location Service", "Start Command");
+        return START_STICKY;
+    }
+}

@@ -1,6 +1,7 @@
 package com.reachndo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
+import com.service.LocationService;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -43,8 +45,10 @@ public class MainMenu extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        startService(new Intent(this, LocationService.class));
+
         //Setting style according to API
-        if (/*Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP*/ false) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setTheme(R.style.MaterialDesign);
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -65,7 +69,7 @@ public class MainMenu extends AppCompatActivity
 
         getActionBar().hide();
 
-        setKitKatTheme(findViewById(R.id.statusBarBackground));
+        //setKitKatTheme(findViewById(R.id.statusBarBackground));
 
     }
 
