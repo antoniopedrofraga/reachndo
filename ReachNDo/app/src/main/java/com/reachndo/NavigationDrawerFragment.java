@@ -12,11 +12,9 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.style.TypefaceSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -272,10 +270,10 @@ public class NavigationDrawerFragment extends Fragment {
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         Typeface font2 = Typeface.createFromAsset(getContext().getAssets(), "fonts/WolfInTheCity.ttf");
-        SpannableStringBuilder SS = new SpannableStringBuilder("Reach N' Do");
-        CustomTypefaceSpan span = new CustomTypefaceSpan("", font2);
-        SS.setSpan (new CustomTypefaceSpan("", font2), 0, SS.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-        actionBar.setTitle(SS);
+        SpannableStringBuilder ss = new SpannableStringBuilder("Reach N' Do");
+        ss.setSpan(new RelativeSizeSpan(2f), 0, ss.length(), 0);
+        ss.setSpan(new CustomTypefaceSpan("", font2), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        actionBar.setTitle(ss);
     }
 
     private ActionBar getActionBar() {

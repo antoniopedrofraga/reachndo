@@ -3,6 +3,7 @@ package com.reachndo;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
@@ -69,8 +70,6 @@ public class MainMenu extends AppCompatActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         getActionBar().hide();
-
-        //setKitKatTheme(findViewById(R.id.statusBarBackground));
 
     }
 
@@ -163,42 +162,10 @@ public class MainMenu extends AppCompatActivity
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main_menu, container, false);
             showFloatingActionButton(rootView);
-            //setKitKatTheme(rootView);
             return rootView;
         }
 
-        private void setKitKatTheme(View statusBarBackground){ //Tema do kitkat
 
-            if (/*android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT &&
-                    android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP*/ true) {
-                Window w = getActivity().getWindow();
-                w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                int statusBarHeight = getStatusBarHeight();
-                int actionBarHeight = getActionBarHeight();
-                statusBarBackground.getLayoutParams().height = statusBarHeight;
-                statusBarBackground.setBackgroundColor(getResources().getColor(R.color.SeaGreen));
-            }
-
-        }
-
-        private int getActionBarHeight() {
-            int actionBarHeight = 0;
-            TypedValue tv = new TypedValue();
-            if (getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-            {
-                actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
-            }
-            return actionBarHeight;
-        }
-
-        private int getStatusBarHeight() {
-            int result = 0;
-            int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-            if (resourceId > 0) {
-                result = getResources().getDimensionPixelSize(resourceId);
-            }
-            return result;
-        }
 
 
 
@@ -232,28 +199,5 @@ public class MainMenu extends AppCompatActivity
 
 
     }
-
-    private int getActionBarHeight() {
-        int actionBarHeight = 0;
-        TypedValue tv = new TypedValue();
-        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-        {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
-        }
-        return actionBarHeight;
-    }
-
-    private int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
-
-
-
-
 
 }
