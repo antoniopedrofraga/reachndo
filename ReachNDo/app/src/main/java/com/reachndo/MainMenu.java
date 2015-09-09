@@ -83,18 +83,8 @@ public class MainMenu extends AppCompatActivity
                 .commit();
     }
 
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = "Section1";
-                break;
-            case 2:
-                mTitle = "Section2";
-                break;
-            case 3:
-                mTitle = "Section3";
-                break;
-        }
+    public void onSectionAttached(int index) {
+        mTitle = Singleton.getLocations().get(index-1).getName();
     }
 
     public void updateActionBar() {

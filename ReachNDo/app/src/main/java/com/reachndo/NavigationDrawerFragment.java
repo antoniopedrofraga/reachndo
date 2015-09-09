@@ -29,6 +29,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.service.Location;
+import com.service.Singleton;
 
 import java.util.ArrayList;
 
@@ -111,7 +112,13 @@ public class NavigationDrawerFragment extends Fragment {
         });
 
         ////
-        ArrayList<Location> l = new ArrayList<>();
+        /*ArrayList<Location> temp = new ArrayList<>();
+        temp.add(new Location(1,2,"Porto", "nada", 10));
+        temp.add(new Location(1,2,"Lisboa", "nada", 10));
+        temp.add(new Location(1,2,"Coimbra", "nada", 10));
+        temp.add(new Location(1,2,"FEUP", "nada", 10));
+        Singleton.setLocations(temp);*/
+        ArrayList<Location> l = Singleton.getLocations();
         ArrayList<String> s = new ArrayList<>();
         for(int i=0; i < l.size(); i++){
             s.add(l.get(i).getName());
