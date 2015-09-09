@@ -28,6 +28,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.service.Location;
+
 import java.util.ArrayList;
 
 /**
@@ -108,10 +110,13 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
 
+        ////
+        ArrayList<Location> l = new ArrayList<>();
         ArrayList<String> s = new ArrayList<>();
-        s.add("Location 1");
-        s.add("Location 2");
-        s.add("Location 3");
+        for(int i=0; i < l.size(); i++){
+            s.add(l.get(i).getName());
+        }
+        ////
 
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
