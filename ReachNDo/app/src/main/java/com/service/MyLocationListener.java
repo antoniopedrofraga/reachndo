@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.reachndo.R;
+
 /**
  * Created by Joao Nogueira on 08/09/2015.
  */
@@ -56,7 +58,7 @@ public class MyLocationListener implements LocationListener {
         builder.setAutoCancel(true);
         builder.setContentTitle(title);
         builder.setContentText(text);
-        builder.setSmallIcon(android.R.drawable.sym_def_app_icon);
+        builder.setSmallIcon(R.mipmap.ic_launcher);
 
         Log.d("Notification Service", "Launches Notification");
 
