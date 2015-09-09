@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 import com.service.LocationService;
+import com.service.Singleton;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -70,7 +71,6 @@ public class MainMenu extends AppCompatActivity
         getActionBar().hide();
 
         //setKitKatTheme(findViewById(R.id.statusBarBackground));
-
     }
 
     @Override
