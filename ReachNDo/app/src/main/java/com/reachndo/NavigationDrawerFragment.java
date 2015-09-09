@@ -1,5 +1,6 @@
 package com.reachndo;
 
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -11,6 +12,11 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.TypefaceSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -238,6 +244,8 @@ public class NavigationDrawerFragment extends Fragment {
             inflater.inflate(R.menu.global, menu);
             showGlobalContextActionBar();
         }
+
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -263,7 +271,11 @@ public class NavigationDrawerFragment extends Fragment {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setTitle(R.string.app_name);
+        Typeface font2 = Typeface.createFromAsset(getContext().getAssets(), "fonts/WolfInTheCity.ttf");
+        SpannableStringBuilder SS = new SpannableStringBuilder("Reach N' Do");
+        CustomTypefaceSpan span = new CustomTypefaceSpan("", font2);
+        SS.setSpan (new CustomTypefaceSpan("", font2), 0, SS.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        actionBar.setTitle(SS);
     }
 
     private ActionBar getActionBar() {

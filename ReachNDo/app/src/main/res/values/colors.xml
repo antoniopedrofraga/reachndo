@@ -142,4 +142,6 @@
     <color name="Navy">#000080</color>
     <color name="Black">#000000</color>
     <color name="FabulousGreen">#246E45</color>
+    <color name="MaterialPurple">#77366f</color>
+    <color name="DarkMaterialPurple">#592853</color>
 </resources>

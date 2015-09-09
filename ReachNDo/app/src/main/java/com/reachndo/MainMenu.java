@@ -45,14 +45,14 @@ public class MainMenu extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        startService(new Intent(this, LocationService.class));
+        //startService(new Intent(this, LocationService.class));
 
         //Setting style according to API
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setTheme(R.style.MaterialDesign);
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.FabulousGreen));
+            window.setStatusBarColor(getResources().getColor(R.color.DarkMaterialPurple));
         }else
             setTheme(R.style.AppTheme);
 
@@ -69,7 +69,8 @@ public class MainMenu extends AppCompatActivity
 
         getActionBar().hide();
 
-        //setKitKatTheme(findViewById(R.id.statusBarBackground));
+
+
 
     }
 
@@ -140,13 +141,14 @@ public class MainMenu extends AppCompatActivity
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
+        private static PlaceholderFragment fragment;
 
         /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
         public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
+            fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
@@ -161,14 +163,50 @@ public class MainMenu extends AppCompatActivity
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main_menu, container, false);
             showFloatingActionButton(rootView);
+            //setKitKatTheme(rootView);
             return rootView;
         }
+
+        private void setKitKatTheme(View statusBarBackground){ //Tema do kitkat
+
+            if (/*android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT &&
+                    android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP*/ true) {
+                Window w = getActivity().getWindow();
+                w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                int statusBarHeight = getStatusBarHeight();
+                int actionBarHeight = getActionBarHeight();
+                statusBarBackground.getLayoutParams().height = statusBarHeight;
+                statusBarBackground.setBackgroundColor(getResources().getColor(R.color.SeaGreen));
+            }
+
+        }
+
+        private int getActionBarHeight() {
+            int actionBarHeight = 0;
+            TypedValue tv = new TypedValue();
+            if (getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+            {
+                actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+            }
+            return actionBarHeight;
+        }
+
+        private int getStatusBarHeight() {
+            int result = 0;
+            int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                result = getResources().getDimensionPixelSize(resourceId);
+            }
+            return result;
+        }
+
 
 
         public void showFloatingActionButton(View v) {
             FloatingActionButton mFab = (FloatingActionButton) v.findViewById(R.id.fab);
             if(mFab != null) {
-                mFab.setDrawable(getResources().getDrawable(R.drawable.plus));
+                mFab.setDrawable(getResources().getDrawable(R.drawable.ic_plusicon));
+
 
                 mFab.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -195,21 +233,6 @@ public class MainMenu extends AppCompatActivity
 
     }
 
-    private void setKitKatTheme(View statusBarBackground){ //Tema do kitkat
-
-        if (/*android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT &&
-                    android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP*/ true) {
-            Window w = getWindow();
-            w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-            int statusBarHeight = getStatusBarHeight();
-
-            statusBarBackground.getLayoutParams().height = statusBarHeight;
-            statusBarBackground.setBackgroundColor(getResources().getColor(R.color.FabulousGreen));
-        }
-
-    }
-
     private int getActionBarHeight() {
         int actionBarHeight = 0;
         TypedValue tv = new TypedValue();
@@ -228,6 +251,7 @@ public class MainMenu extends AppCompatActivity
         }
         return result;
     }
+
 
 
 

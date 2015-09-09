@@ -3,11 +3,11 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
 
-        <item name="colorPrimary">@color/SeaGreen</item>
+        <item name="colorPrimary">@color/MaterialPurple</item>
         <!--   darker variant for the status bar and contextual app bars -->
-        <item name="colorPrimaryDark">@color/FabulousGreen</item>
+        <item name="colorPrimaryDark">@color/DarkMaterialPurple</item>
         <!--   theme UI controls like checkboxes and text fields -->
-        <item name="colorAccent">@color/SeaGreen</item>
+        <item name="colorAccent">@color/MaterialPurple</item>
 
         <!-- Customize your theme here. -->
     </style>
