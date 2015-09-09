@@ -2,9 +2,12 @@ package com.service;
 
 import android.content.Context;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 public class SaveAndLoad {
     private SaveAndLoad() {}
@@ -25,30 +28,20 @@ public class SaveAndLoad {
         }
     }
 
-//TODO falta load
-    public static void loadGame() throws IOException, ClassNotFoundException {
-        int[] toRet;
-        if (!Gdx.files.local("savedGame.dat").file().exists())
+    public static void loadGame(Context cont) throws IOException, ClassNotFoundException {
+        ArrayList<Location> toRet;
+        FileInputStream tempo = cont.openFileInput("saved.dat");
+        if (tempo != null)
         {
-            toRet = new int[10];
-            for (int i = 0; i < 10; i++)
-                toRet[i] = -1;
-            SingletonVandC.totalScore = toRet;
+
         }
         else
         {
-            try
-            {
-                FileInputStream tempo = new FileInputStream(Gdx.files.local("savedGame.dat").file().getAbsolutePath());
-                ObjectInputStream objectIn = new ObjectInputStream(tempo);
-                toRet = (int[]) objectIn.readObject();
-                SingletonVandC.totalScore = toRet;
-                objectIn.close();
-                tempo.close();
-            }
-            catch (IOException a) {
-                a.printStackTrace();
-            }
+            ObjectInputStream objectIn = new ObjectInputStream(tempo);
+            toRet = (ArrayList<Location>) objectIn.readObject();
+            Singleton.setLocations(toRet);
+            objectIn.close();
+            tempo.close();
         }
     }
 
