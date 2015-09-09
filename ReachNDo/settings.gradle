@@ -1,1 +1,1 @@
-include ':app', ':FloatingActionButton', ':FloatingActionButton-Sample'
+include ':app', ':FloatingActionButton', ':FloatingActionButton-Sample', ':extras-toolbar', ':library', ':extras-abc', ':extras-abs'

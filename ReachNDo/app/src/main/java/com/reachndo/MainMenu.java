@@ -25,13 +25,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.balysv.materialmenu.MaterialMenuDrawable;
+import com.balysv.materialmenu.MaterialMenuIcon;
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
+import com.service.Event;
 import com.service.LocationService;
 import com.service.Singleton;
+
+import java.util.ArrayList;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -42,6 +49,10 @@ public class MainMenu extends AppCompatActivity
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
     private CharSequence mTitle;
+
+    private static ListView listView;
+    private static EventListAdapter listAdapter;
+    private static MaterialMenuDrawable materialMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +66,10 @@ public class MainMenu extends AppCompatActivity
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.DarkMaterialPurple));
-        }else
-            setTheme(R.style.AppTheme);
+        }
+
+        materialMenu = new MaterialMenuDrawable(this, Color.WHITE, MaterialMenuDrawable.Stroke.THIN);
+
 
         setContentView(R.layout.activity_main_menu);
 
@@ -69,7 +82,8 @@ public class MainMenu extends AppCompatActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        getActionBar().hide();
+
+        listAdapter = new EventListAdapter(getBaseContext(), new ArrayList<Event>());
 
     }
 
@@ -86,14 +100,24 @@ public class MainMenu extends AppCompatActivity
         switch (number) {
             case 1:
                 mTitle = getString(R.string.title_section1);
+                listAdapter.clear();
+                listAdapter.add(new Event("Ligar", "Ligar para a mae"));
+                listAdapter.add(new Event("Lembrar", "Lembrar duas vezes"));
                 break;
             case 2:
                 mTitle = getString(R.string.title_section2);
+                listAdapter.clear();
+                listAdapter.add(new Event("Ligar2", "Ligar para a mae"));
+                listAdapter.add(new Event("Lembrar2", "Lembrar duas vezes"));
                 break;
             case 3:
                 mTitle = getString(R.string.title_section3);
+                listAdapter.clear();
+                listAdapter.add(new Event("Ligar3", "Ligar para a mae"));
+                listAdapter.add(new Event("Lembrar3", "Lembrar duas vezes"));
                 break;
         }
+        listAdapter.notifyDataSetChanged();
     }
 
     public void updateActionBar() {
@@ -103,16 +127,15 @@ public class MainMenu extends AppCompatActivity
         actionBar.setTitle(mTitle);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
-
             getMenuInflater().inflate(R.menu.main_menu, menu);
-
             updateActionBar();
             return true;
         }
+        MenuItem spinnerItem = menu.findItem(R.id.navigation_drawer);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -127,6 +150,8 @@ public class MainMenu extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
+
+        Toast.makeText(getBaseContext(), item.toString(), Toast.LENGTH_SHORT).show();
 
         return super.onOptionsItemSelected(item);
     }
@@ -162,19 +187,16 @@ public class MainMenu extends AppCompatActivity
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main_menu, container, false);
             showFloatingActionButton(rootView);
+            listView = (ListView) rootView.findViewById(R.id.list);
+            listView.setAdapter(listAdapter);
             return rootView;
         }
-
-
-
 
 
         public void showFloatingActionButton(View v) {
             FloatingActionButton mFab = (FloatingActionButton) v.findViewById(R.id.fab);
             if(mFab != null) {
                 mFab.setDrawable(getResources().getDrawable(R.drawable.ic_plusicon));
-
-
                 mFab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -196,8 +218,7 @@ public class MainMenu extends AppCompatActivity
             ((MainMenu) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
-
-
     }
+
 
 }
