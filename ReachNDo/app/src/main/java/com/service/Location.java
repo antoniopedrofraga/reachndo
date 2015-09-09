@@ -1,9 +1,10 @@
 package com.service;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Location extends LocationCoords{
+public class Location extends LocationCoords implements Serializable {
 
     private String name;
     private String user_description;

@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 /**
  * Created by Joao Nogueira on 09/09/2015.
  */
+
 public class DialogAlarm extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -33,13 +34,10 @@ public class DialogAlarm extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 //Handle OK button
                 ringtoneAlarm.stop();
-
                 finish();
             }
         });
-
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
 }
