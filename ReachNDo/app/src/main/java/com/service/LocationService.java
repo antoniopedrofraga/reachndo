@@ -50,6 +50,12 @@ public class LocationService extends Service {
         lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, minTime, minDistance, ll);
 
         Log.d("Location Service", "First Created");
+
+        try {
+            AlarmEvent a = new AlarmEvent(this);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

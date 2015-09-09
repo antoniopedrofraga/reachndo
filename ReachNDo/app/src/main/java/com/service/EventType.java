@@ -1,7 +1,5 @@
 package com.service;
 
-
 public enum EventType {
-
-    MESSAGE, VOLUME, MUTE, WIFI
+    MESSAGE, VOLUME, WIFI, NOTIFICATION, ALARM
 }
