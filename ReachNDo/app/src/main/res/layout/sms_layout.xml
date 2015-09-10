@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_below="@id/action_bar" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context=".main">
+
+
+    <EditText
+        android:id="@+id/smsNumber"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:inputType="textCapSentences"
+        android:singleLine="false"
+        android:hint="@string/sms_dialog_name_hint"
+        android:textColorHint="@color/LightGrey"
+        android:textColor="@color/SlateGray"
+        android:textSize="16sp"
+        />
+
+
+
+    <EditText
+        android:id="@+id/smsTxt"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/smsNumber"
+        android:layout_centerHorizontal="true"
+        android:inputType="textCapSentences"
+        android:singleLine="false"
+        android:hint="@string/sms_dialog_text_hint"
+        android:textColorHint="@color/LightGrey"
+        android:textColor="@color/SlateGray"
+        android:textSize="16sp"
+        />
+
+</RelativeLayout>
