@@ -101,8 +101,10 @@ public class MainMenu extends AppCompatActivity
     }
 
     public void onSectionAttached(int index) {
-        mTitle = Singleton.getLocations().get(index-1).getName();
-        listAdapter.notifyDataSetChanged();
+        if(index > 0) {
+            mTitle = Singleton.getLocations().get(index - 1).getName();
+            listAdapter.notifyDataSetChanged();
+        }else mTitle = "No Locations";
     }
 
     public void updateActionBar() {
