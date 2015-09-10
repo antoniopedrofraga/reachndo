@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.balysv.materialmenu.MaterialMenuIcon;
+import com.balysv.materialmenu.extras.toolbar.MaterialMenuIconCompat;
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 import com.service.Event;
 import com.service.LocationService;
@@ -52,7 +53,7 @@ public class MainMenu extends AppCompatActivity
 
     private static ListView listView;
     private static EventListAdapter listAdapter;
-    private static MaterialMenuDrawable materialMenu;
+    private static MaterialMenuIconCompat materialMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +69,7 @@ public class MainMenu extends AppCompatActivity
             window.setStatusBarColor(getResources().getColor(R.color.DarkMaterialPurple));
         }
 
-        materialMenu = new MaterialMenuDrawable(this, Color.WHITE, MaterialMenuDrawable.Stroke.THIN);
+        materialMenu = new MaterialMenuIconCompat(this, Color.WHITE, MaterialMenuDrawable.Stroke.THIN);
 
 
         setContentView(R.layout.activity_main_menu);
@@ -83,6 +84,8 @@ public class MainMenu extends AppCompatActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
 
+
+
         listAdapter = new EventListAdapter(getBaseContext(), new ArrayList<Event>());
 
     }
@@ -94,6 +97,7 @@ public class MainMenu extends AppCompatActivity
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
+
     }
 
     public void onSectionAttached(int number) {
@@ -132,9 +136,11 @@ public class MainMenu extends AppCompatActivity
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             getMenuInflater().inflate(R.menu.main_menu, menu);
             updateActionBar();
+            materialMenu.animateState(MaterialMenuDrawable.IconState.BURGER);
             return true;
+        }else{
+            materialMenu.animateState(MaterialMenuDrawable.IconState.ARROW);
         }
-        MenuItem spinnerItem = menu.findItem(R.id.navigation_drawer);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -151,7 +157,11 @@ public class MainMenu extends AppCompatActivity
             return true;
         }
 
-        Toast.makeText(getBaseContext(), item.toString(), Toast.LENGTH_SHORT).show();
+        if (id  == android.R.id.home) {
+            // Handle your drawable state here
+            materialMenu.animateState(MaterialMenuDrawable.IconState.BURGER);
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -209,8 +219,11 @@ public class MainMenu extends AppCompatActivity
 
         }
 
-
-
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            super.onSaveInstanceState(outState);
+            materialMenu.onSaveInstanceState(outState);
+        }
 
         @Override
         public void onAttach(Activity activity) {

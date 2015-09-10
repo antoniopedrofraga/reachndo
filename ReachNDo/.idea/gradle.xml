@@ -13,6 +13,10 @@
             <option value="$PROJECT_DIR$/FloatingActionButton" />
             <option value="$PROJECT_DIR$/FloatingActionButton-Sample" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/extras-abc" />
+            <option value="$PROJECT_DIR$/extras-abs" />
+            <option value="$PROJECT_DIR$/extras-toolbar" />
+            <option value="$PROJECT_DIR$/library" />
           </set>
         </option>
       </GradleProjectSettings>

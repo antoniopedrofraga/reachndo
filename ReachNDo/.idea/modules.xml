@@ -6,6 +6,10 @@
       <module fileurl="file://$PROJECT_DIR$/FloatingActionButton-Sample/FloatingActionButton-Sample.iml" filepath="$PROJECT_DIR$/FloatingActionButton-Sample/FloatingActionButton-Sample.iml" />
       <module fileurl="file://$PROJECT_DIR$/ReachNDo.iml" filepath="$PROJECT_DIR$/ReachNDo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/extras-abc/extras-abc.iml" filepath="$PROJECT_DIR$/extras-abc/extras-abc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/extras-abs/extras-abs.iml" filepath="$PROJECT_DIR$/extras-abs/extras-abs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/extras-toolbar/extras-toolbar.iml" filepath="$PROJECT_DIR$/extras-toolbar/extras-toolbar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
     </modules>
   </component>
 </project>
