@@ -3,6 +3,7 @@ package com.reachndo;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
@@ -24,13 +25,21 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.balysv.materialmenu.MaterialMenuDrawable;
+import com.balysv.materialmenu.MaterialMenuIcon;
+import com.balysv.materialmenu.extras.toolbar.MaterialMenuIconCompat;
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
+import com.service.Event;
 import com.service.LocationService;
 import com.service.Singleton;
+
+import java.util.ArrayList;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -41,6 +50,10 @@ public class MainMenu extends AppCompatActivity
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
     private CharSequence mTitle;
+
+    private static ListView listView;
+    private static EventListAdapter listAdapter;
+    private static MaterialMenuIconCompat materialMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +67,10 @@ public class MainMenu extends AppCompatActivity
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.DarkMaterialPurple));
-        }else
-            setTheme(R.style.AppTheme);
+        }
+
+        materialMenu = new MaterialMenuIconCompat(this, Color.WHITE, MaterialMenuDrawable.Stroke.THIN);
+
 
         setContentView(R.layout.activity_main_menu);
 
@@ -68,9 +83,10 @@ public class MainMenu extends AppCompatActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        getActionBar().hide();
 
-        //setKitKatTheme(findViewById(R.id.statusBarBackground));
+
+
+        listAdapter = new EventListAdapter(getBaseContext(), new ArrayList<Event>());
 
     }
 
@@ -81,10 +97,36 @@ public class MainMenu extends AppCompatActivity
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
+
     }
 
+<<<<<<< HEAD
     public void onSectionAttached(int index) {
         mTitle = Singleton.getLocations().get(index-1).getName();
+=======
+    public void onSectionAttached(int number) {
+        switch (number) {
+            case 1:
+                mTitle = getString(R.string.title_section1);
+                listAdapter.clear();
+                listAdapter.add(new Event("Ligar", "Ligar para a mae"));
+                listAdapter.add(new Event("Lembrar", "Lembrar duas vezes"));
+                break;
+            case 2:
+                mTitle = getString(R.string.title_section2);
+                listAdapter.clear();
+                listAdapter.add(new Event("Ligar2", "Ligar para a mae"));
+                listAdapter.add(new Event("Lembrar2", "Lembrar duas vezes"));
+                break;
+            case 3:
+                mTitle = getString(R.string.title_section3);
+                listAdapter.clear();
+                listAdapter.add(new Event("Ligar3", "Ligar para a mae"));
+                listAdapter.add(new Event("Lembrar3", "Lembrar duas vezes"));
+                break;
+        }
+        listAdapter.notifyDataSetChanged();
+>>>>>>> Fraga
     }
 
     public void updateActionBar() {
@@ -94,16 +136,17 @@ public class MainMenu extends AppCompatActivity
         actionBar.setTitle(mTitle);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
-
             getMenuInflater().inflate(R.menu.main_menu, menu);
-
             updateActionBar();
+            materialMenu.animateState(MaterialMenuDrawable.IconState.BURGER);
             return true;
+        }else{
+            materialMenu.animateState(MaterialMenuDrawable.IconState.ARROW);
         }
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -118,6 +161,12 @@ public class MainMenu extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
+
+        if (id  == android.R.id.home) {
+            // Handle your drawable state here
+            materialMenu.animateState(MaterialMenuDrawable.IconState.BURGER);
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -153,51 +202,16 @@ public class MainMenu extends AppCompatActivity
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main_menu, container, false);
             showFloatingActionButton(rootView);
-            //setKitKatTheme(rootView);
+            listView = (ListView) rootView.findViewById(R.id.list);
+            listView.setAdapter(listAdapter);
             return rootView;
         }
-
-        private void setKitKatTheme(View statusBarBackground){ //Tema do kitkat
-
-            if (/*android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT &&
-                    android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP*/ true) {
-                Window w = getActivity().getWindow();
-                w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                int statusBarHeight = getStatusBarHeight();
-                int actionBarHeight = getActionBarHeight();
-                statusBarBackground.getLayoutParams().height = statusBarHeight;
-                statusBarBackground.setBackgroundColor(getResources().getColor(R.color.SeaGreen));
-            }
-
-        }
-
-        private int getActionBarHeight() {
-            int actionBarHeight = 0;
-            TypedValue tv = new TypedValue();
-            if (getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-            {
-                actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
-            }
-            return actionBarHeight;
-        }
-
-        private int getStatusBarHeight() {
-            int result = 0;
-            int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-            if (resourceId > 0) {
-                result = getResources().getDimensionPixelSize(resourceId);
-            }
-            return result;
-        }
-
 
 
         public void showFloatingActionButton(View v) {
             FloatingActionButton mFab = (FloatingActionButton) v.findViewById(R.id.fab);
             if(mFab != null) {
                 mFab.setDrawable(getResources().getDrawable(R.drawable.ic_plusicon));
-
-
                 mFab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -210,8 +224,11 @@ public class MainMenu extends AppCompatActivity
 
         }
 
-
-
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            super.onSaveInstanceState(outState);
+            materialMenu.onSaveInstanceState(outState);
+        }
 
         @Override
         public void onAttach(Activity activity) {
@@ -219,31 +236,7 @@ public class MainMenu extends AppCompatActivity
             ((MainMenu) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
-
-
     }
-
-    private int getActionBarHeight() {
-        int actionBarHeight = 0;
-        TypedValue tv = new TypedValue();
-        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-        {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
-        }
-        return actionBarHeight;
-    }
-
-    private int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
-
-
-
 
 
 }

@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD
 <merger version="3"><dataSet config="main"><source path="C:\Users\Francisco\Documents\GitHub\reachndo\ReachNDo\FloatingActionButton\assets"/></dataSet><dataSet config="debug"><source path="C:\Users\Francisco\Documents\GitHub\reachndo\ReachNDo\FloatingActionButton\src\debug\assets"/></dataSet></merger>
+=======
+<merger version="3"><dataSet config="main"><source path="C:\Users\Pedro\Documents\GitHub\reachndo\ReachNDo\FloatingActionButton\assets"/></dataSet><dataSet config="debug"><source path="C:\Users\Pedro\Documents\GitHub\reachndo\ReachNDo\FloatingActionButton\src\debug\assets"/></dataSet></merger>
+>>>>>>> Fraga
