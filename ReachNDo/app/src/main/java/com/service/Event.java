@@ -1,7 +1,9 @@
 package com.service;
 
 
-public class Event {
+import java.io.Serializable;
+
+public class Event implements Serializable {
 
     public String name;
     public String description;

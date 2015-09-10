@@ -16,10 +16,12 @@ import android.util.Log;
 
 import com.reachndo.R;
 
+import java.io.Serializable;
+
 /**
  * Created by Joao Nogueira on 09/09/2015.
  */
-public class AlarmEvent extends Event {
+public class AlarmEvent extends Event implements Serializable {
 
     public AlarmEvent(Context cont) throws InterruptedException {
         super(EventType.ALARM);

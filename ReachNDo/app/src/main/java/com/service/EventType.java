@@ -1,6 +1,8 @@
 package com.service;
 
-public enum EventType {
+import java.io.Serializable;
+
+public enum EventType implements Serializable {
     MESSAGE, VOLUME, WIFI, NOTIFICATION, ALARM
 
 }

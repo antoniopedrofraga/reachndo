@@ -57,11 +57,6 @@ import java.util.ArrayList;
 public class MainMenu extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-    /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
-
-    private GoogleApiClient mClient;
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
     private CharSequence mTitle;
@@ -84,6 +79,14 @@ public class MainMenu extends AppCompatActivity
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.DarkMaterialPurple));
+        }
+
+        try {
+            SaveAndLoad.loadInfo(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
 
         materialMenu = new MaterialMenuIconCompat(this, Color.WHITE, MaterialMenuDrawable.Stroke.THIN);
@@ -286,6 +289,9 @@ public class MainMenu extends AppCompatActivity
                                 .show();
                         return;
                     }
+
+                    Log.d("Debug Location - add", Singleton.getLocations().size() + "");
+
                     ArrayList<Location> temp = Singleton.getLocations();
                     Location newLocation = new Location(selectedLocation.getLatLng().longitude,
                             selectedLocation.getLatLng().latitude,
@@ -299,7 +305,7 @@ public class MainMenu extends AppCompatActivity
                         e.printStackTrace();
                     }
 
-                    Log.d("Debug", Singleton.getLocations().size() + "");
+                    Log.d("Debug Location added", Singleton.getLocations().size() + "");
 
                     locationPicker.dismiss();
                 }

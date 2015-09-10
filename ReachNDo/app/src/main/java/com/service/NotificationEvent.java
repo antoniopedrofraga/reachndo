@@ -11,7 +11,9 @@ import android.util.Log;
 
 import com.reachndo.R;
 
-public class NotificationEvent extends Event {
+import java.io.Serializable;
+
+public class NotificationEvent extends Event implements Serializable {
     public static int id = 1;
 
     String title;

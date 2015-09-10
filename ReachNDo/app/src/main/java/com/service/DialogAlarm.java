@@ -8,11 +8,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
+import java.io.Serializable;
+
 /**
  * Created by Joao Nogueira on 09/09/2015.
  */
 
-public class DialogAlarm extends Activity {
+public class DialogAlarm extends Activity implements Serializable {
     @Override
     public void onCreate(Bundle savedInstanceState)
     {

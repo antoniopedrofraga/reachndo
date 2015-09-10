@@ -15,6 +15,7 @@ import android.preference.PreferenceManager;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -107,19 +108,12 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
 
-        ////
-        ArrayList<Location> temp = new ArrayList<>();
-        temp.add(new Location(1,2,"Porto", 10));
-        temp.add(new Location(1,2,"Lisboa", 10));
-        temp.add(new Location(1,2,"Coimbra", 10));
-        temp.add(new Location(1,2,"FEUP", 10));
-        Singleton.setLocations(temp);
-        ArrayList<Location> l = Singleton.getLocations(); //temporario
+        ArrayList<Location> l = Singleton.getLocations();
         ArrayList<String> s = new ArrayList<>();
+
         for(int i=0; i < l.size(); i++){
             s.add(l.get(i).getName());
         }
-        ////
 
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
@@ -174,9 +168,23 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+
                 if (!isAdded()) {
                     return;
                 }
+
+                ArrayList<Location> l = Singleton.getLocations();
+                ArrayList<String> s = new ArrayList<>();
+
+                for(int i=0; i < l.size(); i++){
+                    s.add(l.get(i).getName());
+                }
+
+                mDrawerListView.setAdapter(new ArrayAdapter<String>(
+                        getActionBar().getThemedContext(),
+                        android.R.layout.simple_list_item_activated_1,
+                        android.R.id.text1,
+                        s));
 
                 if (!mUserLearnedDrawer) {
                     // The user manually opened the drawer; store this flag to prevent auto-showing
