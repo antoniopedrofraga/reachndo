@@ -25,6 +25,8 @@
     <string name="location_picker_name">Nome da localização</string>
     <string name="location_picker_radius">Raio em metros</string>
 
+    <string name="default_location">Predefinido</string>
+
     <string name="action_settings">Configurações</string>
 
 </resources>

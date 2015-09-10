@@ -3,6 +3,8 @@ package com.service;
 import android.content.Context;
 import android.util.Log;
 
+import com.reachndo.R;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -53,7 +55,7 @@ public class SaveAndLoad {
             Log.d("Loading Debug", "Does not exist");
 
             ArrayList<Location> tempo2 = new ArrayList<Location>();
-            tempo2.add(new Location(1,2,"Porto", 10));
+            tempo2.add(new Location(1,2, cont.getResources().getString(R.string.default_location), 0));
             Singleton.setLocations(tempo2);
 
             for (int i = 0; i < Singleton.getLocations().size(); i++)
