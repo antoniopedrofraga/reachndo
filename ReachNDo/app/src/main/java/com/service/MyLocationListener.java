@@ -28,8 +28,6 @@ public class MyLocationListener implements LocationListener {
 
             //To test
             Log.v("Location Service", "Longitude: " + longitude + "\tLatitude: " + latitude);
-
-            sendNotification("Coordenadas", "Longitude: " + longitude + "\tLatitude: " + latitude);
         }
     }
 

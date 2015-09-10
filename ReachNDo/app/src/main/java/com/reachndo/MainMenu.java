@@ -26,19 +26,32 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.balysv.materialmenu.MaterialMenuIcon;
 import com.balysv.materialmenu.extras.toolbar.MaterialMenuIconCompat;
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.service.Event;
+import com.service.Location;
 import com.service.LocationService;
+import com.service.SaveAndLoad;
 import com.service.Singleton;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainMenu extends AppCompatActivity
@@ -47,6 +60,8 @@ public class MainMenu extends AppCompatActivity
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
+
+    private GoogleApiClient mClient;
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
     private CharSequence mTitle;
@@ -54,6 +69,8 @@ public class MainMenu extends AppCompatActivity
     private static ListView listView;
     private static EventListAdapter listAdapter;
     private static MaterialMenuIconCompat materialMenu;
+
+    private static final int REQUEST_PLACE_PICKER = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,12 +100,10 @@ public class MainMenu extends AppCompatActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-
-
-
         listAdapter = new EventListAdapter(getBaseContext(), new ArrayList<Event>());
 
     }
+
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
@@ -139,8 +154,11 @@ public class MainMenu extends AppCompatActivity
         }
 
         if (id  == android.R.id.home) {
-            // Handle your drawable state here
-            materialMenu.animateState(MaterialMenuDrawable.IconState.BURGER);
+            if (mNavigationDrawerFragment.isDrawerOpen()) {
+                materialMenu.animateState(MaterialMenuDrawable.IconState.BURGER);
+            }else{
+                materialMenu.animateState(MaterialMenuDrawable.IconState.ARROW);
+            }
         }
 
 
@@ -191,12 +209,107 @@ public class MainMenu extends AppCompatActivity
                 mFab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getActivity(), "Click", Toast.LENGTH_SHORT).show();
+                        try {
+
+                            PlacePicker.IntentBuilder intentBuilder;
+                            intentBuilder = new PlacePicker.IntentBuilder();
+                            Intent intent = intentBuilder.build(getContext());
+                            startActivityForResult(intent, REQUEST_PLACE_PICKER);
+
+                        } catch ( GooglePlayServicesRepairableException e ) {
+                            Log.d( "PlacesAPI Demo", "GooglePlayServicesRepairableException thrown" );
+                        } catch ( GooglePlayServicesNotAvailableException e ) {
+                            Log.d( "PlacesAPI Demo", "GooglePlayServicesNotAvailableException thrown" );
+                        }
                     }
                 });
             }
             else
                 Log.d("Debug", "Error in mFab (NULL)");
+
+        }
+
+        @Override
+        public void onActivityResult(int requestCode,
+                                        int resultCode, Intent data) {
+
+            if (requestCode == REQUEST_PLACE_PICKER
+                    && resultCode == Activity.RESULT_OK) {
+
+
+                // The user has selected a place. Extract the name and address.
+                final Place place = PlacePicker.getPlace(data, getContext());
+                showLocationNamePicker(place);
+                final CharSequence name = place.getName();
+                final CharSequence address = place.getAddress();
+                String attributions = PlacePicker.getAttributions(data);
+                if (attributions == null) {
+                    attributions = "";
+                }
+
+            } else {
+                super.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+
+        private void showLocationNamePicker(final Place selectedLocation) {
+            final MaterialDialog locationPicker =
+                    new MaterialDialog.Builder(getActivity())
+                            .title(R.string.location_picker_title)
+                            .customView(R.layout.location_picker_layout, true)
+                            .positiveText(android.R.string.ok)
+                            .autoDismiss(false)
+                            .negativeText(android.R.string.cancel)
+                            .cancelable(false)
+                            .show();
+
+            View positive = locationPicker.getActionButton(DialogAction.POSITIVE);
+            positive.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    EditText radius = ((EditText)locationPicker.getView().findViewById(R.id.radiusText));
+                    EditText name = ((EditText)locationPicker.getView().findViewById(R.id.nameTxt));
+                    if(name.getText().length() == 0){
+                        new MaterialDialog.Builder(getContext())
+                                .title(R.string.location_picker_warning_title)
+                                .content(R.string.location_picker_warning_name_content)
+                                .neutralText(android.R.string.ok)
+                                .show();
+                        return;
+                    }else if(radius.getText().length() == 0 || Integer.parseInt(radius.getText().toString()) == 0){
+                        new MaterialDialog.Builder(getContext())
+                                .title(R.string.location_picker_warning_title)
+                                .content(R.string.location_picker_warning_radius_content)
+                                .neutralText(android.R.string.ok)
+                                .show();
+                        return;
+                    }
+                    ArrayList<Location> temp = Singleton.getLocations();
+                    Location newLocation = new Location(selectedLocation.getLatLng().longitude,
+                            selectedLocation.getLatLng().latitude,
+                            name.getText().toString(),
+                            Double.parseDouble(radius.getText().toString()));
+                    temp.add(newLocation);
+                    Singleton.setLocations(temp);
+                    try {
+                        SaveAndLoad.saveInfo(getContext());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.d("Debug", Singleton.getLocations().size() + "");
+
+                    locationPicker.dismiss();
+                }
+            });
+
+            View negative = locationPicker.getActionButton(DialogAction.NEGATIVE);
+            negative.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    locationPicker.dismiss();
+                }
+            });
 
         }
 

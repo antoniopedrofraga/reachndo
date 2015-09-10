@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class SaveAndLoad {
     private SaveAndLoad() {}
 
-    public static void saveGame(Context cont) throws IOException {
+    public static void saveInfo(Context cont) throws IOException {
         try
         {
             FileOutputStream tempo = cont.openFileOutput("saved.dat", cont.MODE_PRIVATE);
@@ -28,10 +28,10 @@ public class SaveAndLoad {
         }
     }
 
-    public static void loadGame(Context cont) throws IOException, ClassNotFoundException {
+    public static void loadInfo(Context cont) throws IOException, ClassNotFoundException {
         ArrayList<Location> toRet;
         FileInputStream tempo = cont.openFileInput("saved.dat");
-        if (tempo != null)
+        if (tempo == null)
         {
 
         }

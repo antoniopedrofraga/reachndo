@@ -10,5 +10,14 @@
 
     <string name="action_add_event">Add event</string>
 
+    <string name="location_picker_warning_title">Warning</string>
+    <string name="location_picker_warning_name_content">The name field is empty, please complete it!</string>
+    <string name="location_picker_warning_radius_content">The radius field is empty, please complete it!</string>
+
+    <string name="location_picker_title">New Location</string>
+
+    <string name="location_picker_name">Location Name</string>
+    <string name="location_picker_radius">Radius in meters</string>
+
     <string name="action_settings">Settings</string>
 </resources>

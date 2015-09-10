@@ -1,0 +1,36 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_below="@id/action_bar" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context=".main">
+
+
+
+    <EditText
+        android:id="@+id/nameTxt"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:inputType="textCapSentences"
+        android:singleLine="true"
+        android:hint="@string/location_picker_name"
+        android:textColorHint="@color/LightGrey"
+        android:textColor="@color/SlateGray"
+        android:textSize="16sp"
+        />
+
+    <EditText
+        android:id="@+id/radiusText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:inputType="number"
+        android:singleLine="true"
+        android:layout_below="@+id/nameTxt"
+        android:hint="@string/location_picker_radius"
+        android:textColorHint="@color/LightGrey"
+        android:textColor="@color/SlateGray"
+        android:maxLength="6"
+        android:textSize="16sp"
+        />
+
+
+</RelativeLayout>

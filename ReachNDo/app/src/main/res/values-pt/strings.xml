@@ -3,4 +3,15 @@
 
     <string name="action_add_event">Adicionar evento</string>
 
+    <string name="location_picker_warning_title">Aviso</string>
+    <string name="location_picker_warning_name_content">O campo de nome está vazio, por favor preencha-o!</string>
+    <string name="location_picker_warning_radius_content">O campo do raio está vazio, por favor preencha-o!</string>
+
+    <string name="location_picker_title">Nova Localização</string>
+
+    <string name="location_picker_name">Nome da localização</string>
+    <string name="location_picker_radius">Raio em metros</string>
+
+    <string name="action_settings">Configurações</string>
+
 </resources>

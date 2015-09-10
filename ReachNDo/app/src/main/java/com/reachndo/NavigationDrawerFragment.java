@@ -109,10 +109,10 @@ public class NavigationDrawerFragment extends Fragment {
 
         ////
         ArrayList<Location> temp = new ArrayList<>();
-        temp.add(new Location(1,2,"Porto", "nada", 10));
-        temp.add(new Location(1,2,"Lisboa", "nada", 10));
-        temp.add(new Location(1,2,"Coimbra", "nada", 10));
-        temp.add(new Location(1,2,"FEUP", "nada", 10));
+        temp.add(new Location(1,2,"Porto", 10));
+        temp.add(new Location(1,2,"Lisboa", 10));
+        temp.add(new Location(1,2,"Coimbra", 10));
+        temp.add(new Location(1,2,"FEUP", 10));
         Singleton.setLocations(temp);
         ArrayList<Location> l = Singleton.getLocations(); //temporario
         ArrayList<String> s = new ArrayList<>();
@@ -208,7 +208,7 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
-    
+
     private void selectItem(int position) {
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {

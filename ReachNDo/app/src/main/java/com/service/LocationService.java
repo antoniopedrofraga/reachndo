@@ -12,6 +12,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import java.io.IOException;
+
 /**
  * Created by Joao Nogueira on 08/09/2015.
  */
@@ -31,6 +33,13 @@ public class LocationService extends Service {
 
     @Override
     public void onCreate() {
+        try {
+            SaveAndLoad.loadInfo(getBaseContext());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         ll = new MyLocationListener(this);
@@ -51,11 +60,6 @@ public class LocationService extends Service {
 
         Log.d("Location Service", "First Created");
 
-        try {
-            AlarmEvent a = new AlarmEvent(this);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
