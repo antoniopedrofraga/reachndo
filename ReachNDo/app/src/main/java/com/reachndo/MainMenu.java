@@ -3,19 +3,13 @@ package com.reachndo;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,13 +18,8 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -118,6 +107,8 @@ public class MainMenu extends AppCompatActivity
     public void onSectionAttached(int index) {
         if(index > 0) {
             mTitle = Singleton.getLocations().get(index - 1).getName();
+            listAdapter.clear();
+            listAdapter.addAll(Singleton.getLocations().get(index - 1).getEvents());
             listAdapter.notifyDataSetChanged();
         }else mTitle = "No Locations";
     }
@@ -242,12 +233,6 @@ public class MainMenu extends AppCompatActivity
                 // The user has selected a place. Extract the name and address.
                 final Place place = PlacePicker.getPlace(data, getContext());
                 showLocationNamePicker(place);
-                final CharSequence name = place.getName();
-                final CharSequence address = place.getAddress();
-                String attributions = PlacePicker.getAttributions(data);
-                if (attributions == null) {
-                    attributions = "";
-                }
 
             } else {
                 super.onActivityResult(requestCode, resultCode, data);

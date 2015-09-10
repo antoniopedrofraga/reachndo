@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.InputType;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
@@ -24,7 +25,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.service.Location;
 import com.service.Singleton;
 import java.util.ArrayList;
@@ -271,11 +276,94 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         if (item.getItemId() == R.id.action_example) {
-            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
+            showEventPicker();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showEventPicker() {
+        String type [] = {
+                getResources().getString(R.string.event_picker_dialog_remind),
+                getResources().getString(R.string.event_picker_dialog_sms),
+                getResources().getString(R.string.event_picker_dialog_sound_profile)
+        };
+
+        new MaterialDialog.Builder(getContext())
+                .title(R.string.event_picker_dialog_title)
+                .items(type)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        switch (which) {
+                            case 0:
+                                showReminderPicker();
+                                break;
+                            case 1:
+                                showSMSPicker();
+                                break;
+                            default:
+                                return false;
+                        }
+                        return true;
+                    }
+                })
+                .negativeText(android.R.string.cancel)
+                .show();
+    }
+
+    private void showSMSPicker() {
+        boolean wrapInScrollView = true;
+        final MaterialDialog smsPicker =
+                new MaterialDialog.Builder(getContext())
+                        .title(R.string.sms_dialog_title)
+                        .customView(R.layout.sms_layout, wrapInScrollView)
+                        .positiveText(android.R.string.ok)
+                        .autoDismiss(false)
+                        .negativeText(android.R.string.cancel)
+                        .show();
+        
+        View negative = smsPicker.getActionButton(DialogAction.NEGATIVE);
+        negative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                smsPicker.dismiss();
+            }
+        });
+    }
+
+    private void showReminderPicker() {
+        final MaterialDialog reminderPicker = new MaterialDialog.Builder(getContext())
+                .title(R.string.reminder_dialog_title)
+                .customView(R.layout.reminder_layout, true)
+                .negativeText(android.R.string.cancel)
+                .positiveText(android.R.string.ok)
+                .autoDismiss(false)
+                .build();
+
+        reminderPicker.show();
+
+        View negative = reminderPicker.getActionButton(DialogAction.NEGATIVE);
+        negative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reminderPicker.dismiss();
+            }
+        });
+
+        View positive = reminderPicker.getActionButton(DialogAction.POSITIVE);
+        positive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextView txtView = ((TextView)reminderPicker.getView().findViewById(R.id.reminderTxt));
+                if (txtView.getText().length() <= 0 || txtView.getText() == null) {
+                    Toast.makeText(getContext(), R.string.reminder_dialog_warning, Toast.LENGTH_SHORT).show();
+                } else {
+                    reminderPicker.dismiss();
+                }
+            }
+        });
     }
 
     /**

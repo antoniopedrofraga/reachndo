@@ -14,6 +14,20 @@
     <string name="location_picker_warning_name_content">The name field is empty, please complete it!</string>
     <string name="location_picker_warning_radius_content">The radius field is empty, please complete it!</string>
 
+    <string name="event_picker_dialog_remind">Remind me</string>
+    <string name="event_picker_dialog_sms">Send SMS</string>
+    <string name="event_picker_dialog_sound_profile">Change sound profile</string>
+    <string name="event_picker_dialog_title">Pick an event</string>
+
+    <string name="reminder_dialog_title">Reminder</string>
+    <string name="reminder_dialog_hint">Description</string>
+    <string name="reminder_dialog_warning">Write some text please</string>
+
+    <string name="sms_dialog_title">SMS</string>
+    <string name="sms_dialog_name_hint">Contact name or number</string>
+    <string name="sms_dialog_text_hint">Message text</string>
+
+
     <string name="location_picker_title">New Location</string>
 
     <string name="location_picker_name">Location Name</string>
