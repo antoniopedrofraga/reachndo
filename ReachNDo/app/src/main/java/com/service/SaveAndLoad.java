@@ -55,7 +55,7 @@ public class SaveAndLoad {
             Log.d("Loading Debug", "Does not exist");
 
             ArrayList<Location> tempo2 = new ArrayList<Location>();
-            tempo2.add(new Location(1,2, cont.getResources().getString(R.string.default_location), 0));
+            tempo2.add(new Location(1,2, cont.getResources().getString(R.string.default_location), 0, true));
             Singleton.setLocations(tempo2);
 
             for (int i = 0; i < Singleton.getLocations().size(); i++)

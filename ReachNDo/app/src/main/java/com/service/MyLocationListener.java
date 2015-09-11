@@ -45,13 +45,28 @@ public class MyLocationListener implements LocationListener {
         {
             for (int i = 0; i < Singleton.getLocations().size(); i++)
             {
-                if (Singleton.getLocations().get(i).getName() == cont.getResources().getString(R.string.default_location))
+                Log.d("Distance", " D: outside - 1 " + Singleton.getLocations().get(i).getName() + cont.getResources().getString(R.string.default_location));
+                if (equals(Singleton.getLocations().get(i).getName().equals(cont.getResources().getString(R.string.default_location)))) //TODO 
                 {
+                    Log.d("Distance", " D: outside");
                     Singleton.getLocations().get(i).runEvents(cont);
+                    Singleton.getLocations().get(i).setInside(true);
                     break;
                 }
             }
         }
+        else
+        {
+            for (int i = 0; i < Singleton.getLocations().size(); i++)
+            {
+                if (Singleton.getLocations().get(i).getName() == cont.getResources().getString(R.string.default_location))
+                {
+                    Singleton.getLocations().get(i).setInside(false);
+                    break;
+                }
+            }
+        }
+
     }
 
     @Override

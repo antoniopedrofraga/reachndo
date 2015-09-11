@@ -80,6 +80,8 @@ public class LocationService extends Service {
 
     public static boolean checkIfInsideArea(Location loc, LocationCoords coords, Context cont)
     {
+        Log.d("Distance", "D: " + distFrom(loc.getLatitude(), loc.getLongitude(), coords.getLatitude(), coords.getLongitude()) + " R: " + loc.getRadius());
+
         if (loc.getRadius() > distFrom(coords.getLatitude(), coords.getLongitude(), loc.getLatitude(), loc.getLongitude()))
         {
             loc.runEvents(cont);
@@ -91,9 +93,10 @@ public class LocationService extends Service {
             loc.inside = false;
             return false;
         }
+
     }
 
-    public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
+    public static double distFrom(double lng1, double lat1, double lat2, double lng2) {
         double earthRadius = 6371000; //meters
         double dLat = Math.toRadians(lat2-lat1);
         double dLng = Math.toRadians(lng2-lng1);

@@ -24,4 +24,14 @@ public class MessageEvent extends Event implements Serializable {
         sms.sendTextMessage(destinationNumber, null, textMessage, null, null);
    }
 
+    public String getDestinationNumber()
+    {
+        return destinationNumber;
+    }
+
+    public String getTextMessage()
+    {
+        return textMessage;
+    }
+
 }

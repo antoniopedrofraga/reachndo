@@ -106,7 +106,6 @@ public class MainMenu extends AppCompatActivity
 
     }
 
-
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
@@ -291,7 +290,7 @@ public class MainMenu extends AppCompatActivity
                     Location newLocation = new Location(selectedLocation.getLatLng().longitude,
                             selectedLocation.getLatLng().latitude,
                             name.getText().toString(),
-                            Double.parseDouble(radius.getText().toString()));
+                            Double.parseDouble(radius.getText().toString()), false);
                     temp.add(newLocation);
                     Singleton.setLocations(temp);
                     try {
