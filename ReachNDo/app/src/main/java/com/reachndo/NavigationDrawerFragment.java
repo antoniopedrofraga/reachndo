@@ -1,6 +1,10 @@
 package com.reachndo;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Typeface;
+import android.media.AudioManager;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -12,9 +16,11 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextWatcher;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,11 +39,16 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.service.Event;
+import com.service.EventType;
 import com.service.Location;
 import com.service.MessageEvent;
 import com.service.NotificationEvent;
 import com.service.SaveAndLoad;
 import com.service.Singleton;
+import com.service.SoundProfileEvent;
+import com.service.WiFiEvent;
+import com.tokenautocomplete.FilteredArrayAdapter;
+import com.tokenautocomplete.TokenCompleteTextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,10 +71,16 @@ public class NavigationDrawerFragment extends Fragment {
      */
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
 
+    private static final int IN = 0;
+    private static final int OUT = 1;
+
+
     /**
      * A pointer to the current callbacks instance (the Activity).
      */
     private NavigationDrawerCallbacks mCallbacks;
+
+    private int when;
 
     /**
      * Helper component that ties the action bar to the navigation drawer.
@@ -291,18 +308,42 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         if (item.getItemId() == R.id.action_example) {
-            showEventPicker();
+            showInOutPicker();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void showInOutPicker() {
+        String type [] = {
+            getResources().getString(R.string.in_out_picker_dialog_in),
+                getResources().getString(R.string.in_out_picker_dialog_out)
+        };
+
+        new MaterialDialog.Builder(getContext())
+                .title(R.string.in_out_picker_dialog_title)
+                .items(type)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        when = which;
+                        showEventPicker();
+                        return true;
+                    }
+
+
+                })
+                .negativeText(android.R.string.cancel)
+                .show();
+    }
+
     private void showEventPicker() {
         String type [] = {
                 getResources().getString(R.string.event_picker_dialog_remind),
                 getResources().getString(R.string.event_picker_dialog_sms),
-                getResources().getString(R.string.event_picker_dialog_sound_profile)
+                getResources().getString(R.string.event_picker_dialog_sound_profile),
+                getResources().getString(R.string.event_picker_dialog_wifi)
         };
 
         new MaterialDialog.Builder(getContext())
@@ -318,9 +359,69 @@ public class NavigationDrawerFragment extends Fragment {
                             case 1:
                                 showSMSPicker();
                                 break;
+                            case 2:
+                                showSoundProfilePicker();
+                                break;
+                            case 3:
+                                showWiFiProfilePicker();
+                                break;
                             default:
                                 return false;
                         }
+                        return true;
+                    }
+
+
+                })
+                .negativeText(android.R.string.cancel)
+                .show();
+    }
+
+    private void showWiFiProfilePicker() {
+        if(existsSoundProfileEvent()) {
+            Toast.makeText(getContext(), R.string.sound_profile_picker_dialog_warning ,Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        String type [] = {
+                getResources().getString(R.string.wifi_picker_dialog_on),
+                getResources().getString(R.string.wifi_picker_dialog_off)
+        };
+
+        new MaterialDialog.Builder(getContext())
+                .title(R.string.wifi_picker_dialog_title)
+                .items(type)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        WiFiEvent wifiEvent = new WiFiEvent(which);
+                        wifiEvent.setName(getResources().getString(R.string.wifi_picker_dialog_title));
+                        ArrayList<Location> temp = Singleton.getLocations();
+                        switch (which) {
+                            case WiFiEvent.ON:
+                                wifiEvent.setDescription(getResources().getString(R.string.wifi_picker_dialog_on));
+                                break;
+                            case WiFiEvent.OFF:
+                                wifiEvent.setDescription(getResources().getString(R.string.wifi_picker_dialog_off));
+                                break;
+                        }
+
+                        if (when == IN) {
+                            temp.get(mCurrentSelectedPosition).getEventsIn().add(wifiEvent);
+                        } else {
+                            temp.get(mCurrentSelectedPosition).getEventsOut().add(wifiEvent);
+                        }
+                        Singleton.setLocations(temp);
+                        Singleton.setLocations(temp);
+
+                        try {
+                            SaveAndLoad.saveInfo(getContext());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        MainMenu main =  MainMenu.getInstance();
+                        main.notifyListView(mCurrentSelectedPosition);
                         return true;
                     }
                 })
@@ -328,7 +429,85 @@ public class NavigationDrawerFragment extends Fragment {
                 .show();
     }
 
+    private void showSoundProfilePicker() {
+        if(existsSoundProfileEvent()) {
+            Toast.makeText(getContext(), R.string.sound_profile_picker_dialog_warning ,Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        String type [] = {
+                getResources().getString(R.string.sound_profile_picker_dialog_silent),
+                getResources().getString(R.string.sound_profile_picker_dialog_vibrate),
+                getResources().getString(R.string.sound_profile_picker_dialog_normal)
+        };
+
+        new MaterialDialog.Builder(getContext())
+                .title(R.string.sound_profile_picker_dialog_title)
+                .items(type)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        SoundProfileEvent spEvent = new SoundProfileEvent(which);
+                        spEvent.setName(getResources().getString(R.string.sound_profile_picker_dialog_title));
+                        String changeTo = getResources().getString(R.string.sound_profile_picker_dialog_change) + " ";
+                        ArrayList<Location> temp = Singleton.getLocations();
+                        switch (which) {
+                            case SoundProfileEvent.SILENT:
+                                spEvent.setDescription(changeTo +
+                                        getResources().getString(R.string.sound_profile_picker_dialog_silent));
+                                break;
+                            case SoundProfileEvent.VIBRATE:
+                                spEvent.setDescription(changeTo +
+                                        getResources().getString(R.string.sound_profile_picker_dialog_vibrate));
+                                break;
+                            case SoundProfileEvent.NORMAL:
+                                spEvent.setDescription(changeTo +
+                                        getResources().getString(R.string.sound_profile_picker_dialog_normal));
+                                break;
+                        }
+
+                        if (when == IN) {
+                            temp.get(mCurrentSelectedPosition).getEventsIn().add(spEvent);
+                        } else {
+                            temp.get(mCurrentSelectedPosition).getEventsOut().add(spEvent);
+                        }
+
+                        Singleton.setLocations(temp);
+
+                        try {
+                            SaveAndLoad.saveInfo(getContext());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        MainMenu menu = MainMenu.getInstance();
+                        menu.notifyListView(mCurrentSelectedPosition);
+                        return true;
+                    }
+                })
+                .negativeText(android.R.string.cancel)
+                .show();
+    }
+
+    private boolean existsSoundProfileEvent() {
+        ArrayList<Location> temp = Singleton.getLocations();
+        for(Event e : temp.get(mCurrentSelectedPosition).getEventsIn()) {
+            if(e.getType() == EventType.SOUND_PROFILE)
+                return true;
+        }
+        for(Event e : temp.get(mCurrentSelectedPosition).getEventsOut()) {
+            if(e.getType() == EventType.SOUND_PROFILE)
+                return true;
+        }
+        return false;
+    }
+
     private void showSMSPicker() {
+
+        final ArrayList<Contact> contacts = getContactNumbers();
+        final Contact number = new Contact("","");
+        contacts.add(0, number);
+
         boolean wrapInScrollView = true;
         final MaterialDialog smsPicker =
                 new MaterialDialog.Builder(getContext())
@@ -338,19 +517,28 @@ public class NavigationDrawerFragment extends Fragment {
                         .autoDismiss(false)
                         .negativeText(android.R.string.cancel)
                         .show();
+
+        final ContactsCompletionView contactSearch = (ContactsCompletionView) smsPicker.getCustomView().findViewById(R.id.searchView);
         
         View positive = smsPicker.getActionButton(DialogAction.POSITIVE);
         positive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String number = ((EditText)smsPicker.getView().findViewById(R.id.smsNumber)).getText().toString();
-                String txt = ((EditText)smsPicker.getView().findViewById(R.id.smsTxt)).getText().toString();
+                String number = ((EditText) smsPicker.getView().findViewById(R.id.searchView)).getText().toString();
+                String txt = ((EditText) smsPicker.getView().findViewById(R.id.smsTxt)).getText().toString();
 
                 ArrayList<Location> temp = Singleton.getLocations();
                 MessageEvent sms = new MessageEvent(number, txt);
                 sms.setName(getResources().getString(R.string.sms_dialog_title));
-                sms.setDescription(getResources().getString(R.string.event_message_to) + " " + number);
-                temp.get(mCurrentSelectedPosition).getEvents().add(sms);
+
+                sms.setDescription(getResources().getString(R.string.event_message_to) + " " + contactSearch.getNames());
+                sms.setContacts(contactSearch.getContacts());
+                if(when == IN) {
+                    temp.get(mCurrentSelectedPosition).getEventsIn().add(sms);
+                }else{
+                    temp.get(mCurrentSelectedPosition).getEventsOut().add(sms);
+                }
+
                 Singleton.setLocations(temp);
 
                 try {
@@ -360,8 +548,7 @@ public class NavigationDrawerFragment extends Fragment {
                 }
 
                 MainMenu menu = MainMenu.getInstance();
-                menu.getEventAdapter().add(sms);
-                menu.getEventAdapter().notifyDataSetChanged();
+                menu.notifyListView(mCurrentSelectedPosition);
 
 
                 smsPicker.dismiss();
@@ -374,6 +561,53 @@ public class NavigationDrawerFragment extends Fragment {
                 smsPicker.dismiss();
             }
         });
+
+        final FilteredArrayAdapter<Contact> adapter = new FilteredArrayAdapter<Contact>(getContext(), android.R.layout.simple_list_item_1, contacts) {
+            @Override
+            protected boolean keepObject(Contact obj, String mask) {
+                mask = mask.toLowerCase();
+                return obj.getName().toLowerCase().contains(mask) || obj.getNumber().toLowerCase().contains(mask);
+            }
+        };
+        contactSearch.setTokenListener(new TokenCompleteTextView.TokenListener() {
+            @Override
+            public void onTokenAdded(Object o) {
+                contactSearch.addContact(o);
+            }
+
+            @Override
+            public void onTokenRemoved(Object o) {
+                contactSearch.removeContact(o);
+            }
+        });
+        contactSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (isAPhoneNumber(charSequence)) {
+                    number.setNumber(charSequence.toString());
+                    number.setName("#" + charSequence.toString());
+                    adapter.notifyDataSetChanged();
+                } else {
+                    if (number.getNumber() != "") {
+                        number.setNumber("");
+                        number.setName("");
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        contactSearch.setAdapter(adapter);
     }
 
     private void showReminderPicker() {
@@ -399,14 +633,18 @@ public class NavigationDrawerFragment extends Fragment {
         positive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextView txtView = ((TextView)reminderPicker.getView().findViewById(R.id.reminderTxt));
+                TextView txtView = ((TextView) reminderPicker.getView().findViewById(R.id.reminderTxt));
                 if (txtView.getText().length() <= 0 || txtView.getText() == null) {
                     Toast.makeText(getContext(), R.string.reminder_dialog_warning, Toast.LENGTH_SHORT).show();
                 } else {
                     ArrayList<Location> temp = Singleton.getLocations();
                     NotificationEvent notificationEvent = new NotificationEvent(getResources().getString(R.string.reminder_dialog_title) + "",
                             txtView.getText().toString());
-                    temp.get(mCurrentSelectedPosition).getEvents().add(notificationEvent);
+                    if(when == IN) {
+                        temp.get(mCurrentSelectedPosition).getEventsIn().add(notificationEvent);
+                    }else{
+                        temp.get(mCurrentSelectedPosition).getEventsOut().add(notificationEvent);
+                    }
                     Singleton.setLocations(temp);
 
                     try {
@@ -416,12 +654,13 @@ public class NavigationDrawerFragment extends Fragment {
                     }
 
                     MainMenu menu = MainMenu.getInstance();
-                    menu.getEventAdapter().add(notificationEvent);
-                    menu.getEventAdapter().notifyDataSetChanged();
+                    menu.notifyListView(mCurrentSelectedPosition);
                     reminderPicker.dismiss();
                 }
             }
         });
+
+
     }
 
     /**
@@ -451,5 +690,34 @@ public class NavigationDrawerFragment extends Fragment {
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position);
+    }
+
+
+    private boolean isAPhoneNumber(CharSequence charSequence) {
+        if(charSequence.length() != 0) {
+            if (charSequence.charAt(0) == '+' || Character.isDigit(charSequence.charAt(0))) {
+                for (int i = 1; i < charSequence.length(); i++) {
+                    if (!Character.isDigit(charSequence.charAt(i)))
+                        return false;
+                }
+            } else {
+                return false;
+            }
+
+            return true;
+        }
+        return false;
+    }
+
+    public ArrayList<Contact> getContactNumbers() {
+        ArrayList<Contact> contacts =  new ArrayList<>();
+        Cursor phones = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+        while (phones.moveToNext())
+        {
+            String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+            String number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            contacts.add(new Contact(name, number));
+        }
+        return contacts;
     }
 }

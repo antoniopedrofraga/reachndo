@@ -1,0 +1,28 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+
+    >
+
+    <!-- title -->
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:textSize="16dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginBottom="4dp"
+        android:layout_alignParentBottom="true"
+        android:textColor = "@color/MaterialPurple"
+        android:textStyle="bold"/>
+
+    <!--  divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="1dp"
+        android:layout_alignParentBottom="true"
+         ></View>
+
+</RelativeLayout>

@@ -10,14 +10,16 @@ public class Location extends LocationCoords implements Serializable {
 
     private String name;
     private double radius;
-    private ArrayList<Event> events;
+    private ArrayList<Event> eventsIn;
+    private ArrayList<Event> eventsOut;
     public boolean inside;
 
     public Location(double a, double b, String n, double r) {
         super(a, b);
         this.name = n;
         this.radius = r;
-        events = new ArrayList<>();
+        eventsIn = new ArrayList<>();
+        eventsOut = new ArrayList<>();
         inside = false;
     }
 
@@ -45,12 +47,20 @@ public class Location extends LocationCoords implements Serializable {
         this.radius = radius;
     }
 
-    public ArrayList<Event> getEvents() {
-        return events;
+    public ArrayList<Event> getEventsIn() {
+        return eventsIn;
     }
 
-    public void addEvent(Event e){
-        events.add(e);
+    public void addEventIn(Event e){
+        eventsIn.add(e);
+    }
+
+    public ArrayList<Event> getEventsOut() {
+        return eventsOut;
+    }
+
+    public void addEventOut(Event e){
+        eventsOut.add(e);
     }
 
     public void runEvents(Context cont) {

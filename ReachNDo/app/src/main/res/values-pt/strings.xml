@@ -3,6 +3,13 @@
 
     <string name="action_add_event">Adicionar evento</string>
 
+    <string name="in">À entrada</string>
+    <string name="out">À saída</string>
+
+    <string name="in_out_picker_dialog_title">Quando realizar?</string>
+    <string name="in_out_picker_dialog_in">À entrada desta localização</string>
+    <string name="in_out_picker_dialog_out">À saída desta localização</string>
+
     <string name="location_picker_warning_title">Aviso</string>
     <string name="location_picker_warning_name_content">O campo de nome está vazio, por favor preencha-o!</string>
     <string name="location_picker_warning_radius_content">O campo do raio está vazio, por favor preencha-o!</string>
@@ -12,11 +19,16 @@
     <string name="event_picker_dialog_remind">Lembrete</string>
     <string name="event_picker_dialog_sms">Enviar mensagem</string>
     <string name="event_picker_dialog_sound_profile">Alterar perfil de som</string>
+    <string name="event_picker_dialog_wifi">Perfis de WiFi</string>
     <string name="event_picker_dialog_title">Escolha um evento</string>
 
     <string name="reminder_dialog_title">Lembrete</string>
     <string name="reminder_dialog_hint">Descrição</string>
     <string name="reminder_dialog_warning">Escreva algum texto por favor</string>
+
+    <string name="wifi_picker_dialog_title">WiFi</string>
+    <string name="wifi_picker_dialog_on">Ligar</string>
+    <string name="wifi_picker_dialog_off">Desligar</string>
 
     <string name="sms_dialog_title">Mensagem</string>
     <string name="sms_dialog_name_hint">Nome de contacto ou número</string>
@@ -24,6 +36,16 @@
 
     <string name="location_picker_name">Nome da localização</string>
     <string name="location_picker_radius">Raio em metros</string>
+
+    <string name="sound_profile_picker_dialog_title">Perfil de som</string>
+    <string name="sound_profile_picker_dialog_silent">Silencioso</string>
+    <string name="sound_profile_picker_dialog_vibrate">Vibrar</string>
+    <string name="sound_profile_picker_dialog_normal">Normal</string>
+    <string name="sound_profile_picker_dialog_warning">Não podes definir mais que 1 evento para mudar de perfil de som nesta localização</string>
+
+    <string name="sound_profile_picker_dialog_change">Alterar para</string>
+
+
 
     <string name="event_message_to">Mensagem para </string>
 

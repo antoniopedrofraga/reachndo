@@ -1,6 +1,8 @@
 package com.service;
 
 
+import com.reachndo.R;
+
 import java.io.Serializable;
 
 public class Event implements Serializable {
@@ -8,14 +10,27 @@ public class Event implements Serializable {
     public String name;
     public String description;
     private EventType type;
+    private boolean groupHeader = false;
 
     public Event(String name, String description){
         this.name = name;
         this.description = description;
     }
 
+    public Event(String name){
+        this.name = name;
+        groupHeader = true;
+    }
+
     public int getIcon(){
-        return -1;
+        switch (type){
+            case MESSAGE:
+                return R.drawable.sms;
+            case NOTIFICATION:
+                return R.drawable.notif;
+            default:
+                return -1;
+        }
     }
 
     public String getDescription() {
@@ -29,7 +44,6 @@ public class Event implements Serializable {
 
     public Event(EventType type) {
         this.type = type;
-
     }
 
     public Event(EventType type, String name, String desc) {
@@ -46,11 +60,16 @@ public class Event implements Serializable {
         this.name = name;
     }
 
+
     public EventType getType() {
         return type;
     }
 
     public void setType(EventType type) {
         this.type = type;
+    }
+
+    public boolean isGroupHeader(){
+        return groupHeader;
     }
 }
