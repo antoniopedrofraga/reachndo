@@ -8,8 +8,8 @@ import java.io.Serializable;
 public class LocationCoords implements Serializable {
     LocationCoords(double a, double b)
     {
-        longitude = a;
-        latitude = b;
+        latitude = a;
+        longitude = b;
     }
 
     private double longitude;

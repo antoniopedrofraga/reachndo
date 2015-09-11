@@ -72,4 +72,8 @@ public class Location extends LocationCoords implements Serializable {
     public void setInside(boolean inside) {
         this.inside = inside;
     }
+
+    public boolean isInside() {
+        return inside;
+    }
 }
