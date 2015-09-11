@@ -25,14 +25,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.service.Event;
 import com.service.Location;
+import com.service.MessageEvent;
+import com.service.NotificationEvent;
+import com.service.SaveAndLoad;
 import com.service.Singleton;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -332,6 +339,34 @@ public class NavigationDrawerFragment extends Fragment {
                         .negativeText(android.R.string.cancel)
                         .show();
         
+        View positive = smsPicker.getActionButton(DialogAction.POSITIVE);
+        positive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String number = ((EditText)smsPicker.getView().findViewById(R.id.smsNumber)).getText().toString();
+                String txt = ((EditText)smsPicker.getView().findViewById(R.id.smsTxt)).getText().toString();
+
+                ArrayList<Location> temp = Singleton.getLocations();
+                MessageEvent sms = new MessageEvent(number, txt);
+                sms.setName(getResources().getString(R.string.sms_dialog_title));
+                sms.setDescription(getResources().getString(R.string.event_message_to) + " " + number);
+                temp.get(mCurrentSelectedPosition).getEvents().add(sms);
+                Singleton.setLocations(temp);
+
+                try {
+                    SaveAndLoad.saveInfo(getContext());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                MainMenu menu = MainMenu.getInstance();
+                menu.getEventAdapter().add(sms);
+                menu.getEventAdapter().notifyDataSetChanged();
+
+
+                smsPicker.dismiss();
+            }
+        });
         View negative = smsPicker.getActionButton(DialogAction.NEGATIVE);
         negative.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -368,6 +403,21 @@ public class NavigationDrawerFragment extends Fragment {
                 if (txtView.getText().length() <= 0 || txtView.getText() == null) {
                     Toast.makeText(getContext(), R.string.reminder_dialog_warning, Toast.LENGTH_SHORT).show();
                 } else {
+                    ArrayList<Location> temp = Singleton.getLocations();
+                    NotificationEvent notificationEvent = new NotificationEvent(getResources().getString(R.string.reminder_dialog_title) + "",
+                            txtView.getText().toString());
+                    temp.get(mCurrentSelectedPosition).getEvents().add(notificationEvent);
+                    Singleton.setLocations(temp);
+
+                    try {
+                        SaveAndLoad.saveInfo(getContext());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    MainMenu menu = MainMenu.getInstance();
+                    menu.getEventAdapter().add(notificationEvent);
+                    menu.getEventAdapter().notifyDataSetChanged();
                     reminderPicker.dismiss();
                 }
             }

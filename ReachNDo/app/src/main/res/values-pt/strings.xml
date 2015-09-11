@@ -18,12 +18,14 @@
     <string name="reminder_dialog_hint">Descrição</string>
     <string name="reminder_dialog_warning">Escreva algum texto por favor</string>
 
-    <string name="sms_dialog_title">SMS</string>
+    <string name="sms_dialog_title">Mensagem</string>
     <string name="sms_dialog_name_hint">Nome de contacto ou número</string>
     <string name="sms_dialog_text_hint">Texto de mensagem</string>
 
     <string name="location_picker_name">Nome da localização</string>
     <string name="location_picker_radius">Raio em metros</string>
+
+    <string name="event_message_to">Mensagem para </string>
 
     <string name="action_settings">Configurações</string>
 

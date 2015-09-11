@@ -24,7 +24,6 @@ import android.widget.ListView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.balysv.materialmenu.MaterialMenuDrawable;
-import com.balysv.materialmenu.MaterialMenuIcon;
 import com.balysv.materialmenu.extras.toolbar.MaterialMenuIconCompat;
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.common.ConnectionResult;
@@ -54,11 +53,22 @@ public class MainMenu extends AppCompatActivity
     private static EventListAdapter listAdapter;
     private static MaterialMenuIconCompat materialMenu;
 
+    private static MainMenu instance;
+
     private static final int REQUEST_PLACE_PICKER = 1;
+
+    public static MainMenu getInstance(){
+        return instance;
+    }
+
+    public EventListAdapter getEventAdapter(){
+        return listAdapter;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = this;
 
         startService(new Intent(this, LocationService.class));
 

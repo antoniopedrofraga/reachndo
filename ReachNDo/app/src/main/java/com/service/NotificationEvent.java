@@ -16,22 +16,16 @@ import java.io.Serializable;
 public class NotificationEvent extends Event implements Serializable {
     public static int id = 1;
 
-    String title;
-    String text;
-
     public NotificationEvent(String ti, String tex) {
-        super(EventType.NOTIFICATION);
-
-        title = ti;
-        text = tex;
+        super(EventType.NOTIFICATION, ti, tex);
     }
 
     public void throwNotification(Context cont)
     {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(cont);
         builder.setAutoCancel(true);
-        builder.setContentTitle(title);
-        builder.setContentText(text);
+        builder.setContentTitle(getName());
+        builder.setContentText(getDescription());
         builder.setSmallIcon(R.mipmap.ic_launcher);
 
         Log.d("Notification Service", "Launches Notification");

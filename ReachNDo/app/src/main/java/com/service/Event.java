@@ -32,6 +32,12 @@ public class Event implements Serializable {
 
     }
 
+    public Event(EventType type, String name, String desc) {
+        this.type = type;
+        this.name = name;
+        this.description = desc;
+    }
+
     public String getName() {
         return name;
     }
