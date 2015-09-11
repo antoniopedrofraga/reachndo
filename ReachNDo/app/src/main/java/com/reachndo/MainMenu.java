@@ -292,8 +292,8 @@ public class MainMenu extends AppCompatActivity
                     Log.d("Debug Location - add", Singleton.getLocations().size() + "");
 
                     ArrayList<Location> temp = Singleton.getLocations();
-                    Location newLocation = new Location(selectedLocation.getLatLng().longitude,
-                            selectedLocation.getLatLng().latitude,
+                    Location newLocation = new Location(selectedLocation.getLatLng().latitude,
+                            selectedLocation.getLatLng().longitude,
                             name.getText().toString(),
                             Double.parseDouble(radius.getText().toString()), false);
                     temp.add(newLocation);

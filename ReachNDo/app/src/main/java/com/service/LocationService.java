@@ -11,6 +11,9 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.reachndo.R;
 
 import java.io.IOException;
 
@@ -18,6 +21,8 @@ import java.io.IOException;
  * Created by Joao Nogueira on 08/09/2015.
  */
 public class LocationService extends Service {
+
+    public final static double EARTH_RADIUS_KM = 6371;
 
     long minTime;
     float minDistance;
@@ -80,36 +85,52 @@ public class LocationService extends Service {
 
     public static boolean checkIfInsideArea(Location loc, LocationCoords coords, Context cont)
     {
-        Log.d("Distance", "D: " + distFrom(loc.getLatitude(), loc.getLongitude(), coords.getLatitude(), coords.getLongitude()) + " R: " + loc.getRadius());
 
-        if (loc.getRadius() > distFrom(coords.getLatitude(), coords.getLongitude(), loc.getLatitude(), loc.getLongitude()))
+        Log.d("Distance", "D: " + getDistance(loc.getLatitude(), loc.getLongitude(), coords.getLatitude(), coords.getLongitude()) + " R: " + loc.getRadius() + " N: " + loc.getName());
+
+        if (loc.getRadius() > getDistance(loc.getLatitude(), loc.getLongitude(), coords.getLatitude(), coords.getLongitude()) &&
+                !loc.isInside()
+                &&
+               !loc.getName().equals(cont.getResources().getString(R.string.default_location)))
         {
             loc.runEvents(cont);
             loc.inside = true;
             return true;
         }
-        else
+        else if (loc.getRadius() <= getDistance(loc.getLatitude(), loc.getLongitude(), coords.getLatitude(), coords.getLongitude()) &&
+                !loc.getName().equals(cont.getResources().getString(R.string.default_location)))
         {
             loc.inside = false;
             return false;
         }
-
+        else
+            return false;
     }
 
-    public static double distFrom(double lng1, double lat1, double lat2, double lng2) {
-        double earthRadius = 6371000; //meters
-        double dLat = Math.toRadians(lat2-lat1);
-        double dLng = Math.toRadians(lng2-lng1);
-        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                        Math.sin(dLng/2) * Math.sin(dLng/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        double dist = earthRadius * c;
+    /**
+     * Gets the great circle distance in kilometers between two geographical points, using
+     * the <a href="http://en.wikipedia.org/wiki/Haversine_formula">haversine formula</a>.
+     *
+     * @param latitude1 the latitude of the first point
+     * @param longitude1 the longitude of the first point
+     * @param latitude2 the latitude of the second point
+     * @param longitude2 the longitude of the second point
+     * @return the distance, in kilometers, between the two points
+     */
+    public static float getDistance(double latitude1, double longitude1, double latitude2,
+                                    double longitude2) {
+        double dLat = Math.toRadians(latitude2 - latitude1);
+        double dLon = Math.toRadians(longitude2 - longitude1);
+        double lat1 = Math.toRadians(latitude1);
+        double lat2 = Math.toRadians(latitude2);
+        double sqrtHaversineLat = Math.sin(dLat / 2);
+        double sqrtHaversineLon = Math.sin(dLon / 2);
+        double a = sqrtHaversineLat * sqrtHaversineLat + sqrtHaversineLon * sqrtHaversineLon
+                * Math.cos(lat1) * Math.cos(lat2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-        if (dist < 0)
-            dist = -dist;
-
-        return dist;
+        return (float) (EARTH_RADIUS_KM * c * 1000);
     }
+
 
 }
