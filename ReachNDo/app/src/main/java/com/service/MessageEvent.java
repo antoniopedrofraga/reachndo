@@ -2,7 +2,10 @@ package com.service;
 
 import android.telephony.SmsManager;
 
+import com.reachndo.Contact;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by Joao Nogueira on 09/09/2015.
@@ -11,6 +14,7 @@ public class MessageEvent extends Event implements Serializable {
 
     private String destinationNumber;
     private String textMessage;
+    private ArrayList<Contact> contacts;
 
     public MessageEvent(String nr, String text) {
         super(EventType.MESSAGE);
@@ -23,5 +27,14 @@ public class MessageEvent extends Event implements Serializable {
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(destinationNumber, null, textMessage, null, null);
    }
+
+    public void setContacts(ArrayList<Contact> contacts){
+        this.contacts = contacts;
+    }
+
+    public ArrayList<Contact> getContacts(){
+        return contacts;
+    }
+
 
 }

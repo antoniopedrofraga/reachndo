@@ -53,4 +53,17 @@ public class ContactsCompletionView extends TokenCompleteTextView<Contact> {
     public ArrayList<Contact> getContacts(){
         return contacts;
     }
+
+    public String getNames() {
+        String names = " ";
+        for(int index = 0; index < contacts.size(); index++){
+            names = names + contacts.get(index).getName();
+            if(index == contacts.size() - 2){
+                names = names + " e ";
+            }else if(index != contacts.size() - 1){
+                names = names  + ", ";
+            }
+        }
+        return names;
+    }
 }

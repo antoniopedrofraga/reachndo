@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -122,9 +123,7 @@ public class MainMenu extends AppCompatActivity
     public void onSectionAttached(int index) {
         if(index > 0) {
             mTitle = Singleton.getLocations().get(index - 1).getName();
-            listAdapter.clear();
-            listAdapter.addAll(Singleton.getLocations().get(index - 1).getEvents());
-            listAdapter.notifyDataSetChanged();
+            notifyListView(index - 1);
         }else mTitle = "No Locations";
     }
 
@@ -332,6 +331,26 @@ public class MainMenu extends AppCompatActivity
         }
     }
 
+    public void notifyListView(int index){
+        listAdapter.clear();
+        if(Singleton.getLocations().get(index).getEventsIn().size() != 0) {
+            listAdapter.add(new Event(getResources().getString(R.string.in)));
+            listAdapter.addAll(Singleton.getLocations().get(index).getEventsIn());
+        }
 
+        if(Singleton.getLocations().get(index).getEventsOut().size() != 0) {
+            listAdapter.add(new Event(getResources().getString(R.string.out)));
+            listAdapter.addAll(Singleton.getLocations().get(index).getEventsOut());
+        }
+
+        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                listAdapter.getItem(i).showDialog(getBaseContext());
+            }
+        });*/
+
+        listAdapter.notifyDataSetChanged();
+    }
 
 }
