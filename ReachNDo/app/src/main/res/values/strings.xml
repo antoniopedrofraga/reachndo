@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">ReachN\'Do</string>
 
+    <string name="action_edit">Edit</string>
+    <string name="action_delete">Delete</string>
+
+    <string name="sms_picker_contacts_warning">Add some contacts first</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -24,6 +28,7 @@
     <string name="wifi_picker_dialog_title">WiFi</string>
     <string name="wifi_picker_dialog_on">Turn on</string>
     <string name="wifi_picker_dialog_off">Turn off</string>
+    <string name="wifi_picker_dialog_warning">You can\'t define more than 1 WiFi event at this location</string>
 
 
     <string name="reminder_dialog_title">Reminder</string>
@@ -33,6 +38,9 @@
     <string name="sms_dialog_title">Message</string>
     <string name="sms_dialog_name_hint">Contact name or number</string>
     <string name="sms_dialog_text_hint">Message text</string>
+    <string name="sms_dialog_text_info">Text:</string>
+    <string name="sms_dialog_contact_empty_alert_title">Empty message</string>
+    <string name="sms_dialog_contact_empty_alert_txt">Are you sure you want send an empty message?</string>
 
     <string name="sound_profile_picker_dialog_title">Sound profile</string>
     <string name="sound_profile_picker_dialog_silent">Silent</string>

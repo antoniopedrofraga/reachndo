@@ -1,6 +1,12 @@
 package com.service;
 
 
+import android.content.Context;
+import android.view.View;
+import android.widget.Button;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.reachndo.R;
 
 import java.io.Serializable;
@@ -72,4 +78,7 @@ public class Event implements Serializable {
     public boolean isGroupHeader(){
         return groupHeader;
     }
+
+
+
 }

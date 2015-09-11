@@ -378,8 +378,8 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void showWiFiProfilePicker() {
-        if(existsSoundProfileEvent()) {
-            Toast.makeText(getContext(), R.string.sound_profile_picker_dialog_warning ,Toast.LENGTH_LONG).show();
+        if(existsProfileEvent(EventType.WIFI)) {
+            Toast.makeText(getContext(), R.string.wifi_picker_dialog_warning ,Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -430,7 +430,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void showSoundProfilePicker() {
-        if(existsSoundProfileEvent()) {
+        if(existsProfileEvent(EventType.SOUND_PROFILE)) {
             Toast.makeText(getContext(), R.string.sound_profile_picker_dialog_warning ,Toast.LENGTH_LONG).show();
             return;
         }
@@ -489,15 +489,18 @@ public class NavigationDrawerFragment extends Fragment {
                 .show();
     }
 
-    private boolean existsSoundProfileEvent() {
+    private boolean existsProfileEvent(EventType type) {
         ArrayList<Location> temp = Singleton.getLocations();
-        for(Event e : temp.get(mCurrentSelectedPosition).getEventsIn()) {
-            if(e.getType() == EventType.SOUND_PROFILE)
-                return true;
-        }
-        for(Event e : temp.get(mCurrentSelectedPosition).getEventsOut()) {
-            if(e.getType() == EventType.SOUND_PROFILE)
-                return true;
+        if(when == IN) {
+            for (Event e : temp.get(mCurrentSelectedPosition).getEventsIn()) {
+                if (e.getType() == type)
+                    return true;
+            }
+        }else {
+            for (Event e : temp.get(mCurrentSelectedPosition).getEventsOut()) {
+                if (e.getType() == type)
+                    return true;
+            }
         }
         return false;
     }
@@ -524,35 +527,24 @@ public class NavigationDrawerFragment extends Fragment {
         positive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String number = ((EditText) smsPicker.getView().findViewById(R.id.searchView)).getText().toString();
+                if(contactSearch.getContacts().size() == 0){
+                    Toast.makeText(getContext(), R.string.sms_picker_contacts_warning, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 String txt = ((EditText) smsPicker.getView().findViewById(R.id.smsTxt)).getText().toString();
 
-                ArrayList<Location> temp = Singleton.getLocations();
-                MessageEvent sms = new MessageEvent(number, txt);
-                sms.setName(getResources().getString(R.string.sms_dialog_title));
-
-                sms.setDescription(getResources().getString(R.string.event_message_to) + " " + contactSearch.getNames());
-                sms.setContacts(contactSearch.getContacts());
-                if(when == IN) {
-                    temp.get(mCurrentSelectedPosition).getEventsIn().add(sms);
-                }else{
-                    temp.get(mCurrentSelectedPosition).getEventsOut().add(sms);
+                if(txt.length() == 0){
+                    showNoSMSTxtWarning(smsPicker, contactSearch);
+                    return;
                 }
 
-                Singleton.setLocations(temp);
-
-                try {
-                    SaveAndLoad.saveInfo(getContext());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                MainMenu menu = MainMenu.getInstance();
-                menu.notifyListView(mCurrentSelectedPosition);
-
+                saveSMS(smsPicker, contactSearch);
 
                 smsPicker.dismiss();
             }
+
+
         });
         View negative = smsPicker.getActionButton(DialogAction.NEGATIVE);
         negative.setOnClickListener(new View.OnClickListener() {
@@ -610,6 +602,34 @@ public class NavigationDrawerFragment extends Fragment {
         contactSearch.setAdapter(adapter);
     }
 
+    private void saveSMS(MaterialDialog smsPicker, ContactsCompletionView contactSearch) {
+        String number = ((EditText) smsPicker.getView().findViewById(R.id.searchView)).getText().toString();
+        String txt = ((EditText) smsPicker.getView().findViewById(R.id.smsTxt)).getText().toString();
+
+        ArrayList<Location> temp = Singleton.getLocations();
+        MessageEvent sms = new MessageEvent(number, txt);
+        sms.setName(getResources().getString(R.string.sms_dialog_title));
+
+        sms.setDescription(getResources().getString(R.string.event_message_to) + " " + contactSearch.getNames());
+        sms.setContacts(contactSearch.getContacts());
+        if(when == IN) {
+            temp.get(mCurrentSelectedPosition).getEventsIn().add(sms);
+        }else{
+            temp.get(mCurrentSelectedPosition).getEventsOut().add(sms);
+        }
+
+        Singleton.setLocations(temp);
+
+        try {
+            SaveAndLoad.saveInfo(getContext());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        MainMenu menu = MainMenu.getInstance();
+        menu.notifyListView(mCurrentSelectedPosition);
+    }
+
     private void showReminderPicker() {
         final MaterialDialog reminderPicker = new MaterialDialog.Builder(getContext())
                 .title(R.string.reminder_dialog_title)
@@ -663,10 +683,6 @@ public class NavigationDrawerFragment extends Fragment {
 
     }
 
-    /**
-     * Per the navigation drawer design guidelines, updates the action bar to show the global app
-     * 'context', rather than just what's in the current screen.
-     */
     private void showGlobalContextActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
@@ -682,16 +698,12 @@ public class NavigationDrawerFragment extends Fragment {
         return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
 
-    /**
-     * Callbacks interface that all activities using this fragment must implement.
-     */
     public static interface NavigationDrawerCallbacks {
         /**
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position);
     }
-
 
     private boolean isAPhoneNumber(CharSequence charSequence) {
         if(charSequence.length() != 0) {
@@ -719,5 +731,24 @@ public class NavigationDrawerFragment extends Fragment {
             contacts.add(new Contact(name, number));
         }
         return contacts;
+    }
+
+    private void showNoSMSTxtWarning(final MaterialDialog smsPicker,final ContactsCompletionView contactSearch) {
+        final MaterialDialog alert = new MaterialDialog.Builder(getContext())
+                .title(R.string.sms_dialog_contact_empty_alert_title)
+                .content(R.string.sms_dialog_contact_empty_alert_txt)
+                .positiveText(android.R.string.yes)
+                .negativeText(android.R.string.no)
+                .show();
+        View positive = alert.getActionButton(DialogAction.POSITIVE);
+        positive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveSMS(smsPicker, contactSearch);
+                smsPicker.dismiss();
+                alert.dismiss();
+            }
+        });
+
     }
 }

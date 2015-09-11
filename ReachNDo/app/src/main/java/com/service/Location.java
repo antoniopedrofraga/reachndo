@@ -95,4 +95,9 @@ public class Location extends LocationCoords implements Serializable {
     public boolean isInside() {
         return inside;
     }
+
+    public void removeEvent(Event event){
+        eventsIn.remove(event);
+        eventsOut.remove(event);
+    }
 }
