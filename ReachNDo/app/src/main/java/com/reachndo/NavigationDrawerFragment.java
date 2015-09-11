@@ -1,6 +1,8 @@
 package com.reachndo;
 
+import android.database.Cursor;
 import android.graphics.Typeface;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -12,9 +14,11 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextWatcher;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +42,8 @@ import com.service.MessageEvent;
 import com.service.NotificationEvent;
 import com.service.SaveAndLoad;
 import com.service.Singleton;
+import com.tokenautocomplete.FilteredArrayAdapter;
+import com.tokenautocomplete.TokenCompleteTextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -329,6 +335,11 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void showSMSPicker() {
+
+        final ArrayList<Contact> contacts = getContactNumbers();
+        final Contact number = new Contact("","");
+        contacts.add(0, number);
+
         boolean wrapInScrollView = true;
         final MaterialDialog smsPicker =
                 new MaterialDialog.Builder(getContext())
@@ -343,8 +354,8 @@ public class NavigationDrawerFragment extends Fragment {
         positive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String number = ((EditText)smsPicker.getView().findViewById(R.id.smsNumber)).getText().toString();
-                String txt = ((EditText)smsPicker.getView().findViewById(R.id.smsTxt)).getText().toString();
+                String number = ((EditText) smsPicker.getView().findViewById(R.id.searchView)).getText().toString();
+                String txt = ((EditText) smsPicker.getView().findViewById(R.id.smsTxt)).getText().toString();
 
                 ArrayList<Location> temp = Singleton.getLocations();
                 MessageEvent sms = new MessageEvent(number, txt);
@@ -374,6 +385,54 @@ public class NavigationDrawerFragment extends Fragment {
                 smsPicker.dismiss();
             }
         });
+
+        final ContactsCompletionView contactSearch = (ContactsCompletionView) smsPicker.getCustomView().findViewById(R.id.searchView);
+        final FilteredArrayAdapter<Contact> adapter = new FilteredArrayAdapter<Contact>(getContext(), android.R.layout.simple_list_item_1, contacts) {
+            @Override
+            protected boolean keepObject(Contact obj, String mask) {
+                mask = mask.toLowerCase();
+                return obj.getName().toLowerCase().contains(mask) || obj.getNumber().toLowerCase().contains(mask);
+            }
+        };
+        contactSearch.setTokenListener(new TokenCompleteTextView.TokenListener() {
+            @Override
+            public void onTokenAdded(Object o) {
+                contactSearch.addContact(o);
+            }
+
+            @Override
+            public void onTokenRemoved(Object o) {
+                contactSearch.removeContact(o);
+            }
+        });
+        contactSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (isAPhoneNumber(charSequence)) {
+                    number.setNumber(charSequence.toString());
+                    number.setName("#" + charSequence.toString());
+                    adapter.notifyDataSetChanged();
+                } else {
+                    if (number.getNumber() != "") {
+                        number.setNumber("");
+                        number.setName("");
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        contactSearch.setAdapter(adapter);
     }
 
     private void showReminderPicker() {
@@ -399,7 +458,7 @@ public class NavigationDrawerFragment extends Fragment {
         positive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextView txtView = ((TextView)reminderPicker.getView().findViewById(R.id.reminderTxt));
+                TextView txtView = ((TextView) reminderPicker.getView().findViewById(R.id.reminderTxt));
                 if (txtView.getText().length() <= 0 || txtView.getText() == null) {
                     Toast.makeText(getContext(), R.string.reminder_dialog_warning, Toast.LENGTH_SHORT).show();
                 } else {
@@ -422,6 +481,8 @@ public class NavigationDrawerFragment extends Fragment {
                 }
             }
         });
+
+
     }
 
     /**
@@ -451,5 +512,34 @@ public class NavigationDrawerFragment extends Fragment {
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position);
+    }
+
+
+    private boolean isAPhoneNumber(CharSequence charSequence) {
+        if(charSequence.length() != 0) {
+            if (charSequence.charAt(0) == '+' || Character.isDigit(charSequence.charAt(0))) {
+                for (int i = 1; i < charSequence.length(); i++) {
+                    if (!Character.isDigit(charSequence.charAt(i)))
+                        return false;
+                }
+            } else {
+                return false;
+            }
+
+            return true;
+        }
+        return false;
+    }
+
+    public ArrayList<Contact> getContactNumbers() {
+        ArrayList<Contact> contacts =  new ArrayList<>();
+        Cursor phones = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+        while (phones.moveToNext())
+        {
+            String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+            String number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            contacts.add(new Contact(name, number));
+        }
+        return contacts;
     }
 }
