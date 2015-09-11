@@ -3,6 +3,11 @@
 
     <string name="action_add_event">Adicionar evento</string>
 
+    <string name="sms_picker_contacts_warning">Adiciona contactos primeiro</string>
+
+    <string name="action_edit">Editar</string>
+    <string name="action_delete">Apagar</string>
+
     <string name="in">À entrada</string>
     <string name="out">À saída</string>
 
@@ -29,10 +34,14 @@
     <string name="wifi_picker_dialog_title">WiFi</string>
     <string name="wifi_picker_dialog_on">Ligar</string>
     <string name="wifi_picker_dialog_off">Desligar</string>
+    <string name="wifi_picker_dialog_warning">Não podes definir mais que 1 evento para mudar de perfil de WiFi nesta localização</string>
 
     <string name="sms_dialog_title">Mensagem</string>
     <string name="sms_dialog_name_hint">Nome de contacto ou número</string>
     <string name="sms_dialog_text_hint">Texto de mensagem</string>
+    <string name="sms_dialog_text_info">Texto:</string>
+    <string name="sms_dialog_contact_empty_alert_title">Mensagem vazia</string>
+    <string name="sms_dialog_contact_empty_alert_txt">Tens a certeza que queres enviar uma mensagem vazia?</string>
 
     <string name="location_picker_name">Nome da localização</string>
     <string name="location_picker_radius">Raio em metros</string>

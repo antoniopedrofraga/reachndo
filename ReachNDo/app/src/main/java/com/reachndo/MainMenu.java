@@ -1,6 +1,7 @@
 package com.reachndo;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -22,6 +23,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -40,6 +42,8 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.service.Event;
 import com.service.Location;
 import com.service.LocationService;
+import com.service.MessageEvent;
+import com.service.NotificationEvent;
 import com.service.SaveAndLoad;
 import com.service.Singleton;
 
@@ -57,6 +61,8 @@ public class MainMenu extends AppCompatActivity
     private static ListView listView;
     private static EventListAdapter listAdapter;
     private static MaterialMenuIconCompat materialMenu;
+
+    private static AdapterView.OnItemClickListener clickListener;
 
     private static MainMenu instance;
 
@@ -108,6 +114,13 @@ public class MainMenu extends AppCompatActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         listAdapter = new EventListAdapter(getBaseContext(), new ArrayList<Event>());
+
+        clickListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+        };
 
         makeActionOverflowMenuShown();
     }
@@ -176,9 +189,6 @@ public class MainMenu extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
     public static class PlaceholderFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
@@ -209,6 +219,7 @@ public class MainMenu extends AppCompatActivity
             showFloatingActionButton(rootView);
             listView = (ListView) rootView.findViewById(R.id.list);
             listView.setAdapter(listAdapter);
+            listView.setOnItemClickListener(clickListener);
             return rootView;
         }
 
@@ -349,7 +360,8 @@ public class MainMenu extends AppCompatActivity
         }
     }
 
-    public void notifyListView(int index){
+    public void notifyListView(final
+                               int index){
         listAdapter.clear();
         if(Singleton.getLocations().get(index).getEventsIn().size() != 0) {
             listAdapter.add(new Event(getResources().getString(R.string.in)));
@@ -361,14 +373,56 @@ public class MainMenu extends AppCompatActivity
             listAdapter.addAll(Singleton.getLocations().get(index).getEventsOut());
         }
 
-        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        clickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                listAdapter.getItem(i).showDialog(getBaseContext());
+                showDialog(listAdapter.getItem(i), index);
             }
-        });*/
+        };
 
         listAdapter.notifyDataSetChanged();
+    }
+
+    public void showDialog(final Event event, final int index) {
+        String title = "";
+        String content = "";
+        switch (event.getType()) {
+            case MESSAGE:
+                title = getResources().getString(R.string.sms_dialog_title);
+                content = event.getDescription() + "\n\n" + getResources().getString(R.string.sms_dialog_text_info)
+                        + " " + ((MessageEvent)event).getTextMessage();
+                break;
+            case NOTIFICATION:
+                title = event.getName();
+                content = getResources().getString(R.string.sms_dialog_text_info) + " " + ((NotificationEvent)event).getDescription();
+                break;
+            default:
+                title = event.getName();
+                content = event.getDescription();
+                break;
+        }
+        final MaterialDialog infoDialog = new MaterialDialog.Builder(MainMenu.this)
+                .title(title)
+                .content(content)
+                .positiveText(R.string.action_edit)
+                .neutralText(android.R.string.ok)
+                .negativeText(R.string.action_delete)
+                .show();
+
+        View negative = infoDialog.getActionButton(DialogAction.NEGATIVE);
+        negative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Singleton.getLocations().get(index).removeEvent(event);
+                try {
+                    SaveAndLoad.saveInfo(MainMenu.this);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                infoDialog.dismiss();
+                notifyListView(index);
+            }
+        });
     }
 
 }

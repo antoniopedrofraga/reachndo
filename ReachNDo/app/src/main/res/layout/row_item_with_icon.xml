@@ -3,12 +3,13 @@
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
     >
-    <ImageView
-        android:id="@+id/item_icon"
+    <CheckBox
+        android:id="@+id/checkBox1"
         android:focusable="false"
         android:clickable="false"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
@@ -17,7 +18,7 @@
         android:layout_centerVertical="true"
         android:enabled="true"
         android:gravity="center_horizontal"
-        />
+        android:shadowColor="#30894E" />
 
     <TextView
         android:id="@+id/string"
@@ -27,7 +28,7 @@
         android:paddingTop="5dp"
         android:paddingLeft="5dp"
         android:textColor="#FF444444"
-        android:layout_toLeftOf="@+id/item_icon"
+        android:layout_toLeftOf="@+id/checkBox1"
         android:layout_alignParentLeft="true"
         >
     </TextView>
@@ -38,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/string"
         android:paddingBottom="10dp"
-        android:layout_toLeftOf="@+id/item_icon"
+        android:layout_toLeftOf="@+id/checkBox1"
         android:layout_alignParentLeft="true"
         android:textSize="12sp"
         android:paddingLeft="5dp"

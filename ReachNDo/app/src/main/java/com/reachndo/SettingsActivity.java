@@ -50,5 +50,6 @@ public class SettingsActivity extends PreferenceActivity {
                 finish();
             }
         });
+
     }
 }
