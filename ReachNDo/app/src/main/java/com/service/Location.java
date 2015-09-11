@@ -27,7 +27,8 @@ public class Location extends LocationCoords implements Serializable {
         super(a, b);
         this.name = n;
         this.radius = r;
-        events = new ArrayList<>();
+        eventsIn = new ArrayList<>();
+        eventsOut = new ArrayList<>();
         inside = bo;
     }
 
@@ -64,16 +65,16 @@ public class Location extends LocationCoords implements Serializable {
     }
 
     public void runEvents(Context cont) {
-        for (int i = 0; i < events.size(); i++)
+        for (int i = 0; i < eventsIn.size(); i++)
         {
-            if (events.get(i).getType() == EventType.NOTIFICATION)
+            if (eventsIn.get(i).getType() == EventType.NOTIFICATION)
             {
-                NotificationEvent notif = new NotificationEvent(events.get(i).getName(), events.get(i).getDescription());
+                NotificationEvent notif = new NotificationEvent(eventsIn.get(i).getName(), eventsIn.get(i).getDescription());
                 notif.throwNotification(cont);
             }
-            else if (events.get(i).getType() == EventType.MESSAGE)
+            else if (eventsIn.get(i).getType() == EventType.MESSAGE)
             {
-                MessageEvent sms = (MessageEvent) events.get(i);
+                MessageEvent sms = (MessageEvent) eventsIn.get(i);
                 sms.sendMessage();
             }
         }
