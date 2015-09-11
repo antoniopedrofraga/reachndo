@@ -25,12 +25,11 @@ public class MessageEvent extends Event implements Serializable {
     }
 
    public void sendMessage() {
-        SmsManager sms = SmsManager.getDefault();
+       SmsManager sms = SmsManager.getDefault();
 
        for (int i = 0; i < contacts.size(); i++) {
            sms.sendTextMessage(contacts.get(i).getNumber(), null, textMessage, null, null);
        }
-
 
    }
 

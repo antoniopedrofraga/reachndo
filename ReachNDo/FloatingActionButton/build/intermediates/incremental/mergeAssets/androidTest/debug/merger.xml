@@ -1,6 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD
 <merger version="3"><dataSet config="debug"><source path="C:\Users\Joao Nogueira\Documents\GitHub\reachndo\ReachNDo\FloatingActionButton\build\intermediates\bundles\debug\assets"/></dataSet><dataSet config="main"><source path="C:\Users\Joao Nogueira\Documents\GitHub\reachndo\ReachNDo\FloatingActionButton\src\androidTest\assets"/></dataSet></merger>
-=======
-<merger version="3"><dataSet config="debug"><source path="C:\Users\Francisco\Documents\GitHub\reachndo\ReachNDo\FloatingActionButton\build\intermediates\bundles\debug\assets"/></dataSet><dataSet config="main"><source path="C:\Users\Francisco\Documents\GitHub\reachndo\ReachNDo\FloatingActionButton\src\androidTest\assets"/></dataSet></merger>
->>>>>>> a4edbfec75f0de451de597f4d71426663d8ee6ae
