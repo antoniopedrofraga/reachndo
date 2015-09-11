@@ -22,4 +22,8 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
+    <style name="MyToolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">#FF0000</item>
+        <item name="android:textColorPrimary">#0000FF</item>
+    </style>
 </resources>

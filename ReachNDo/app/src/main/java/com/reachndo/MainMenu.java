@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Window;
@@ -40,6 +41,7 @@ import com.service.SaveAndLoad;
 import com.service.Singleton;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class MainMenu extends AppCompatActivity
@@ -104,6 +106,7 @@ public class MainMenu extends AppCompatActivity
 
         listAdapter = new EventListAdapter(getBaseContext(), new ArrayList<Event>());
 
+        makeActionOverflowMenuShown();
     }
 
     @Override
@@ -155,6 +158,8 @@ public class MainMenu extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(MainMenu.this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -326,6 +331,20 @@ public class MainMenu extends AppCompatActivity
             super.onAttach(activity);
             ((MainMenu) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
+        }
+    }
+
+    private void makeActionOverflowMenuShown() {
+        //devices with hardware menu button (e.g. Samsung Note) don't show action overflow menu
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if (menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception e) {
+            Log.d("Error getting overflow", e.getLocalizedMessage());
         }
     }
 
