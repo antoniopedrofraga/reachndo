@@ -36,7 +36,6 @@ public class AlarmEvent extends Event implements Serializable {
         dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         cont.startActivity(dialogIntent);
 
-
         Log.d("Alarm Event", "Alarm set");
     }
 

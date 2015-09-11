@@ -16,8 +16,10 @@ import java.io.Serializable;
 public class NotificationEvent extends Event implements Serializable {
     public static int id = 1;
 
+
     public NotificationEvent(String ti, String tex) {
         super(EventType.NOTIFICATION, ti, tex);
+        id++;
     }
 
     public void throwNotification(Context cont)
@@ -35,7 +37,7 @@ public class NotificationEvent extends Event implements Serializable {
         NotificationManager nm = (NotificationManager) cont.getSystemService(cont.NOTIFICATION_SERVICE);
         nm.notify(id, notification);
 
-        id++;
+        Log.d("Notif Debug", "id: " + id);
     }
 
 }

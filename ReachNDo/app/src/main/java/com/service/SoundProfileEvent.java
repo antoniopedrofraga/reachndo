@@ -18,7 +18,6 @@ public class SoundProfileEvent extends Event implements Serializable {
     public SoundProfileEvent(int type){
         super(EventType.SOUND_PROFILE);
         this.type = type;
-
     }
 
 }

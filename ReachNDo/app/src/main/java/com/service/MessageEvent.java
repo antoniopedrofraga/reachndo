@@ -1,6 +1,7 @@
 package com.service;
 
 import android.telephony.SmsManager;
+import android.util.Log;
 
 import com.reachndo.Contact;
 
@@ -25,7 +26,12 @@ public class MessageEvent extends Event implements Serializable {
 
    public void sendMessage() {
         SmsManager sms = SmsManager.getDefault();
-        sms.sendTextMessage(destinationNumber, null, textMessage, null, null);
+
+       for (int i = 0; i < contacts.size(); i++) {
+           sms.sendTextMessage(contacts.get(i).getNumber(), null, textMessage, null, null);
+       }
+
+
    }
 
     public String getDestinationNumber()

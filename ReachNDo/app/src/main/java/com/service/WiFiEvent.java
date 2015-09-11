@@ -1,5 +1,7 @@
 package com.service;
 
+import android.content.Context;
+import android.net.wifi.WifiManager;
 import android.telephony.SmsManager;
 
 import com.reachndo.Contact;
@@ -22,5 +24,18 @@ public class WiFiEvent extends Event implements Serializable {
         this.status = status;
     }
 
+    public void turnOn(Context cont) {
+        WifiManager wifiManager = (WifiManager) cont.getSystemService(cont.WIFI_SERVICE);
+        wifiManager.setWifiEnabled(true);
+    }
 
+    public void turnOff(Context cont) {
+        WifiManager wifiManager = (WifiManager) cont.getSystemService(cont.WIFI_SERVICE);
+        wifiManager.setWifiEnabled(false);
+
+    }
+
+    public int getStatus() {
+        return status;
+    }
 }

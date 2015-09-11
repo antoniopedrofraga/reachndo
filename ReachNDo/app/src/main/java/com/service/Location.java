@@ -69,13 +69,21 @@ public class Location extends LocationCoords implements Serializable {
         {
             if (eventsIn.get(i).getType() == EventType.NOTIFICATION)
             {
-                NotificationEvent notif = new NotificationEvent(eventsIn.get(i).getName(), eventsIn.get(i).getDescription());
+                NotificationEvent notif = (NotificationEvent) eventsIn.get(i);
                 notif.throwNotification(cont);
             }
             else if (eventsIn.get(i).getType() == EventType.MESSAGE)
             {
                 MessageEvent sms = (MessageEvent) eventsIn.get(i);
                 sms.sendMessage();
+            }
+            else if (eventsIn.get(i).getType() == EventType.WIFI)
+            {
+                WiFiEvent ev = (WiFiEvent) eventsIn.get(i);
+                if (ev.getStatus() == 0)
+                    ev.turnOn(cont);
+                else
+                   ev.turnOff(cont);
             }
         }
     }
