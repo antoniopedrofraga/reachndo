@@ -27,8 +27,11 @@
     <string name="sms_dialog_name_hint">Contact name or number</string>
     <string name="sms_dialog_text_hint">Message text</string>
 
+
     <string name="event_message_to">Mensage to </string>
 
+
+    <string name="default_location">Default</string>
 
     <string name="location_picker_title">New Location</string>
 

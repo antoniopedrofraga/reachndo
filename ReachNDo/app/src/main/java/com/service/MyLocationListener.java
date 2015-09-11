@@ -6,6 +6,8 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.reachndo.R;
+
 /**
  * Created by Joao Nogueira on 08/09/2015.
  */
@@ -28,6 +30,27 @@ public class MyLocationListener implements LocationListener {
 
             //To test
             Log.v("Location Service", "Longitude: " + longitude + "\tLatitude: " + latitude);
+
+            checkAllLocations(cont, location);
+        }
+    }
+
+    private void checkAllLocations(Context cont, Location location) {
+        boolean out = false;
+        for (int i = 0; i < Singleton.getLocations().size(); i++)
+            if (LocationService.checkIfInsideArea(Singleton.getLocations().get(i), new LocationCoords(location.getLatitude(), location.getLongitude()), cont))
+                out = true;
+
+        if (!out)
+        {
+            for (int i = 0; i < Singleton.getLocations().size(); i++)
+            {
+                if (Singleton.getLocations().get(i).getName() == cont.getResources().getString(R.string.default_location))
+                {
+                    Singleton.getLocations().get(i).runEvents(cont);
+                    break;
+                }
+            }
         }
     }
 
@@ -44,11 +67,6 @@ public class MyLocationListener implements LocationListener {
     @Override
     public void onProviderDisabled(String provider) {
         Log.d("Location Service", "Provider Disabled");
-    }
-
-    public void sendNotification(String title, String text) {
-        NotificationEvent notif = new NotificationEvent(title, text);
-        notif.throwNotification(cont);
     }
 
 }

@@ -77,4 +77,36 @@ public class LocationService extends Service {
 
         return START_STICKY;
     }
+
+    public static boolean checkIfInsideArea(Location loc, LocationCoords coords, Context cont)
+    {
+        if (loc.getRadius() > distFrom(coords.getLatitude(), coords.getLongitude(), loc.getLatitude(), loc.getLongitude()))
+        {
+            loc.runEvents(cont);
+            loc.inside = true;
+            return true;
+        }
+        else
+        {
+            loc.inside = false;
+            return false;
+        }
+    }
+
+    public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
+        double earthRadius = 6371000; //meters
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double dist = earthRadius * c;
+
+        if (dist < 0)
+            dist = -dist;
+
+        return dist;
+    }
+
 }

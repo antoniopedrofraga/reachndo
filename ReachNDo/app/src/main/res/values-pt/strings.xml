@@ -27,6 +27,8 @@
 
     <string name="event_message_to">Mensagem para </string>
 
+    <string name="default_location">Predefinido</string>
+
     <string name="action_settings">Configurações</string>
 
 </resources>
