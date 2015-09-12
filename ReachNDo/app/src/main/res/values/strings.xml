@@ -30,7 +30,7 @@
     <string name="wifi_picker_dialog_title">WiFi</string>
     <string name="wifi_picker_dialog_on">Turn on</string>
     <string name="wifi_picker_dialog_off">Turn off</string>
-    <string name="wifi_picker_dialog_warning">You can\'t define more than 1 WiFi event at this location</string>
+    <string name="wifi_picker_dialog_warning">You can\'t add another Wifi event at this location</string>
 
     <string name="bluetooth_picker_dialog_title">Bluetooth</string>
     <string name="bluetooth_picker_dialog_on">Turn on</string>
@@ -40,7 +40,7 @@
     <string name="mobile_data_picker_dialog_title">Mobile Data</string>
     <string name="mobile_data_picker_dialog_on">Turn on</string>
     <string name="mobile_data_picker_dialog_off">Turn off</string>
-    <string name="mobile_data_picker_dialog_warning">You can\'t add another Mobile Data events at this location</string>
+    <string name="mobile_data_picker_dialog_warning">You can\'t add another Mobile Data event at this location</string>
 
     <string name="reminder_dialog_title">Reminder</string>
     <string name="reminder_dialog_hint">Description</string>
@@ -61,7 +61,7 @@
     <string name="sound_profile_picker_dialog_silent">Silent</string>
     <string name="sound_profile_picker_dialog_vibrate">Vibrate</string>
     <string name="sound_profile_picker_dialog_normal">Normal</string>
-    <string name="sound_profile_picker_dialog_warning">You can\'t add another Sound Profile events at this location</string>
+    <string name="sound_profile_picker_dialog_warning">You can\'t add another Sound Profile event at this location</string>
 
     <string name="sound_profile_picker_dialog_change">Change to</string>
 
