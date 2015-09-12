@@ -11,7 +11,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.reachndo.R;
 
@@ -93,9 +92,17 @@ public class LocationService extends Service {
                 &&
                !loc.getName().equals(cont.getResources().getString(R.string.default_location)))
         {
-            loc.runEvents(cont);
+            loc.runInEvents(cont);
             loc.inside = true;
             return true;
+        }
+        else if (loc.getRadius() <= getDistance(loc.getLatitude(), loc.getLongitude(), coords.getLatitude(), coords.getLongitude()) &&
+                !loc.getName().equals(cont.getResources().getString(R.string.default_location)) &&
+                loc.isInside())
+        {
+            loc.runOutEvents(cont);
+            loc.inside = false;
+            return false;
         }
         else if (loc.getRadius() <= getDistance(loc.getLatitude(), loc.getLongitude(), coords.getLatitude(), coords.getLongitude()) &&
                 !loc.getName().equals(cont.getResources().getString(R.string.default_location)))

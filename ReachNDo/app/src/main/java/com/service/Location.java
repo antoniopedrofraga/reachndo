@@ -4,6 +4,7 @@ package com.service;
 import android.content.Context;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Location extends LocationCoords implements Serializable {
@@ -64,26 +65,32 @@ public class Location extends LocationCoords implements Serializable {
         eventsOut.add(e);
     }
 
-    public void runEvents(Context cont) {
-        for (int i = 0; i < eventsIn.size(); i++)
-        {
-            if (eventsIn.get(i).getType() == EventType.NOTIFICATION)
-            {
-                NotificationEvent notif = (NotificationEvent) eventsIn.get(i);
+    public void runInEvents(Context cont) {
+        runEvents(cont, getEventsIn());
+    }
+
+    public void runOutEvents(Context cont) {
+        runEvents(cont, getEventsOut());
+    }
+
+    public void runEvents(Context cont, ArrayList<Event> events)
+    {
+        for (int i = 0; i < events.size(); i++) {
+            if (events.get(i).getType() == EventType.NOTIFICATION) {
+                NotificationEvent notif = (NotificationEvent) events.get(i);
                 notif.throwNotification(cont);
-            }
-            else if (eventsIn.get(i).getType() == EventType.MESSAGE)
-            {
-                MessageEvent sms = (MessageEvent) eventsIn.get(i);
+            } else if (events.get(i).getType() == EventType.MESSAGE) {
+                MessageEvent sms = (MessageEvent) events.get(i);
                 sms.sendMessage();
-            }
-            else if (eventsIn.get(i).getType() == EventType.WIFI)
-            {
-                WiFiEvent ev = (WiFiEvent) eventsIn.get(i);
+            } else if (events.get(i).getType() == EventType.WIFI) {
+                WiFiEvent ev = (WiFiEvent) events.get(i);
                 if (ev.getStatus() == 0)
                     ev.turnOn(cont);
                 else
-                   ev.turnOff(cont);
+                    ev.turnOff(cont);
+            } else if (events.get(i).getType() == EventType.SOUND_PROFILE) {
+                SoundProfileEvent ev = (SoundProfileEvent) events.get(i);
+                ev.change(cont);
             }
         }
     }
@@ -100,4 +107,6 @@ public class Location extends LocationCoords implements Serializable {
         eventsIn.remove(event);
         eventsOut.remove(event);
     }
+
+
 }
