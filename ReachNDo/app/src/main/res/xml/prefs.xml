@@ -5,7 +5,7 @@
         android:summary="Section2"
         android:title="Options" >
     <CheckBoxPreference
-        android:id="@id/checkBox1"
+        android:id="@+id/checkBox1"
         android:key="eventControl"
         android:summary="Turn on the events"
         android:title="Active events" />

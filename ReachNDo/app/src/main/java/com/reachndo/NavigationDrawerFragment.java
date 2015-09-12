@@ -264,7 +264,7 @@ public class NavigationDrawerFragment extends Fragment {
         if(locationAdapter != null) {
             clearChecks(locationAdapter);
             if(locationAdapter.getLocationArrayList().size() > 0)
-                locationAdapter.getItem(position).setChecked(true);
+                locationAdapter.getLocationArrayList().get(position).setChecked(true);
         }
         mCurrentSelectedPosition = position;
         if (mDrawerLayout != null) {
