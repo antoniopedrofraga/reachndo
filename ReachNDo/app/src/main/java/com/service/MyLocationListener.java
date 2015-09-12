@@ -50,7 +50,7 @@ public class MyLocationListener implements LocationListener {
                 {
                     if (!Singleton.getLocations().get(i).isInside()) {
 
-                        Singleton.getLocations().get(i).runEvents(cont);
+                        Singleton.getLocations().get(i).runInEvents(cont);
                         Singleton.getLocations().get(i).setInside(true);
                         break;
                     }
