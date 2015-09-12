@@ -91,6 +91,29 @@ public class Location extends LocationCoords implements Serializable {
             } else if (events.get(i).getType() == EventType.SOUND_PROFILE) {
                 SoundProfileEvent ev = (SoundProfileEvent) events.get(i);
                 ev.change(cont);
+            } else if (events.get(i).getType() == EventType.MOBILE_DATA) {
+                MobileDataEvent ev = (MobileDataEvent) events.get(i);
+                if (ev.getStatus() == MobileDataEvent.OFF) {
+                    ev.turnOff(cont);
+                    NotificationEvent notif = new NotificationEvent("Data Connection", "Turned Off");
+                    notif.throwNotification(cont);
+                }
+                else {
+                    ev.turnOn(cont);
+                    NotificationEvent notif = new NotificationEvent("Data Connection", "Turned On");
+                    notif.throwNotification(cont);
+                }
+            } else if (events.get(i).getType() == EventType.BLUETOOTH) {
+                BluetoothEvent ev = (BluetoothEvent) events.get(i);
+                if (ev.getStatus() == BluetoothEvent.OFF) {
+                    ev.turnOff();
+                    NotificationEvent notif = new NotificationEvent("Bluetooth", "Turned Off");
+                    notif.throwNotification(cont);
+                } else {
+                    ev.turnOn();
+                    NotificationEvent notif = new NotificationEvent("Bluetooth", "Turned On");
+                    notif.throwNotification(cont);
+                }
             }
         }
     }

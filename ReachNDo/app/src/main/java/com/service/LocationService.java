@@ -49,7 +49,7 @@ public class LocationService extends Service {
 
         Log.d("Service Debug", "Checkpoint on creation");
 
-        ll = new MyLocationListener(this);
+        ll = new MyLocationListener(this.getBaseContext());
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    public void requestPermissions(@NonNull String[] permissions, int requestCode)

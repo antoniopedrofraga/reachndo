@@ -58,4 +58,8 @@ public class MobileDataEvent extends Event implements Serializable {
         }
 
     }
+
+    public int getStatus() {
+        return status;
+    }
 }

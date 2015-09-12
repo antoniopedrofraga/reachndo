@@ -36,4 +36,8 @@ public class BluetoothEvent extends Event implements Serializable {
         }
 
     }
+
+    public int getStatus() {
+        return status;
+    }
 }
