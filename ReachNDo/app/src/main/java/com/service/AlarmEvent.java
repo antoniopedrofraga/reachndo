@@ -23,20 +23,26 @@ import java.io.Serializable;
  */
 public class AlarmEvent extends Event implements Serializable {
 
+    private String description;
+
     public AlarmEvent(Context cont) throws InterruptedException {
         super(EventType.ALARM);
 
-        NotificationEvent notif = new NotificationEvent("Alarm", "a disparar");
+        NotificationEvent notif = new NotificationEvent("Alarm", description);
         notif.throwNotification(cont);
 
         Intent dialogIntent = new Intent(cont, DialogAlarm.class);
         Bundle extrasBundle = new Bundle();
-        extrasBundle.putStringArray("info", new String[]{"Alarme", "aqui esta"});
+        extrasBundle.putStringArray("info", new String[]{"Alarm", description});
         dialogIntent.putExtras(extrasBundle);
         dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         cont.startActivity(dialogIntent);
 
         Log.d("Alarm Event", "Alarm set");
+    }
+
+    public void setDescription(String s){
+        description = s;
     }
 
 }

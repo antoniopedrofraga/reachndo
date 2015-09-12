@@ -33,6 +33,10 @@
     <string name="reminder_dialog_hint">Descrição</string>
     <string name="reminder_dialog_warning">Escreva algum texto por favor</string>
 
+    <string name="alarm_dialog_title">Alarme</string>
+    <string name="alarm_dialog_text_hint">Descrição</string>
+    <string name="alarm_dialog_warning">Escreva algum texto por favor</string>
+
     <string name="wifi_picker_dialog_title">WiFi</string>
     <string name="wifi_picker_dialog_on">Ligar</string>
     <string name="wifi_picker_dialog_off">Desligar</string>

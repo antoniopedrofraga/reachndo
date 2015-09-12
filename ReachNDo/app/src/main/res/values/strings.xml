@@ -46,6 +46,10 @@
     <string name="reminder_dialog_hint">Description</string>
     <string name="reminder_dialog_warning">Write some text please</string>
 
+    <string name="alarm_dialog_title">Alarm</string>
+    <string name="alarm_dialog_text_hint">Description</string>
+    <string name="alarm_dialog_warning">Write some text please</string>
+
     <string name="sms_dialog_title">Message</string>
     <string name="sms_dialog_name_hint">Contact name or number</string>
     <string name="sms_dialog_text_hint">Message text</string>
