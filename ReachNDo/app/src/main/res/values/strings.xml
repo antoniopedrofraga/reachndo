@@ -11,9 +11,9 @@
 
     <string name="action_add_event">Add event</string>
 
-    <string name="in_out_picker_dialog_title">When to do it?</string>
-    <string name="in_out_picker_dialog_in">Getting in</string>
-    <string name="in_out_picker_dialog_out">Exiting</string>
+    <string name="in_out_picker_dialog_title">When?</string>
+    <string name="in_out_picker_dialog_in">Entering the location</string>
+    <string name="in_out_picker_dialog_out">Exiting the location</string>
 
     <string name="location_picker_warning_title">Warning</string>
     <string name="location_picker_warning_name_content">The name field is empty, please complete it!</string>
@@ -22,25 +22,25 @@
     <string name="event_picker_dialog_remind">Remind me</string>
     <string name="event_picker_dialog_sms">Send SMS</string>
     <string name="event_picker_dialog_sound_profile">Change sound profile</string>
-    <string name="event_picker_dialog_wifi">WiFi profiles</string>
-    <string name="event_picker_dialog_bluetooth">Bluetooth profiles</string>
-    <string name="event_picker_dialog_mobile_data">Mobile Data profiles</string>
+    <string name="event_picker_dialog_wifi">Change WiFi profile</string>
+    <string name="event_picker_dialog_bluetooth">Change Bluetooth profile</string>
+    <string name="event_picker_dialog_mobile_data">Change Mobile Data profile</string>
     <string name="event_picker_dialog_title">Pick an event</string>
 
     <string name="wifi_picker_dialog_title">WiFi</string>
     <string name="wifi_picker_dialog_on">Turn on</string>
     <string name="wifi_picker_dialog_off">Turn off</string>
-    <string name="wifi_picker_dialog_warning">You can\'t define more than 1 WiFi event at this location</string>
+    <string name="wifi_picker_dialog_warning">You can\'t add another Wifi event at this location</string>
 
     <string name="bluetooth_picker_dialog_title">Bluetooth</string>
     <string name="bluetooth_picker_dialog_on">Turn on</string>
     <string name="bluetooth_picker_dialog_off">Turn off</string>
-    <string name="bluetooth_picker_dialog_warning">You can\'t define more than 1 Bluetooth event at this location</string>
+    <string name="bluetooth_picker_dialog_warning">You can\'t add another Bluetooth event at this location</string>
 
     <string name="mobile_data_picker_dialog_title">Mobile Data</string>
     <string name="mobile_data_picker_dialog_on">Turn on</string>
     <string name="mobile_data_picker_dialog_off">Turn off</string>
-    <string name="mobile_data_picker_dialog_warning">You can\'t define more than 1 Mobile Data event at this location</string>
+    <string name="mobile_data_picker_dialog_warning">You can\'t add another Mobile Data event at this location</string>
 
     <string name="reminder_dialog_title">Reminder</string>
     <string name="reminder_dialog_hint">Description</string>
@@ -57,12 +57,12 @@
     <string name="sound_profile_picker_dialog_silent">Silent</string>
     <string name="sound_profile_picker_dialog_vibrate">Vibrate</string>
     <string name="sound_profile_picker_dialog_normal">Normal</string>
-    <string name="sound_profile_picker_dialog_warning">You can\'t define more than 1 Sound Profile event at this location</string>
+    <string name="sound_profile_picker_dialog_warning">You can\'t add another Sound Profile event at this location</string>
 
     <string name="sound_profile_picker_dialog_change">Change to</string>
 
 
-    <string name="event_message_to">Mensage to </string>
+    <string name="event_message_to">Message to </string>
 
 
     <string name="default_location">Default</string>
