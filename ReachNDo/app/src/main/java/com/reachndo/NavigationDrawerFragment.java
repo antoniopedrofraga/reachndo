@@ -38,10 +38,12 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.service.BluetoothEvent;
 import com.service.Event;
 import com.service.EventType;
 import com.service.Location;
 import com.service.MessageEvent;
+import com.service.MobileDataEvent;
 import com.service.NotificationEvent;
 import com.service.SaveAndLoad;
 import com.service.Singleton;
@@ -343,7 +345,9 @@ public class NavigationDrawerFragment extends Fragment {
                 getResources().getString(R.string.event_picker_dialog_remind),
                 getResources().getString(R.string.event_picker_dialog_sms),
                 getResources().getString(R.string.event_picker_dialog_sound_profile),
-                getResources().getString(R.string.event_picker_dialog_wifi)
+                getResources().getString(R.string.event_picker_dialog_wifi),
+                getResources().getString(R.string.event_picker_dialog_bluetooth),
+                getResources().getString(R.string.event_picker_dialog_mobile_data)
         };
 
         new MaterialDialog.Builder(getContext())
@@ -364,6 +368,12 @@ public class NavigationDrawerFragment extends Fragment {
                                 break;
                             case 3:
                                 showWiFiProfilePicker();
+                                break;
+                            case 4:
+                                showBluetoothProfilePicker();
+                                break;
+                            case 5:
+                                showMobileDataProfilePicker();
                                 break;
                             default:
                                 return false;
@@ -410,6 +420,110 @@ public class NavigationDrawerFragment extends Fragment {
                             temp.get(mCurrentSelectedPosition).getEventsIn().add(wifiEvent);
                         } else {
                             temp.get(mCurrentSelectedPosition).getEventsOut().add(wifiEvent);
+                        }
+                        Singleton.setLocations(temp);
+                        Singleton.setLocations(temp);
+
+                        try {
+                            SaveAndLoad.saveInfo(getContext());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        MainMenu main =  MainMenu.getInstance();
+                        main.notifyListView(mCurrentSelectedPosition);
+                        return true;
+                    }
+                })
+                .negativeText(android.R.string.cancel)
+                .show();
+    }
+
+    private void showBluetoothProfilePicker() {
+        if(existsProfileEvent(EventType.BLUETOOTH)) {
+            Toast.makeText(getContext(), R.string.bluetooth_picker_dialog_warning ,Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        String type [] = {
+                getResources().getString(R.string.bluetooth_picker_dialog_on),
+                getResources().getString(R.string.bluetooth_picker_dialog_off)
+        };
+
+        new MaterialDialog.Builder(getContext())
+                .title(R.string.bluetooth_picker_dialog_title)
+                .items(type)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        BluetoothEvent bluetoothEvent = new BluetoothEvent(which);
+                        bluetoothEvent.setName(getResources().getString(R.string.bluetooth_picker_dialog_title));
+                        ArrayList<Location> temp = Singleton.getLocations();
+                        switch (which) {
+                            case BluetoothEvent.ON:
+                                bluetoothEvent.setDescription(getResources().getString(R.string.bluetooth_picker_dialog_on));
+                                break;
+                            case BluetoothEvent.OFF:
+                                bluetoothEvent.setDescription(getResources().getString(R.string.bluetooth_picker_dialog_off));
+                                break;
+                        }
+
+                        if (when == IN) {
+                            temp.get(mCurrentSelectedPosition).getEventsIn().add(bluetoothEvent);
+                        } else {
+                            temp.get(mCurrentSelectedPosition).getEventsOut().add(bluetoothEvent);
+                        }
+                        Singleton.setLocations(temp);
+                        Singleton.setLocations(temp);
+
+                        try {
+                            SaveAndLoad.saveInfo(getContext());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        MainMenu main =  MainMenu.getInstance();
+                        main.notifyListView(mCurrentSelectedPosition);
+                        return true;
+                    }
+                })
+                .negativeText(android.R.string.cancel)
+                .show();
+    }
+
+    private void showMobileDataProfilePicker() {
+        if(existsProfileEvent(EventType.MOBILE_DATA)) {
+            Toast.makeText(getContext(), R.string.mobile_data_picker_dialog_warning ,Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        String type [] = {
+                getResources().getString(R.string.mobile_data_picker_dialog_on),
+                getResources().getString(R.string.mobile_data_picker_dialog_off)
+        };
+
+        new MaterialDialog.Builder(getContext())
+                .title(R.string.mobile_data_picker_dialog_title)
+                .items(type)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        MobileDataEvent mobileDataEvent = new MobileDataEvent(which);
+                        mobileDataEvent.setName(getResources().getString(R.string.mobile_data_picker_dialog_title));
+                        ArrayList<Location> temp = Singleton.getLocations();
+                        switch (which) {
+                            case MobileDataEvent.ON:
+                                mobileDataEvent.setDescription(getResources().getString(R.string.mobile_data_picker_dialog_on));
+                                break;
+                            case MobileDataEvent.OFF:
+                                mobileDataEvent.setDescription(getResources().getString(R.string.mobile_data_picker_dialog_off));
+                                break;
+                        }
+
+                        if (when == IN) {
+                            temp.get(mCurrentSelectedPosition).getEventsIn().add(mobileDataEvent);
+                        } else {
+                            temp.get(mCurrentSelectedPosition).getEventsOut().add(mobileDataEvent);
                         }
                         Singleton.setLocations(temp);
                         Singleton.setLocations(temp);
