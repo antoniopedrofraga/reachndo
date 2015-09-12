@@ -28,7 +28,7 @@ public class NotificationEvent extends Event implements Serializable {
         builder.setAutoCancel(true);
         builder.setContentTitle(getName());
         builder.setContentText(getDescription());
-        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setSmallIcon(R.drawable.plus_icon);
 
         Log.d("Notification Service", "Launches Notification");
 

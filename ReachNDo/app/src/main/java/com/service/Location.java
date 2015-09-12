@@ -12,6 +12,9 @@ public class Location extends LocationCoords implements Serializable {
     private double radius;
     private ArrayList<Event> eventsIn;
     private ArrayList<Event> eventsOut;
+
+
+    private boolean checked = false;
     public boolean inside;
 
     public Location(double a, double b, String n, double r) {
@@ -100,4 +103,13 @@ public class Location extends LocationCoords implements Serializable {
         eventsIn.remove(event);
         eventsOut.remove(event);
     }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
 }

@@ -9,6 +9,12 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="none_locations">No locations</string>
+    <string name="sub_none_locations">Hit the + button to set up a location</string>
+
+    <string name="none_events">No events at this location</string>
+    <string name="sub_none_events">Hit the \"Add event\" button</string>
+
     <string name="action_add_event">Add event</string>
 
     <string name="in_out_picker_dialog_title">When to do it?</string>
@@ -52,6 +58,12 @@
 
 
     <string name="event_message_to">Mensage to </string>
+
+    <string name="no_locations_saved">You can\'t add an event because there is no saved locations</string>
+    <string name="no_locations">No locations</string>
+
+    <string name="remove_warning_title">Remove</string>
+    <string name="remove_warning_content">Are you sure you want remove this location?</string>
 
 
     <string name="default_location">Default</string>

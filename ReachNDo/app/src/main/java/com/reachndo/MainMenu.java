@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -61,6 +62,14 @@ public class MainMenu extends AppCompatActivity
     private static ListView listView;
     private static EventListAdapter listAdapter;
     private static MaterialMenuIconCompat materialMenu;
+
+    private static FloatingActionButton mFab;
+
+    public static TextView warningLocMainText;
+    public static TextView warningLocSubText;
+
+    public static TextView warningEvnMainText;
+    public static TextView warningEvnSubText;
 
     private static AdapterView.OnItemClickListener clickListener;
 
@@ -139,7 +148,10 @@ public class MainMenu extends AppCompatActivity
         if(index > 0) {
             mTitle = Singleton.getLocations().get(index - 1).getName();
             notifyListView(index - 1);
-        }else mTitle = "No Locations";
+        }else {
+            mTitle = getResources().getString(R.string.no_locations);
+            notifyListView(-1);
+        }
     }
 
     public void updateActionBar() {
@@ -189,6 +201,26 @@ public class MainMenu extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    public void removeLocation(int position) {
+        Singleton.getLocations().remove(position);
+
+        NavigationDrawerFragment nd = NavigationDrawerFragment.getInstance();
+        if(position == nd.getCurrentSelection()){
+            if(Singleton.getLocations().size() != 0){
+                nd.selectItem(0);
+            }else{
+                nd.selectItem(-1);
+            }
+        }else if(position < nd.getCurrentSelection()){
+            nd.selectItem(nd.getCurrentSelection() - 1);
+        }
+        try {
+            SaveAndLoad.saveInfo(MainMenu.this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static class PlaceholderFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
@@ -220,12 +252,27 @@ public class MainMenu extends AppCompatActivity
             listView = (ListView) rootView.findViewById(R.id.list);
             listView.setAdapter(listAdapter);
             listView.setOnItemClickListener(clickListener);
+            warningLocMainText = (TextView) rootView.findViewById(R.id.txtLocView);
+            warningLocSubText = (TextView) rootView.findViewById(R.id.subTxtLocView);
+            warningEvnMainText = (TextView) rootView.findViewById(R.id.txtEvnView);
+            warningEvnSubText = (TextView) rootView.findViewById(R.id.subTxtEvnView);
+            NavigationDrawerFragment nd = NavigationDrawerFragment.getInstance();
+            if(Singleton.getLocations().size() == 0){
+                warningLocMainText.setVisibility(View.VISIBLE);
+                warningLocSubText.setVisibility(View.VISIBLE);
+            }else if(Singleton.getLocations().get(nd.getCurrentSelection()).getEventsIn().size() == 0 &&
+                    Singleton.getLocations().get(nd.getCurrentSelection()).getEventsOut().size() == 0 ){
+                listAdapter.clear();
+                listAdapter.notifyDataSetChanged();
+                warningEvnMainText.setVisibility(View.VISIBLE);
+                warningEvnSubText.setVisibility(View.VISIBLE);
+            }
             return rootView;
         }
 
 
         public void showFloatingActionButton(View v) {
-            FloatingActionButton mFab = (FloatingActionButton) v.findViewById(R.id.fab);
+            mFab = (FloatingActionButton) v.findViewById(R.id.fab);
             if(mFab != null) {
                 mFab.setDrawable(getResources().getDrawable(R.drawable.ic_plusicon));
                 mFab.setOnClickListener(new View.OnClickListener() {
@@ -238,13 +285,14 @@ public class MainMenu extends AppCompatActivity
                             Intent intent = intentBuilder.build(getContext());
                             startActivityForResult(intent, REQUEST_PLACE_PICKER);
 
-                        } catch ( GooglePlayServicesRepairableException e ) {
-                            Log.d( "PlacesAPI Demo", "GooglePlayServicesRepairableException thrown" );
-                        } catch ( GooglePlayServicesNotAvailableException e ) {
-                            Log.d( "PlacesAPI Demo", "GooglePlayServicesNotAvailableException thrown" );
+                        } catch (GooglePlayServicesRepairableException e) {
+                            Log.d("PlacesAPI Demo", "GooglePlayServicesRepairableException thrown");
+                        } catch (GooglePlayServicesNotAvailableException e) {
+                            Log.d("PlacesAPI Demo", "GooglePlayServicesNotAvailableException thrown");
                         }
                     }
                 });
+                mFab.listenTo(listView);
             }
             else
                 Log.d("Debug", "Error in mFab (NULL)");
@@ -317,7 +365,11 @@ public class MainMenu extends AppCompatActivity
                     }
 
                     Log.d("Debug Location added", Singleton.getLocations().size() + "");
-
+                    NavigationDrawerFragment nd = NavigationDrawerFragment.getInstance();
+                    nd.setLocationAdapter((ArrayList<Location>)Singleton.getLocations());
+                    nd.selectItem(Singleton.getLocations().size() - 1);
+                    MainMenu menu = MainMenu.getInstance();
+                    menu.updateTitle(name.getText().toString());
                     locationPicker.dismiss();
                 }
             });
@@ -346,6 +398,11 @@ public class MainMenu extends AppCompatActivity
         }
     }
 
+    public void updateTitle(String s) {
+        mTitle = s;
+        updateActionBar();
+    }
+
     private void makeActionOverflowMenuShown() {
         //devices with hardware menu button (e.g. Samsung Note) don't show action overflow menu
         try {
@@ -362,6 +419,20 @@ public class MainMenu extends AppCompatActivity
 
     public void notifyListView(final
                                int index){
+
+        if(index == -1){
+            listAdapter.clear();
+            listAdapter.notifyDataSetChanged();
+            return;
+        }
+
+        if(warningEvnMainText != null && warningEvnSubText != null &&
+                (Singleton.getLocations().get(index).getEventsIn().size() != 0 ||
+                        Singleton.getLocations().get(index).getEventsOut().size() != 0)){
+            warningEvnMainText.setVisibility(View.INVISIBLE);
+            warningEvnSubText.setVisibility(View.INVISIBLE);
+        }
+
         listAdapter.clear();
         if(Singleton.getLocations().get(index).getEventsIn().size() != 0) {
             listAdapter.add(new Event(getResources().getString(R.string.in)));
@@ -404,7 +475,6 @@ public class MainMenu extends AppCompatActivity
         final MaterialDialog infoDialog = new MaterialDialog.Builder(MainMenu.this)
                 .title(title)
                 .content(content)
-                .positiveText(R.string.action_edit)
                 .neutralText(android.R.string.ok)
                 .negativeText(R.string.action_delete)
                 .show();
@@ -413,7 +483,16 @@ public class MainMenu extends AppCompatActivity
         negative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Singleton.getLocations().get(index).removeEvent(event);
+
+                if(warningEvnMainText != null && warningEvnSubText != null &&
+                        (Singleton.getLocations().get(index).getEventsIn().size() == 0 &&
+                                Singleton.getLocations().get(index).getEventsOut().size() == 0)){
+                    warningEvnMainText.setVisibility(View.VISIBLE);
+                    warningEvnSubText.setVisibility(View.VISIBLE);
+                }
+
                 try {
                     SaveAndLoad.saveInfo(MainMenu.this);
                 } catch (IOException e) {

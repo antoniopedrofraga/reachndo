@@ -13,11 +13,14 @@ public class SoundProfileEvent extends Event implements Serializable {
     public static final int VIBRATE = 1;
     public static final int NORMAL = 2;
 
-    int type;
+    private int profile;
 
     public SoundProfileEvent(int type){
         super(EventType.SOUND_PROFILE);
-        this.type = type;
+        this.profile = type;
     }
 
+    public int getProfile(){
+        return profile;
+    }
 }
