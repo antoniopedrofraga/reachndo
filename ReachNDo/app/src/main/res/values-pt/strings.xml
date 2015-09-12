@@ -16,7 +16,7 @@
     <string name="in_out_picker_dialog_out">À saída desta localização</string>
 
     <string name="location_picker_warning_title">Aviso</string>
-    <string name="location_picker_warning_name_content">O campo do nome está vazio, por favor preencha-o!</string>
+    <string name="location_picker_warning_name_content">O campo de nome está vazio, por favor preencha-o!</string>
     <string name="location_picker_warning_radius_content">O campo do raio está vazio, por favor preencha-o!</string>
 
     <string name="location_picker_title">Nova Localização</string>
@@ -24,9 +24,9 @@
     <string name="event_picker_dialog_remind">Lembrete</string>
     <string name="event_picker_dialog_sms">Enviar mensagem</string>
     <string name="event_picker_dialog_sound_profile">Alterar perfil de som</string>
-    <string name="event_picker_dialog_wifi">Alterar perfil de WiFi</string>
-    <string name="event_picker_dialog_bluetooth">Alterar perfil de Bluetooth</string>
-    <string name="event_picker_dialog_mobile_data">Alterar perfil de Dados Móveis</string>
+    <string name="event_picker_dialog_wifi">Perfis de WiFi</string>
+    <string name="event_picker_dialog_bluetooth">Perfis de Bluetooth</string>
+    <string name="event_picker_dialog_mobile_data">Perfis de Dados Móveis</string>
     <string name="event_picker_dialog_title">Escolha um evento</string>
 
     <string name="reminder_dialog_title">Lembrete</string>
@@ -36,17 +36,17 @@
     <string name="wifi_picker_dialog_title">WiFi</string>
     <string name="wifi_picker_dialog_on">Ligar</string>
     <string name="wifi_picker_dialog_off">Desligar</string>
-    <string name="wifi_picker_dialog_warning">Não podes definir mais eventos para mudar o perfil do WiFi nesta localização</string>
+    <string name="wifi_picker_dialog_warning">Não podes definir mais que 1 evento para mudar de perfil de WiFi nesta localização</string>
 
     <string name="bluetooth_picker_dialog_title">Bluetooth</string>
     <string name="bluetooth_picker_dialog_on">Ligar</string>
     <string name="bluetooth_picker_dialog_off">Desligar</string>
-    <string name="bluetooth_picker_dialog_warning">Não podes definir mais eventos para mudar o perfil do Bluetooth nesta localização</string>
+    <string name="bluetooth_picker_dialog_warning">Não podes definir mais que 1 evento para mudar de perfil de Bluetooth nesta localização</string>
 
     <string name="mobile_data_picker_dialog_title">Dados Móveis</string>
     <string name="mobile_data_picker_dialog_on">Ligar</string>
     <string name="mobile_data_picker_dialog_off">Desligar</string>
-    <string name="mobile_data_picker_dialog_warning">Não podes definir mais eventos para mudar o perfil dos Dados Móveis nesta localização</string>
+    <string name="mobile_data_picker_dialog_warning">Não podes definir mais que 1 evento para mudar de perfil de Dados Móveis nesta localização</string>
 
     <string name="sms_dialog_title">Mensagem</string>
     <string name="sms_dialog_name_hint">Nome de contacto ou número</string>
