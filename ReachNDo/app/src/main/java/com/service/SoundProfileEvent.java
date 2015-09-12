@@ -16,30 +16,30 @@ public class SoundProfileEvent extends Event implements Serializable {
     public static final int VIBRATE = 1;
     public static final int NORMAL = 2;
 
-    int type;
+    private int profile;
 
     public SoundProfileEvent(int type){
         super(EventType.SOUND_PROFILE);
-        this.type = type;
+        this.profile = type;
     }
 
     public void change(Context cont)
     {
-        if (type == 1) {
+        if (profile == 1) {
             AudioManager audioManager = (AudioManager)cont.getSystemService(Context.AUDIO_SERVICE);
             audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
 
             NotificationEvent notif = new NotificationEvent("Sound Profile", "Vibrate mode ON");
             notif.throwNotification(cont);
         }
-        else if (type == 0) {
+        else if (profile == 0) {
         AudioManager audioManager = (AudioManager)cont.getSystemService(Context.AUDIO_SERVICE);
         audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
 
         NotificationEvent notif = new NotificationEvent("Sound Profile", "Silent mode ON");
         notif.throwNotification(cont);
         }
-        else if (type == 2) {
+        else if (profile == 2) {
         AudioManager audioManager = (AudioManager)cont.getSystemService(Context.AUDIO_SERVICE);
         audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
 
@@ -48,4 +48,7 @@ public class SoundProfileEvent extends Event implements Serializable {
         }
     }
 
+    public int getProfile(){
+        return profile;
+    }
 }

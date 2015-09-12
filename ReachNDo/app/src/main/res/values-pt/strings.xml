@@ -11,6 +11,12 @@
     <string name="in">À entrada</string>
     <string name="out">À saída</string>
 
+    <string name="none_locations">Não há localizações gravadas</string>
+    <string name="sub_none_locations">Clica no botão + para adicionar algumas</string>
+
+    <string name="none_events">Sem eventos nesta localização</string>
+    <string name="sub_none_events">Clica no botão \"Adicionar evento\"</string>
+
     <string name="in_out_picker_dialog_title">Quando realizar?</string>
     <string name="in_out_picker_dialog_in">À entrada desta localização</string>
     <string name="in_out_picker_dialog_out">À saída desta localização</string>
@@ -70,6 +76,12 @@
 
     <string name="sound_profile_picker_dialog_change">Alterar para</string>
 
+    <string name="no_locations_saved">Não pode adicionar eventos porque não há localizações gravadas</string>
+
+    <string name="no_locations">Sem localizações</string>
+
+    <string name="remove_warning_title">Remover</string>
+    <string name="remove_warning_content">Tem a certeza que pretende remover esta localização?</string>
 
 
     <string name="event_message_to">Mensagem para </string>

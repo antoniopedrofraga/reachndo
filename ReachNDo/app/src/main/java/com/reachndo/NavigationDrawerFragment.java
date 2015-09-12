@@ -97,12 +97,22 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
+    private static NavigationDrawerFragment instance;
+
+    private LocationListAdapter locationAdapter;
+
     public NavigationDrawerFragment() {
+    }
+
+    public static NavigationDrawerFragment getInstance(){
+        return instance;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        instance = this;
 
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
         // drawer. See PREF_USER_LEARNED_DRAWER for details.
@@ -110,14 +120,16 @@ public class NavigationDrawerFragment extends Fragment {
         mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
 
 
+        if(Singleton.getLocations().size() > 0) {
+            if (savedInstanceState != null) {
+                mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
+                mFromSavedInstanceState = true;
+                selectItem(mCurrentSelectedPosition);
+            }
 
-        if (savedInstanceState != null) {
-            mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
-            mFromSavedInstanceState = true;
+        }else{
+            selectItem(-1);
         }
-
-        // Select either the default item (0) or the last selected item.
-        selectItem(mCurrentSelectedPosition);
     }
 
     @Override
@@ -132,27 +144,33 @@ public class NavigationDrawerFragment extends Fragment {
                              Bundle savedInstanceState) {
         mDrawerListView = (ListView) inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
+        mDrawerListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        mDrawerListView.setClickable(true);
+
+        ArrayList<Location> locationList = Singleton.getLocations();
+        locationAdapter =
+                new LocationListAdapter(getContext(), locationList);
+
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectItem(position);
+
             }
         });
 
-        ArrayList<Location> l = Singleton.getLocations();
-        ArrayList<String> s = new ArrayList<>();
+        mDrawerListView.setAdapter(locationAdapter);
+            if(Singleton.getLocations().size() > 0) {
+                selectItem(mCurrentSelectedPosition);
+            }
 
-        for(int i=0; i < l.size(); i++){
-            s.add(l.get(i).getName());
-        }
-
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(
-                getActionBar().getThemedContext(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                s));
-        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
+    }
+
+    private void clearChecks(LocationListAdapter locationAdapter) {
+        for(Location l : locationAdapter.getLocationArrayList()){
+            l.setChecked(false);
+        }
     }
 
     public boolean isDrawerOpen() {
@@ -204,18 +222,12 @@ public class NavigationDrawerFragment extends Fragment {
                     return;
                 }
 
-                ArrayList<Location> l = Singleton.getLocations();
-                ArrayList<String> s = new ArrayList<>();
+                ArrayList<Location> locationList = Singleton.getLocations();
 
-                for(int i=0; i < l.size(); i++){
-                    s.add(l.get(i).getName());
-                }
+                locationAdapter =
+                new LocationListAdapter(getContext(), locationList);
 
-                mDrawerListView.setAdapter(new ArrayAdapter<String>(
-                        getActionBar().getThemedContext(),
-                        android.R.layout.simple_list_item_activated_1,
-                        android.R.id.text1,
-                        s));
+                mDrawerListView.setAdapter(locationAdapter);
 
                 if (!mUserLearnedDrawer) {
                     // The user manually opened the drawer; store this flag to prevent auto-showing
@@ -248,11 +260,13 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
 
-    private void selectItem(int position) {
-        mCurrentSelectedPosition = position;
-        if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, true);
+    public void selectItem(int position) {
+        if(locationAdapter != null) {
+            clearChecks(locationAdapter);
+            if(locationAdapter.getLocationArrayList().size() > 0)
+                locationAdapter.getItem(position).setChecked(true);
         }
+        mCurrentSelectedPosition = position;
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
@@ -310,6 +324,10 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         if (item.getItemId() == R.id.action_example) {
+            if(Singleton.getLocations().size() == 0){
+                Toast.makeText(getContext(), R.string.no_locations_saved, Toast.LENGTH_SHORT).show();
+                return true;
+            }
             showInOutPicker();
             return true;
         }
@@ -774,9 +792,9 @@ public class NavigationDrawerFragment extends Fragment {
                     ArrayList<Location> temp = Singleton.getLocations();
                     NotificationEvent notificationEvent = new NotificationEvent(getResources().getString(R.string.reminder_dialog_title) + "",
                             txtView.getText().toString());
-                    if(when == IN) {
+                    if (when == IN) {
                         temp.get(mCurrentSelectedPosition).getEventsIn().add(notificationEvent);
-                    }else{
+                    } else {
                         temp.get(mCurrentSelectedPosition).getEventsOut().add(notificationEvent);
                     }
                     Singleton.setLocations(temp);
@@ -810,6 +828,10 @@ public class NavigationDrawerFragment extends Fragment {
 
     private ActionBar getActionBar() {
         return ((AppCompatActivity) getActivity()).getSupportActionBar();
+    }
+
+    public void setLocationAdapter(ArrayList<Location> locations) {
+        this.locationAdapter.setLocations(locations);
     }
 
     public static interface NavigationDrawerCallbacks {
@@ -864,5 +886,9 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
 
+    }
+
+    public int getCurrentSelection(){
+        return mCurrentSelectedPosition;
     }
 }

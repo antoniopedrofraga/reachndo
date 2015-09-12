@@ -34,6 +34,18 @@ public class Event implements Serializable {
                 return R.drawable.sms;
             case NOTIFICATION:
                 return R.drawable.notif;
+            case WIFI:
+                if(((WiFiEvent)this).getStatus() == WiFiEvent.OFF)
+                    return R.drawable.wifi_off;
+                else
+                    return R.drawable.wifi_on;
+            case SOUND_PROFILE:
+                if(((SoundProfileEvent)this).getProfile() == SoundProfileEvent.NORMAL)
+                    return R.drawable.normal;
+                else if(((SoundProfileEvent)this).getProfile() == SoundProfileEvent.SILENT)
+                    return R.drawable.silent;
+                else
+                    return R.drawable.vibrate;
             default:
                 return -1;
         }

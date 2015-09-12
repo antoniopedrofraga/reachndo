@@ -18,6 +18,54 @@
         android:layout_width="match_parent">
     </ListView>
 
+
+    <TextView
+        android:id="@+id/txtLocView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:translationY="-20dp"
+        android:textSize="20dp"
+        android:textColor="@color/SlateGray"
+        android:visibility="invisible"
+        android:text="@string/none_locations" />
+
+    <TextView
+        android:id="@+id/subTxtLocView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtLocView"
+        android:layout_centerHorizontal="true"
+        android:textSize="12dp"
+        android:translationY="-20dp"
+        android:textColor="@color/LightSlateGray"
+        android:visibility="invisible"
+        android:text="@string/sub_none_locations" />
+
+
+    <TextView
+        android:id="@+id/txtEvnView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:translationY="-20dp"
+        android:textSize="20dp"
+        android:textColor="@color/SlateGray"
+        android:visibility="invisible"
+        android:text="@string/none_events" />
+
+    <TextView
+        android:id="@+id/subTxtEvnView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtEvnView"
+        android:layout_centerHorizontal="true"
+        android:textSize="12dp"
+        android:translationY="-20dp"
+        android:textColor="@color/LightSlateGray"
+        android:visibility="invisible"
+        android:text="@string/sub_none_events" />
+
     <com.faizmalkani.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="72dp"
