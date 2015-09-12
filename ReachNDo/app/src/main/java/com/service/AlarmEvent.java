@@ -23,11 +23,9 @@ import java.io.Serializable;
  */
 public class AlarmEvent extends Event implements Serializable {
 
-    private String description;
-
-    public AlarmEvent(Context cont) throws InterruptedException {
+    public AlarmEvent(Context cont, String description) {
         super(EventType.ALARM);
-
+        this.description = description;
         NotificationEvent notif = new NotificationEvent("Alarm", description);
         notif.throwNotification(cont);
 
@@ -39,10 +37,6 @@ public class AlarmEvent extends Event implements Serializable {
         cont.startActivity(dialogIntent);
 
         Log.d("Alarm Event", "Alarm set");
-    }
-
-    public void setDescription(String s){
-        description = s;
     }
 
 }

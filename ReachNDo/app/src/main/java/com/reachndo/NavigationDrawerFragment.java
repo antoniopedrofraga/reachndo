@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.service.AlarmEvent;
 import com.service.BluetoothEvent;
 import com.service.Event;
 import com.service.EventType;
@@ -143,7 +144,7 @@ public class NavigationDrawerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mDrawerListView = (ListView) inflater.inflate(
-                R.layout.fragment_navigation_drawer, container, false);
+                (R.layout.fragment_navigation_drawer), container, false);
         mDrawerListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mDrawerListView.setClickable(true);
 
@@ -362,6 +363,7 @@ public class NavigationDrawerFragment extends Fragment {
         String type [] = {
                 getResources().getString(R.string.event_picker_dialog_remind),
                 getResources().getString(R.string.event_picker_dialog_sms),
+                getResources().getString(R.string.alarm_dialog_title),
                 getResources().getString(R.string.event_picker_dialog_sound_profile),
                 getResources().getString(R.string.event_picker_dialog_wifi),
                 getResources().getString(R.string.event_picker_dialog_bluetooth),
@@ -382,15 +384,18 @@ public class NavigationDrawerFragment extends Fragment {
                                 showSMSPicker();
                                 break;
                             case 2:
-                                showSoundProfilePicker();
+                                showAlarmPicker();
                                 break;
                             case 3:
-                                showWiFiProfilePicker();
+                                showSoundProfilePicker();
                                 break;
                             case 4:
-                                showBluetoothProfilePicker();
+                                showWiFiProfilePicker();
                                 break;
                             case 5:
+                                showBluetoothProfilePicker();
+                                break;
+                            case 6:
                                 showMobileDataProfilePicker();
                                 break;
                             default:
@@ -403,6 +408,58 @@ public class NavigationDrawerFragment extends Fragment {
                 })
                 .negativeText(android.R.string.cancel)
                 .show();
+    }
+
+    private void showAlarmPicker() {
+        final MaterialDialog alarmPicker = new MaterialDialog.Builder(getContext())
+                .title(R.string.alarm_dialog_title)
+                .customView(R.layout.alarm_layout, true)
+                .negativeText(android.R.string.cancel)
+                .positiveText(android.R.string.ok)
+                .autoDismiss(false)
+                .build();
+
+        alarmPicker.show();
+
+        View negative = alarmPicker.getActionButton(DialogAction.NEGATIVE);
+        negative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alarmPicker.dismiss();
+            }
+        });
+
+        View positive = alarmPicker.getActionButton(DialogAction.POSITIVE);
+        positive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextView txtView = ((TextView) alarmPicker.getView().findViewById(R.id.alarmTxt));
+                if (txtView.getText().length() <= 0 || txtView.getText() == null) {
+                    Toast.makeText(getContext(), R.string.alarm_dialog_warning, Toast.LENGTH_SHORT).show();
+                } else {
+                    ArrayList<Location> temp = Singleton.getLocations();
+                    AlarmEvent alarmEvent = new AlarmEvent(getContext() , txtView.getText().toString());
+                    alarmEvent.setName(getResources().getString(R.string.alarm_dialog_title));
+
+                    if (when == IN) {
+                        temp.get(mCurrentSelectedPosition).getEventsIn().add(alarmEvent);
+                    } else {
+                        temp.get(mCurrentSelectedPosition).getEventsOut().add(alarmEvent);
+                    }
+                    Singleton.setLocations(temp);
+
+                    try {
+                        SaveAndLoad.saveInfo(getContext());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    MainMenu menu = MainMenu.getInstance();
+                    menu.notifyListView(mCurrentSelectedPosition);
+                    alarmPicker.dismiss();
+                }
+            }
+        });
     }
 
     private void showWiFiProfilePicker() {

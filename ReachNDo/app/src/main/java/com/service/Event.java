@@ -46,6 +46,18 @@ public class Event implements Serializable {
                     return R.drawable.silent;
                 else
                     return R.drawable.vibrate;
+            case BLUETOOTH:
+                if(((BluetoothEvent)this).getStatus() == BluetoothEvent.ON)
+                    return R.drawable.bluetooth;
+                else
+                    return R.drawable.bluetooth_off;
+            case MOBILE_DATA:
+                if(((MobileDataEvent)this).getStatus() == MobileDataEvent.ON)
+                    return R.drawable.mobile_data;
+                else
+                    return R.drawable.mobile_data_off;
+            case ALARM:
+                return R.drawable.alarm;
             default:
                 return -1;
         }
