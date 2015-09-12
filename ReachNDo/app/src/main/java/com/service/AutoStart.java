@@ -3,8 +3,6 @@ package com.service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
 
 /**
  * Created by Joao Nogueira on 11/09/2015.

@@ -3,15 +3,20 @@
 
     <PreferenceCategory
         android:summary="Section2"
-        android:title="Section2" >
+        android:title="Options" >
     <CheckBoxPreference
+        android:id="@id/checkBox1"
         android:key="eventControl"
-        android:summary="Turn off the events"
-        android:title="Disable events" />
-        <CheckBoxPreference
-            android:key="highPrecision"
-            android:summary="Toggle better precision at the cost of more battery consumption"
-            android:title="High Precision" />
+        android:summary="Turn on the events"
+        android:title="Active events" />
+
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="Precision Information">
+    <Preference android:title="GPS"
+        android:summary="To improve your phone's location capabilities, please turn ON the GPS Provider manually."/>
+        <Preference android:title="WARNING"
+            android:summary="Turning ON the GPS provider may decrease the battery's lifespan significantly."/>
+    </PreferenceCategory>
 </PreferenceScreen>

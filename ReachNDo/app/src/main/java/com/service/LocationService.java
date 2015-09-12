@@ -23,11 +23,20 @@ public class LocationService extends Service {
 
     public final static double EARTH_RADIUS_KM = 6371;
 
-    long minTime;
-    float minDistance;
+    static long minTime;
+    static float minDistance;
 
-    LocationManager lm;
-    LocationListener ll;
+    static LocationManager lm;
+    static LocationListener ll;
+    private static boolean eventControl;
+
+    public static void setEventControl(boolean eventControl) {
+        LocationService.eventControl = eventControl;
+    }
+
+    public static boolean isEventControl() {
+        return eventControl;
+    }
 
     @Nullable
     @Override
@@ -45,6 +54,7 @@ public class LocationService extends Service {
             e.printStackTrace();
         }
 
+        eventControl = true;
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         Log.d("Service Debug", "Checkpoint on creation");
@@ -92,7 +102,8 @@ public class LocationService extends Service {
                 &&
                !loc.getName().equals(cont.getResources().getString(R.string.default_location)))
         {
-            loc.runInEvents(cont);
+            if (eventControl)
+                loc.runInEvents(cont);
             loc.inside = true;
             return true;
         }
@@ -100,7 +111,8 @@ public class LocationService extends Service {
                 !loc.getName().equals(cont.getResources().getString(R.string.default_location)) &&
                 loc.isInside())
         {
-            loc.runOutEvents(cont);
+            if (eventControl)
+                loc.runOutEvents(cont);
             loc.inside = false;
             return false;
         }
@@ -140,4 +152,11 @@ public class LocationService extends Service {
     }
 
 
+    public static long getMinTime() {
+        return minTime;
+    }
+
+    public static float getMinDistance() {
+        return minDistance;
+    }
 }
