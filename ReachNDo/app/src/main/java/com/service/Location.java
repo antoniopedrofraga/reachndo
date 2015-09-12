@@ -75,25 +75,22 @@ public class Location extends LocationCoords implements Serializable {
 
     public void runEvents(Context cont, ArrayList<Event> events)
     {
-        for (int i = 0; i < events.size(); i++)
-        {
-            if (events.get(i).getType() == EventType.NOTIFICATION)
-            {
+        for (int i = 0; i < events.size(); i++) {
+            if (events.get(i).getType() == EventType.NOTIFICATION) {
                 NotificationEvent notif = (NotificationEvent) events.get(i);
                 notif.throwNotification(cont);
-            }
-            else if (events.get(i).getType() == EventType.MESSAGE)
-            {
+            } else if (events.get(i).getType() == EventType.MESSAGE) {
                 MessageEvent sms = (MessageEvent) events.get(i);
                 sms.sendMessage();
-            }
-            else if (events.get(i).getType() == EventType.WIFI)
-            {
+            } else if (events.get(i).getType() == EventType.WIFI) {
                 WiFiEvent ev = (WiFiEvent) events.get(i);
                 if (ev.getStatus() == 0)
                     ev.turnOn(cont);
                 else
                     ev.turnOff(cont);
+            } else if (events.get(i).getType() == EventType.SOUND_PROFILE) {
+                SoundProfileEvent ev = (SoundProfileEvent) events.get(i);
+                ev.change(cont);
             }
         }
     }
