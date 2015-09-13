@@ -32,14 +32,14 @@ import com.service.LocationService;
  * Created by Francisco on 11/09/2015.
  */
 
-public class SettingsActivity extends Activity {
+public class AboutUsActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Display the fragment as the main content.
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new SettingsFragment())
+                .replace(android.R.id.content, new AboutUsFragment())
                 .commit();
     }
 
@@ -48,32 +48,20 @@ public class SettingsActivity extends Activity {
         super.onPostCreate(savedInstanceState);
 
         LinearLayout root = (LinearLayout) findViewById(android.R.id.list).getParent().getParent().getParent();
-        Toolbar bar = (Toolbar) LayoutInflater.from(this).inflate(R.layout.settings_action_bar, root, false);
+        Toolbar bar = (Toolbar) LayoutInflater.from(this).inflate(R.layout.about, root, false);
         bar.setTitleTextColor(getResources().getColor(R.color.White));
         root.addView(bar, 0); // insert at top
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean("eventControl", LocationService.isEventControl());
-        editor.commit();
 
         bar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
-                LocationService.setEventControl(prefs.getBoolean("eventControl", false));
-
                 finish();
             }
         });
-
     }
 
     @Override
     public void onBackPressed() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
-        LocationService.setEventControl(prefs.getBoolean("eventControl", false));
-
         finish();
     }
 

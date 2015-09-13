@@ -188,6 +188,11 @@ public class MainMenu extends AppCompatActivity
             startActivity(intent);
             return true;
         }
+        else if (id == R.id.about_us) {
+            Intent intent = new Intent(MainMenu.this, AboutUsActivity.class);
+            startActivity(intent);
+            return true;
+        }
 
         if (id  == android.R.id.home) {
             if (mNavigationDrawerFragment.isDrawerOpen()) {

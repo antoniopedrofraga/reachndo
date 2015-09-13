@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Autores">
+        <Preference
+            android:summary="João Nogueira, Marta Lopes, Pedro Fraga, Francisco Rodrigues."
+            />
+        <Preference android:summary="Somos estudantes do Mestrado Integrado em Engenhari Informática e Computação na Faculdade de Engenharia da Universidade do Porto" />
+    </PreferenceCategory>
+</PreferenceScreen>
