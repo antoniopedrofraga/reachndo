@@ -26,17 +26,19 @@ public class AlarmEvent extends Event implements Serializable {
     public AlarmEvent(Context cont, String description) {
         super(EventType.ALARM);
         this.description = description;
-        NotificationEvent notif = new NotificationEvent("Alarm", description);
+        Log.d("Alarm Event", "Alarm set");
+    }
+
+
+    public void fireAlarm(Context cont){
+        NotificationEvent notif = new NotificationEvent(cont.getResources().getString(R.string.alarm_dialog_title), description);
         notif.throwNotification(cont);
 
         Intent dialogIntent = new Intent(cont, DialogAlarm.class);
         Bundle extrasBundle = new Bundle();
-        extrasBundle.putStringArray("info", new String[]{"Alarm", description});
+        extrasBundle.putStringArray("info", new String[]{cont.getResources().getString(R.string.alarm_dialog_title), description});
         dialogIntent.putExtras(extrasBundle);
         dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         cont.startActivity(dialogIntent);
-
-        Log.d("Alarm Event", "Alarm set");
     }
-
 }

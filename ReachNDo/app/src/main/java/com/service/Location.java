@@ -117,6 +117,9 @@ public class Location extends LocationCoords implements Serializable {
                     NotificationEvent notif = new NotificationEvent("Bluetooth", "Turned On");
                     notif.throwNotification(cont);
                 }
+            }else if (events.get(i).getType() == EventType.ALARM){
+                AlarmEvent alarmEvent = (AlarmEvent) events.get(i);
+                alarmEvent.fireAlarm(cont);
             }
         }
     }
