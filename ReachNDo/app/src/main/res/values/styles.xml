@@ -9,6 +9,8 @@
         <!--   theme UI controls like checkboxes and text fields -->
         <item name="colorAccent">@color/MaterialPurple</item>
 
+        <item name="colorControlNormal">@color/White</item>
+
         <!-- Customize your theme here. -->
     </style>
 
@@ -26,4 +28,10 @@
         <item name="android:background">#FF0000</item>
         <item name="android:textColorPrimary">#0000FF</item>
     </style>
+
+
+    <style name="SplashTheme.BrandedLaunch" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/branded_logo</item>
+    </style>
+
 </resources>

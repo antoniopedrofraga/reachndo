@@ -10,6 +10,8 @@
         <!--   theme UI controls like checkboxes and text fields -->
         <item name="colorAccent">@color/MaterialPurple</item>
 
+        <item name="colorControlNormal">@color/White</item>
+
     </style>
 
 </resources>

@@ -2,21 +2,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".MainMenu$PlaceholderFragment"
-    >
+    tools:context=".states.MainMenu$PlaceholderFragment"
+    android:gravity="top">
 
 
 
     <ListView
         android:id="@+id/list"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent">
-    </ListView>
+        android:layout_width="match_parent" />
+
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/faMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:menu_colorNormal="@color/MaterialPurple"
+        app:menu_colorPressed="@color/Purple"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fabEvents"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_event"
+            app:fab_size="mini"
+            app:fab_label="@string/action_add_event"
+            app:fab_colorNormal="@color/MaterialPurple"
+            app:fab_colorPressed="@color/Purple"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fabLocals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_plusicon"
+            app:fab_size="mini"
+            app:fab_label="@string/action_add_locations"
+            app:fab_colorNormal="@color/MaterialPurple"
+            app:fab_colorPressed="@color/Purple"/>
+
+    </com.github.clans.fab.FloatingActionMenu>
 
 
     <TextView
@@ -65,14 +98,5 @@
         android:textColor="@color/LightSlateGray"
         android:visibility="invisible"
         android:text="@string/sub_none_events" />
-
-    <com.faizmalkani.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:color="@color/MaterialPurple"
-        />
 
 </RelativeLayout>

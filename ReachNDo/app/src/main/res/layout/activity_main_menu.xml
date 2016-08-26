@@ -5,21 +5,21 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainMenu">
+    tools:context=".states.MainMenu">
 
     <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
     <FrameLayout android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/Silver"
+        android:background="@color/White"
         />
 
     <fragment android:id="@+id/navigation_drawer"
         android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:name="com.reachndo.NavigationDrawerFragment"
+        android:name="com.reachndo.states.fragments.NavigationDrawerFragment"
         tools:layout="@layout/fragment_navigation_drawer"
         />
 

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="action_add_event">Adicionar evento</string>
+    <string name="action_add_event">Novo evento</string>
+    <string name="action_add_locations">Novo local</string>
 
     <string name="sms_picker_contacts_warning">Adiciona contactos primeiro</string>
 
@@ -15,7 +16,7 @@
     <string name="sub_none_locations">Clica no botão + para adicionar algumas</string>
 
     <string name="none_events">Sem eventos nesta localização</string>
-    <string name="sub_none_events">Clica no botão \"Adicionar evento\"</string>
+    <string name="sub_none_events">Clica no botão + para adicionar alguns"</string>
 
     <string name="in_out_picker_dialog_title">Quando realizar?</string>
     <string name="in_out_picker_dialog_in">À entrada desta localização</string>
@@ -26,6 +27,7 @@
     <string name="location_picker_warning_radius_content">O campo do raio está vazio, por favor preencha-o!</string>
 
     <string name="location_picker_title">Nova Localização</string>
+
 
     <string name="event_picker_dialog_remind">Lembrete</string>
     <string name="event_picker_dialog_sms">Enviar mensagem</string>
@@ -90,6 +92,10 @@
 
     <string name="action_settings">Configurações</string>
     <string name="about_us">Sobre</string>
+
+    <string name="developers">Autores</string>
+    <string name="version">Versão</string>
+    <string name="app">Aplicação</string>
 
 
 </resources>

@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FloatingActionButton/FloatingActionButton.iml" filepath="$PROJECT_DIR$/FloatingActionButton/FloatingActionButton.iml" />
       <module fileurl="file://$PROJECT_DIR$/ReachNDo.iml" filepath="$PROJECT_DIR$/ReachNDo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/extras-abc/extras-abc.iml" filepath="$PROJECT_DIR$/extras-abc/extras-abc.iml" />

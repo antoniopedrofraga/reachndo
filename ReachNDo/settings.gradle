@@ -1,1 +1,1 @@
-include ':app', ':extras-toolbar', ':library', ':extras-abc', ':extras-abs', ':FloatingActionButton'
+include ':app', ':extras-toolbar', ':library', ':extras-abc', ':extras-abs'

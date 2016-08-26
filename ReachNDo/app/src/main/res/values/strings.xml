@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">ReachN\'Do</string>
 
+    <string name="in">In</string>
+    <string name="out">Out</string>
+
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>
 
@@ -15,11 +18,12 @@
     <string name="none_events">No events at this location</string>
     <string name="sub_none_events">Hit the \"Add event\" button</string>
 
-    <string name="action_add_event">Add event</string>
+    <string name="action_add_event">New event</string>
+    <string name="action_add_locations">New location</string>
 
     <string name="in_out_picker_dialog_title">When?</string>
-    <string name="in_out_picker_dialog_in">Entering the location</string>
-    <string name="in_out_picker_dialog_out">Exiting the location</string>
+    <string name="in_out_picker_dialog_in">Location entry</string>
+    <string name="in_out_picker_dialog_out">Location exit</string>
 
     <string name="location_picker_warning_title">Warning</string>
     <string name="location_picker_warning_name_content">The name field is empty, please complete it!</string>
@@ -90,5 +94,10 @@
 
     <string name="action_settings">Settings</string>
     <string name="about_us">About Us</string>
+
+    <string name="developers">Developers</string>
+
+    <string name="version">Version</string>
+    <string name="app">App</string>
 
 </resources>

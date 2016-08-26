@@ -8,5 +8,5 @@
     android:divider="@android:color/transparent"
     android:dividerHeight="0dp"
     android:background="@color/Silver"
-    tools:context=".NavigationDrawerFragment"
+    tools:context=".states.fragments.NavigationDrawerFragment"
     />

@@ -11,6 +11,13 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    applicationVariants.all { variant ->
+        variant.resValue "string", "versionName", variant.versionName
+    }
+    applicationVariants.all { variant ->
+        variant.resValue "string", "versionCode", variant.versionName
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -21,12 +28,11 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':FloatingActionButton')
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.balysv.materialmenu:material-menu-toolbar:1.5.4'
-    compile 'com.afollestad:material-dialogs:0.7.9.1'
+    compile 'com.afollestad.material-dialogs:core:0.9.0.1'
     compile 'com.android.support:support-v4:23.0.1'
     compile "com.splitwise:tokenautocomplete:2.0.1@aar"
     compile 'com.google.android.gms:play-services:7.5.0'
-    compile project(':FloatingActionButton')
+    compile 'com.github.clans:fab:1.6.4'
 }
