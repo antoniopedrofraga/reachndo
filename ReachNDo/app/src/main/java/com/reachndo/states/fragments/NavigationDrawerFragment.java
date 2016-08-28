@@ -1,8 +1,7 @@
 package com.reachndo.states.fragments;
 
-import android.database.Cursor;
+
 import android.graphics.Typeface;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -14,10 +13,8 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.TextWatcher;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,35 +23,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.reachndo.Contact;
-import com.reachndo.ContactsCompletionView;
 import com.reachndo.CustomTypefaceSpan;
 import com.reachndo.adapters.LocationListAdapter;
 import com.reachndo.R;
-import com.reachndo.states.MainMenu;
-import com.service.AlarmEvent;
-import com.service.BluetoothEvent;
-import com.service.Event;
-import com.service.EventType;
 import com.service.Location;
-import com.service.MessageEvent;
-import com.service.MobileDataEvent;
-import com.service.NotificationEvent;
-import com.service.SaveAndLoad;
 import com.service.Singleton;
-import com.service.SoundProfileEvent;
-import com.service.WiFiEvent;
-import com.tokenautocomplete.FilteredArrayAdapter;
-import com.tokenautocomplete.TokenCompleteTextView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**

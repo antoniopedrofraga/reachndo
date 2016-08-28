@@ -4,16 +4,16 @@
     <PreferenceCategory
         android:title="@string/developers">
         <Preference
-            android:summary="Pedro Fraga"
+            android:title="Pedro Fraga"
             />
         <Preference
-            android:summary="João Nogueira"
+            android:title="João Nogueira"
             />
         <Preference
-            android:summary="Marta Lopes"
+            android:title="Marta Lopes"
             />
         <Preference
-            android:summary="Francisco Rodrigues"
+            android:title="Francisco Rodrigues"
             />
         <Preference android:summary="Somos estudantes do Mestrado Integrado em Engenhari Informática e Computação na Faculdade de Engenharia da Universidade do Porto" />
     </PreferenceCategory>

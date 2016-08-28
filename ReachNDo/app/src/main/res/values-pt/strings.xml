@@ -50,6 +50,12 @@
     <string name="wifi_picker_dialog_off">Desligar</string>
     <string name="wifi_picker_dialog_warning">Não podes definir mais eventos para mudar o perfil do WiFi nesta localização</string>
 
+    <string name="wifi_on_dialog_title">Sem ligação à internet</string>
+    <string name="wifi_on_dialog_warning">Não podes adicionar uma localização sem ligação à internet, queres ligar o WiFi?</string>
+
+    <string name="location_on_dialog_title">Os serviços de localização estão desativados</string>
+    <string name="location_on_dialog_warning">Será mais fácil adicionar uma localização próxima se os serviços de localização estiverem activos, queres activá-los?</string>
+
     <string name="bluetooth_picker_dialog_title">Bluetooth</string>
     <string name="bluetooth_picker_dialog_on">Ligar</string>
     <string name="bluetooth_picker_dialog_off">Desligar</string>

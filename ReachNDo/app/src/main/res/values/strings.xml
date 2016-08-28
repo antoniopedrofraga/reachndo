@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">ReachN\'Do</string>
 
-    <string name="in">In</string>
-    <string name="out">Out</string>
+    <string name="in">Entry</string>
+    <string name="out">Exit</string>
 
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>
@@ -41,6 +41,12 @@
     <string name="wifi_picker_dialog_on">Turn on</string>
     <string name="wifi_picker_dialog_off">Turn off</string>
     <string name="wifi_picker_dialog_warning">You can\'t add another Wifi event at this location</string>
+
+    <string name="wifi_on_dialog_title">No internet connection</string>
+    <string name="wifi_on_dialog_warning">You can\'t add a location without an internet connection, do you want to turn on the WiFi?</string>
+
+    <string name="location_on_dialog_title">Location service is disabled</string>
+    <string name="location_on_dialog_warning">It will be easier to add a nearby location with the location service enabled, do you want to turn it on?</string>
 
     <string name="bluetooth_picker_dialog_title">Bluetooth</string>
     <string name="bluetooth_picker_dialog_on">Turn on</string>

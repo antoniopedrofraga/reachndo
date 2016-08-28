@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
@@ -50,6 +51,7 @@ import com.service.SoundProfileEvent;
 import com.service.WiFiEvent;
 import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
+import com.utilities.Utilities;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -67,7 +69,6 @@ public class PlaceholderFragment extends Fragment {
     private static final int OUT = 1;
 
 
-    private static final int REQUEST_PLACE_PICKER = 1;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 355;
 
     private static ListView listView;
@@ -137,11 +138,11 @@ public class PlaceholderFragment extends Fragment {
         warningEvnSubText = (TextView) rootView.findViewById(R.id.subTxtEvnView);
 
         NavigationDrawerFragment nd = NavigationDrawerFragment.getInstance();
-        if(Singleton.getLocations().size() == 0){
+        if (Singleton.getLocations().size() == 0) {
             warningLocMainText.setVisibility(View.VISIBLE);
             warningLocSubText.setVisibility(View.VISIBLE);
-        }else if(Singleton.getLocations().get(nd.getCurrentSelection()).getEventsIn().size() == 0 &&
-                Singleton.getLocations().get(nd.getCurrentSelection()).getEventsOut().size() == 0 ){
+        } else if (Singleton.getLocations().get(nd.getCurrentSelection()).getEventsIn().size() == 0 &&
+                Singleton.getLocations().get(nd.getCurrentSelection()).getEventsOut().size() == 0) {
             listAdapter.clear();
             listAdapter.notifyDataSetChanged();
             warningEvnMainText.setVisibility(View.VISIBLE);
@@ -157,25 +158,58 @@ public class PlaceholderFragment extends Fragment {
         floatingActionButtonEvents = (FloatingActionButton) v.findViewById(R.id.fabEvents);
         floatingActionButtonLocals = (FloatingActionButton) v.findViewById(R.id.fabLocals);
 
-        if(floatingActionMenu != null) {
+        if (floatingActionMenu != null) {
 
             floatingActionMenu.setClosedOnTouchOutside(true);
 
             floatingActionButtonLocals.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    try {
-
-                        PlacePicker.IntentBuilder intentBuilder;
-                        intentBuilder = new PlacePicker.IntentBuilder();
-                        Intent intent = intentBuilder.build(getContext());
-                        startActivityForResult(intent, REQUEST_PLACE_PICKER);
-
-                    } catch (GooglePlayServicesRepairableException e) {
-                        Log.d("PlacesAPI Demo", "GooglePlayServicesRepairableException thrown");
-                    } catch (GooglePlayServicesNotAvailableException e) {
-                        Log.d("PlacesAPI Demo", "GooglePlayServicesNotAvailableException thrown");
+                    if (!Utilities.isNetworkAvailable(getContext())) {
+                        final MaterialDialog alert = new MaterialDialog.Builder(getContext())
+                                .title(R.string.wifi_on_dialog_title)
+                                .content(R.string.wifi_on_dialog_warning)
+                                .positiveText(android.R.string.yes)
+                                .negativeText(android.R.string.no)
+                                .show();
+                        View positive = alert.getActionButton(DialogAction.POSITIVE);
+                        positive.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                startActivity(new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK));
+                                alert.dismiss();
+                            }
+                        });
+                        return;
                     }
+
+                    if (!Utilities.isLocationEnabled(getContext())) {
+                        final MaterialDialog alert = new MaterialDialog.Builder(getContext())
+                                .title(R.string.location_on_dialog_title)
+                                .content(R.string.location_on_dialog_warning)
+                                .positiveText(android.R.string.yes)
+                                .negativeText(android.R.string.no)
+                                .show();
+                        View positive = alert.getActionButton(DialogAction.POSITIVE);
+                        positive.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                alert.dismiss();
+                                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                            }
+                        });
+                        View negative = alert.getActionButton(DialogAction.NEGATIVE);
+                        negative.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                alert.dismiss();
+                                startLocationPick();
+                            }
+                        });
+                        return;
+                    }
+
+                    startLocationPick();
                 }
             });
 
@@ -189,27 +223,43 @@ public class PlaceholderFragment extends Fragment {
                     }
                 });
             }
-        }
-        else
+        } else
             Log.d("Debug", "Error in mFab (NULL)");
 
+    }
+
+    public void startLocationPick() {
+        try {
+            floatingActionButtonLocals.setIndeterminate(true);
+            PlacePicker.IntentBuilder intentBuilder;
+            intentBuilder = new PlacePicker.IntentBuilder();
+            Intent intent = intentBuilder.build(getContext());
+            startActivityForResult(intent, Utilities.REQUEST_PLACE_PICKER);
+        } catch (GooglePlayServicesRepairableException e) {
+            Log.d("PlacesAPI Demo", "GooglePlayServicesRepairableException thrown");
+        } catch (GooglePlayServicesNotAvailableException e) {
+            Log.d("PlacesAPI Demo", "GooglePlayServicesNotAvailableException thrown");
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode,
                                  int resultCode, Intent data) {
 
-        if (requestCode == REQUEST_PLACE_PICKER
-                && resultCode == Activity.RESULT_OK) {
+        switch (requestCode) {
+            case Utilities.REQUEST_PLACE_PICKER:
+                floatingActionButtonLocals.setIndeterminate(false);
+                if (resultCode == Activity.RESULT_OK) {
+                    // The user has selected a place. Extract the name and address.
+                    final Place place = PlacePicker.getPlace(data, getContext());
+                    showLocationNamePicker(place);
 
-
-            // The user has selected a place. Extract the name and address.
-            final Place place = PlacePicker.getPlace(data, getContext());
-            showLocationNamePicker(place);
-
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
+                } else {
+                    super.onActivityResult(requestCode, resultCode, data);
+                }
+                break;
         }
+
     }
 
     private void showLocationNamePicker(final Place selectedLocation) {
@@ -227,16 +277,16 @@ public class PlaceholderFragment extends Fragment {
         positive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText radius = ((EditText)locationPicker.getView().findViewById(R.id.radiusText));
-                EditText name = ((EditText)locationPicker.getView().findViewById(R.id.nameTxt));
-                if(name.getText().length() == 0){
+                EditText radius = ((EditText) locationPicker.getView().findViewById(R.id.radiusText));
+                EditText name = ((EditText) locationPicker.getView().findViewById(R.id.nameTxt));
+                if (name.getText().length() == 0) {
                     new MaterialDialog.Builder(getContext())
                             .title(R.string.location_picker_warning_title)
                             .content(R.string.location_picker_warning_name_content)
                             .neutralText(android.R.string.ok)
                             .show();
                     return;
-                }else if(radius.getText().length() == 0 || Integer.parseInt(radius.getText().toString()) == 0){
+                } else if (radius.getText().length() == 0 || Integer.parseInt(radius.getText().toString()) == 0) {
                     new MaterialDialog.Builder(getContext())
                             .title(R.string.location_picker_warning_title)
                             .content(R.string.location_picker_warning_radius_content)
@@ -262,7 +312,7 @@ public class PlaceholderFragment extends Fragment {
 
                 Log.d("Debug Location added", Singleton.getLocations().size() + "");
                 NavigationDrawerFragment nd = NavigationDrawerFragment.getInstance();
-                nd.setLocationAdapter((ArrayList<Location>)Singleton.getLocations());
+                nd.setLocationAdapter((ArrayList<Location>) Singleton.getLocations());
                 nd.selectItem(Singleton.getLocations().size() - 1);
                 MainMenu menu = MainMenu.getInstance();
                 menu.updateTitle(name.getText().toString());
@@ -294,7 +344,7 @@ public class PlaceholderFragment extends Fragment {
     }
 
     private void showInOutPicker() {
-        String type [] = {
+        String type[] = {
                 getResources().getString(R.string.in_out_picker_dialog_in),
                 getResources().getString(R.string.in_out_picker_dialog_out)
         };
@@ -317,7 +367,7 @@ public class PlaceholderFragment extends Fragment {
     }
 
     private void showEventPicker() {
-        String type [] = {
+        String type[] = {
                 getResources().getString(R.string.event_picker_dialog_remind),
                 getResources().getString(R.string.event_picker_dialog_sms),
                 getResources().getString(R.string.alarm_dialog_title),
@@ -395,7 +445,7 @@ public class PlaceholderFragment extends Fragment {
                     Toast.makeText(getContext(), R.string.alarm_dialog_warning, Toast.LENGTH_SHORT).show();
                 } else {
                     ArrayList<Location> temp = Singleton.getLocations();
-                    AlarmEvent alarmEvent = new AlarmEvent(getContext() , txtView.getText().toString());
+                    AlarmEvent alarmEvent = new AlarmEvent(getContext(), txtView.getText().toString());
                     alarmEvent.setName(getResources().getString(R.string.alarm_dialog_title));
 
                     if (when == IN) {
@@ -420,12 +470,12 @@ public class PlaceholderFragment extends Fragment {
     }
 
     private void showWiFiProfilePicker() {
-        if(existsProfileEvent(EventType.WIFI)) {
-            Toast.makeText(getContext(), R.string.wifi_picker_dialog_warning ,Toast.LENGTH_LONG).show();
+        if (existsProfileEvent(EventType.WIFI)) {
+            Toast.makeText(getContext(), R.string.wifi_picker_dialog_warning, Toast.LENGTH_LONG).show();
             return;
         }
 
-        String type [] = {
+        String type[] = {
                 getResources().getString(R.string.wifi_picker_dialog_on),
                 getResources().getString(R.string.wifi_picker_dialog_off)
         };
@@ -462,7 +512,7 @@ public class PlaceholderFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                        MainMenu main =  MainMenu.getInstance();
+                        MainMenu main = MainMenu.getInstance();
                         main.notifyListView(mCurrentSelectedPosition);
                         return true;
                     }
@@ -472,12 +522,12 @@ public class PlaceholderFragment extends Fragment {
     }
 
     private void showBluetoothProfilePicker() {
-        if(existsProfileEvent(EventType.BLUETOOTH)) {
-            Toast.makeText(getContext(), R.string.bluetooth_picker_dialog_warning ,Toast.LENGTH_LONG).show();
+        if (existsProfileEvent(EventType.BLUETOOTH)) {
+            Toast.makeText(getContext(), R.string.bluetooth_picker_dialog_warning, Toast.LENGTH_LONG).show();
             return;
         }
 
-        String type [] = {
+        String type[] = {
                 getResources().getString(R.string.bluetooth_picker_dialog_on),
                 getResources().getString(R.string.bluetooth_picker_dialog_off)
         };
@@ -514,7 +564,7 @@ public class PlaceholderFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                        MainMenu main =  MainMenu.getInstance();
+                        MainMenu main = MainMenu.getInstance();
                         main.notifyListView(mCurrentSelectedPosition);
                         return true;
                     }
@@ -524,12 +574,12 @@ public class PlaceholderFragment extends Fragment {
     }
 
     private void showMobileDataProfilePicker() {
-        if(existsProfileEvent(EventType.MOBILE_DATA)) {
-            Toast.makeText(getContext(), R.string.mobile_data_picker_dialog_warning ,Toast.LENGTH_LONG).show();
+        if (existsProfileEvent(EventType.MOBILE_DATA)) {
+            Toast.makeText(getContext(), R.string.mobile_data_picker_dialog_warning, Toast.LENGTH_LONG).show();
             return;
         }
 
-        String type [] = {
+        String type[] = {
                 getResources().getString(R.string.mobile_data_picker_dialog_on),
                 getResources().getString(R.string.mobile_data_picker_dialog_off)
         };
@@ -566,7 +616,7 @@ public class PlaceholderFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                        MainMenu main =  MainMenu.getInstance();
+                        MainMenu main = MainMenu.getInstance();
                         main.notifyListView(mCurrentSelectedPosition);
                         return true;
                     }
@@ -576,12 +626,12 @@ public class PlaceholderFragment extends Fragment {
     }
 
     private void showSoundProfilePicker() {
-        if(existsProfileEvent(EventType.SOUND_PROFILE)) {
-            Toast.makeText(getContext(), R.string.sound_profile_picker_dialog_warning ,Toast.LENGTH_LONG).show();
+        if (existsProfileEvent(EventType.SOUND_PROFILE)) {
+            Toast.makeText(getContext(), R.string.sound_profile_picker_dialog_warning, Toast.LENGTH_LONG).show();
             return;
         }
 
-        String type [] = {
+        String type[] = {
                 getResources().getString(R.string.sound_profile_picker_dialog_silent),
                 getResources().getString(R.string.sound_profile_picker_dialog_vibrate),
                 getResources().getString(R.string.sound_profile_picker_dialog_normal)
@@ -637,12 +687,12 @@ public class PlaceholderFragment extends Fragment {
 
     private boolean existsProfileEvent(EventType type) {
         ArrayList<Location> temp = Singleton.getLocations();
-        if(when == IN) {
+        if (when == IN) {
             for (Event e : temp.get(mCurrentSelectedPosition).getEventsIn()) {
                 if (e.getType() == type)
                     return true;
             }
-        }else {
+        } else {
             for (Event e : temp.get(mCurrentSelectedPosition).getEventsOut()) {
                 if (e.getType() == type)
                     return true;
@@ -654,7 +704,7 @@ public class PlaceholderFragment extends Fragment {
     private void showSMSPicker() {
 
         final ArrayList<Contact> contacts = getContactNumbers();
-        final Contact number = new Contact("","");
+        final Contact number = new Contact("", "");
         contacts.add(0, number);
 
         boolean wrapInScrollView = true;
@@ -673,14 +723,14 @@ public class PlaceholderFragment extends Fragment {
         positive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(contactSearch.getContacts().size() == 0){
+                if (contactSearch.getContacts().size() == 0) {
                     Toast.makeText(getContext(), R.string.sms_picker_contacts_warning, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 String txt = ((EditText) smsPicker.getView().findViewById(R.id.smsTxt)).getText().toString();
 
-                if(txt.length() == 0){
+                if (txt.length() == 0) {
                     showNoSMSTxtWarning(smsPicker, contactSearch);
                     return;
                 }
@@ -759,9 +809,9 @@ public class PlaceholderFragment extends Fragment {
 
         sms.setDescription(getResources().getString(R.string.event_message_to) + " " + contactSearch.getNames());
         sms.setContacts(contactSearch.getContacts());
-        if(when == IN) {
+        if (when == IN) {
             temp.get(mCurrentSelectedPosition).getEventsIn().add(sms);
-        }else{
+        } else {
             temp.get(mCurrentSelectedPosition).getEventsOut().add(sms);
         }
 
@@ -839,7 +889,7 @@ public class PlaceholderFragment extends Fragment {
     }
 
     private boolean isAPhoneNumber(CharSequence charSequence) {
-        if(charSequence.length() != 0) {
+        if (charSequence.length() != 0) {
             if (charSequence.charAt(0) == '+' || Character.isDigit(charSequence.charAt(0))) {
                 for (int i = 1; i < charSequence.length(); i++) {
                     if (!Character.isDigit(charSequence.charAt(i)))
@@ -855,10 +905,9 @@ public class PlaceholderFragment extends Fragment {
     }
 
     public ArrayList<Contact> getContactNumbers() {
-        ArrayList<Contact> contacts =  new ArrayList<>();
+        ArrayList<Contact> contacts = new ArrayList<>();
         Cursor phones = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
-        while (phones.moveToNext())
-        {
+        while (phones.moveToNext()) {
             String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             String number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             contacts.add(new Contact(name, number));
@@ -866,7 +915,7 @@ public class PlaceholderFragment extends Fragment {
         return contacts;
     }
 
-    private void showNoSMSTxtWarning(final MaterialDialog smsPicker,final ContactsCompletionView contactSearch) {
+    private void showNoSMSTxtWarning(final MaterialDialog smsPicker, final ContactsCompletionView contactSearch) {
         final MaterialDialog alert = new MaterialDialog.Builder(getContext())
                 .title(R.string.sms_dialog_contact_empty_alert_title)
                 .content(R.string.sms_dialog_contact_empty_alert_txt)
