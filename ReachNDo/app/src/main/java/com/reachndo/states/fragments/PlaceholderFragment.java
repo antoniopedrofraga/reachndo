@@ -56,9 +56,7 @@ import com.utilities.Utilities;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * Created by Pedro Fraga on 26-Aug-16.
- */
+
 public class PlaceholderFragment extends Fragment {
 
     private int when;
@@ -312,10 +310,9 @@ public class PlaceholderFragment extends Fragment {
 
                 Log.d("Debug Location added", Singleton.getLocations().size() + "");
                 NavigationDrawerFragment nd = NavigationDrawerFragment.getInstance();
-                nd.setLocationAdapter((ArrayList<Location>) Singleton.getLocations());
+                nd.setLocationAdapter(Singleton.getLocations());
                 nd.selectItem(Singleton.getLocations().size() - 1);
-                MainMenu menu = MainMenu.getInstance();
-                menu.updateTitle(name.getText().toString());
+                MainMenu.getInstance().getActionBarManager().updateTitle(name.getText().toString());
                 locationPicker.dismiss();
             }
         });
@@ -707,11 +704,10 @@ public class PlaceholderFragment extends Fragment {
         final Contact number = new Contact("", "");
         contacts.add(0, number);
 
-        boolean wrapInScrollView = true;
         final MaterialDialog smsPicker =
                 new MaterialDialog.Builder(getContext())
                         .title(R.string.sms_dialog_title)
-                        .customView(R.layout.sms_layout, wrapInScrollView)
+                        .customView(R.layout.sms_layout, true)
                         .positiveText(android.R.string.ok)
                         .autoDismiss(false)
                         .negativeText(android.R.string.cancel)
@@ -957,7 +953,7 @@ public class PlaceholderFragment extends Fragment {
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
-                // If request is cancelled, the result arrays are empty.
+                /* If request is cancelled, the result arrays are empty. */
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
@@ -965,12 +961,12 @@ public class PlaceholderFragment extends Fragment {
 
                 } else {
 
-                    Toast.makeText(getContext(), "Since the permission to read contacts was not granted you can't access this functionality.", Toast.LENGTH_SHORT);
+                    Toast.makeText(getContext(), "Since the permission to read contacts was not granted you can't access this functionality.", Toast.LENGTH_SHORT).show();
                 }
                 return;
             }
             default:
-                Toast.makeText(getContext(), "WRONG CODE", Toast.LENGTH_SHORT);
+                Toast.makeText(getContext(), "WRONG CODE", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

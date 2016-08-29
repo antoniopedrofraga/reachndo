@@ -3,7 +3,6 @@ package com.reachndo.states;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,13 +17,13 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.balysv.materialmenu.extras.toolbar.MaterialMenuIconCompat;
 import com.reachndo.adapters.EventListAdapter;
+import com.reachndo.managers.ActionBarManager;
 import com.reachndo.states.fragments.NavigationDrawerFragment;
 import com.reachndo.R;
 import com.reachndo.states.fragments.PlaceholderFragment;
 import com.service.Event;
 import com.service.LocationService;
 import com.service.MessageEvent;
-import com.service.NotificationEvent;
 import com.reachndo.memory.SaveAndLoad;
 import com.reachndo.memory.Singleton;
 import com.utilities.Theme;
@@ -35,12 +34,11 @@ import java.util.ArrayList;
 public class MainMenu extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+    ActionBarManager actionBarManager;
 
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
-    private CharSequence title;
     private MaterialMenuIconCompat materialMenu;
-
 
     public TextView warningLocMainText;
     public TextView warningLocSubText;
@@ -65,7 +63,7 @@ public class MainMenu extends AppCompatActivity
         super.onCreate(savedInstanceState);
         instance = this;
 
-        title = getTitle();
+        actionBarManager = new ActionBarManager(getSupportActionBar(), this);
 
         materialMenu = new MaterialMenuIconCompat(this, Color.WHITE, MaterialMenuDrawable.Stroke.THIN);
         listAdapter = new EventListAdapter(getBaseContext(), new ArrayList<Event>());
@@ -100,26 +98,23 @@ public class MainMenu extends AppCompatActivity
     }
 
     public void onSectionAttached(int index) {
+        int locationIndex = -1;
+        CharSequence locationName;
         if (index > 0) {
-            title = Singleton.getLocations().get(index - 1).getName();
-            notifyListView(index - 1);
+            locationName = Singleton.getLocations().get(index - 1).getName();
+            locationIndex = index - 1;
         } else {
-            title = getResources().getString(R.string.no_locations);
-            notifyListView(-1);
+            locationName = getResources().getString(R.string.no_locations);
         }
+        actionBarManager.updateTitle(locationName);
+        notifyListView(locationIndex);
     }
 
-    public void updateActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(title);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             getMenuInflater().inflate(R.menu.main_menu, menu);
-            updateActionBar();
             materialMenu.animateState(MaterialMenuDrawable.IconState.BURGER);
             return true;
         } else {
@@ -137,23 +132,19 @@ public class MainMenu extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Intent intent = new Intent(MainMenu.this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        } else if (id == R.id.about_us) {
-            Intent intent = new Intent(MainMenu.this, AboutUsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        if (id == android.R.id.home) {
-            if (mNavigationDrawerFragment.isDrawerOpen()) {
-                materialMenu.animateState(MaterialMenuDrawable.IconState.BURGER);
-            } else {
-                materialMenu.animateState(MaterialMenuDrawable.IconState.ARROW);
-            }
+        switch (id) {
+            case R.id.action_settings:
+                startActivity(new Intent(MainMenu.this, SettingsActivity.class));
+                break;
+            case R.id.about_us:
+                startActivity(new Intent(MainMenu.this, AboutUsActivity.class));
+                break;
+            case android.R.id.home:
+                if (mNavigationDrawerFragment.isDrawerOpen())
+                    materialMenu.animateState(MaterialMenuDrawable.IconState.BURGER);
+                 else
+                    materialMenu.animateState(MaterialMenuDrawable.IconState.ARROW);
+                break;
         }
 
 
@@ -180,11 +171,6 @@ public class MainMenu extends AppCompatActivity
         }
     }
 
-
-    public void updateTitle(String s) {
-        title = s;
-        updateActionBar();
-    }
 
 
     public void notifyListView(final
@@ -227,8 +213,8 @@ public class MainMenu extends AppCompatActivity
     }
 
     public void showDialog(final Event event, final int index) {
-        String title = "";
-        String content = "";
+        String title;
+        String content;
         switch (event.getType()) {
             case MESSAGE:
                 title = getResources().getString(R.string.sms_dialog_title);
@@ -237,7 +223,7 @@ public class MainMenu extends AppCompatActivity
                 break;
             case NOTIFICATION:
                 title = event.getName();
-                content = getResources().getString(R.string.sms_dialog_text_info) + " " + ((NotificationEvent) event).getDescription();
+                content = getResources().getString(R.string.sms_dialog_text_info) + " " +  event.getDescription();
                 break;
             default:
                 title = event.getName();
@@ -304,6 +290,10 @@ public class MainMenu extends AppCompatActivity
 
     public MaterialMenuIconCompat getMaterialMenu() {
         return materialMenu;
+    }
+
+    public ActionBarManager getActionBarManager() {
+        return actionBarManager;
     }
 
 }
