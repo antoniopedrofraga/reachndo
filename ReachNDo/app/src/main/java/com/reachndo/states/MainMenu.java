@@ -5,16 +5,11 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.FragmentManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
@@ -30,11 +25,11 @@ import com.service.Event;
 import com.service.LocationService;
 import com.service.MessageEvent;
 import com.service.NotificationEvent;
-import com.service.SaveAndLoad;
-import com.service.Singleton;
+import com.reachndo.memory.SaveAndLoad;
+import com.reachndo.memory.Singleton;
+import com.utilities.Theme;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class MainMenu extends AppCompatActivity
@@ -43,10 +38,7 @@ public class MainMenu extends AppCompatActivity
 
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
-    private CharSequence mTitle;
-
-    private EventListAdapter listAdapter;
-
+    private CharSequence title;
     private MaterialMenuIconCompat materialMenu;
 
 
@@ -56,7 +48,7 @@ public class MainMenu extends AppCompatActivity
     public TextView warningEvnMainText;
     public TextView warningEvnSubText;
 
-
+    private EventListAdapter listAdapter;
     private AdapterView.OnItemClickListener clickListener;
 
     private static MainMenu instance;
@@ -69,26 +61,14 @@ public class MainMenu extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        //Setting style according to API
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setTheme(R.style.MaterialDesign);
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.DarkMaterialPurple));
-        } else {
-            setTheme(R.style.AppTheme);
-        }
-
+        Theme.setThemeAccordingAPI(this);
         super.onCreate(savedInstanceState);
         instance = this;
 
+        title = getTitle();
 
         materialMenu = new MaterialMenuIconCompat(this, Color.WHITE, MaterialMenuDrawable.Stroke.THIN);
-
-        mTitle = getTitle();
-
         listAdapter = new EventListAdapter(getBaseContext(), new ArrayList<Event>());
-
         clickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -96,27 +76,17 @@ public class MainMenu extends AppCompatActivity
             }
         };
 
-        startService(new Intent(this, LocationService.class));
-
-        try {
-            SaveAndLoad.loadInfo(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        SaveAndLoad.loadInfo(this);
 
         setContentView(R.layout.activity_main_menu);
-
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-
-        // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        Theme.showActionOverflowMenu(this);
 
-        showActionOverflowMenu();
+        startService(new Intent(this, LocationService.class));
     }
 
     @Override
@@ -131,10 +101,10 @@ public class MainMenu extends AppCompatActivity
 
     public void onSectionAttached(int index) {
         if (index > 0) {
-            mTitle = Singleton.getLocations().get(index - 1).getName();
+            title = Singleton.getLocations().get(index - 1).getName();
             notifyListView(index - 1);
         } else {
-            mTitle = getResources().getString(R.string.no_locations);
+            title = getResources().getString(R.string.no_locations);
             notifyListView(-1);
         }
     }
@@ -142,7 +112,7 @@ public class MainMenu extends AppCompatActivity
     public void updateActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        actionBar.setTitle(title);
     }
 
     @Override
@@ -212,23 +182,10 @@ public class MainMenu extends AppCompatActivity
 
 
     public void updateTitle(String s) {
-        mTitle = s;
+        title = s;
         updateActionBar();
     }
 
-    private void showActionOverflowMenu() {
-        //devices with hardware menu button (e.g. Samsung Note) don't show action overflow menu
-        try {
-            ViewConfiguration config = ViewConfiguration.get(this);
-            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
-            if (menuKeyField != null) {
-                menuKeyField.setAccessible(true);
-                menuKeyField.setBoolean(config, false);
-            }
-        } catch (Exception e) {
-            Log.e("Error getting overflow", e.getLocalizedMessage());
-        }
-    }
 
     public void notifyListView(final
                                int index) {

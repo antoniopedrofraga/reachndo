@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.reachndo.R;
+import com.reachndo.memory.SaveAndLoad;
 
 import java.io.IOException;
 
@@ -46,13 +47,8 @@ public class LocationService extends Service {
 
     @Override
     public void onCreate() {
-        try {
-            SaveAndLoad.loadInfo(getBaseContext());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+
+        SaveAndLoad.loadInfo(getBaseContext());
 
         eventControl = true;
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

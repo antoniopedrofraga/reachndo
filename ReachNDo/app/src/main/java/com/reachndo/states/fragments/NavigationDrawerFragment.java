@@ -29,7 +29,7 @@ import com.reachndo.CustomTypefaceSpan;
 import com.reachndo.adapters.LocationListAdapter;
 import com.reachndo.R;
 import com.service.Location;
-import com.service.Singleton;
+import com.reachndo.memory.Singleton;
 
 import java.util.ArrayList;
 
@@ -77,7 +77,7 @@ public class NavigationDrawerFragment extends Fragment {
     public NavigationDrawerFragment() {
     }
 
-    public static NavigationDrawerFragment getInstance(){
+    public static NavigationDrawerFragment getInstance() {
         return instance;
     }
 
@@ -93,21 +93,19 @@ public class NavigationDrawerFragment extends Fragment {
         mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
 
 
-        if(Singleton.getLocations().size() > 0) {
-            if (savedInstanceState != null) {
-                mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
-                mFromSavedInstanceState = true;
-                selectItem(mCurrentSelectedPosition);
+        if (Singleton.getLocations() != null)
+            if (Singleton.getLocations().size() > 0) {
+                if (savedInstanceState != null) {
+                    mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
+                    mFromSavedInstanceState = true;
+                    selectItem(mCurrentSelectedPosition);
+                }
+
+            } else {
+                selectItem(-1);
             }
-
-        }else{
-            selectItem(-1);
-        }
     }
 
-    public static int getmCurrentSelectedPosition() {
-        return mCurrentSelectedPosition;
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -137,7 +135,8 @@ public class NavigationDrawerFragment extends Fragment {
         });
 
         mDrawerListView.setAdapter(locationAdapter);
-            if(Singleton.getLocations().size() > 0) {
+        if (Singleton.getLocations() != null)
+            if (Singleton.getLocations().size() > 0) {
                 selectItem(mCurrentSelectedPosition);
             }
 
@@ -145,7 +144,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void clearChecks(LocationListAdapter locationAdapter) {
-        for(Location l : locationAdapter.getLocationArrayList()){
+        for (Location l : locationAdapter.getLocationArrayList()) {
             l.setChecked(false);
         }
     }
@@ -202,7 +201,7 @@ public class NavigationDrawerFragment extends Fragment {
                 ArrayList<Location> locationList = Singleton.getLocations();
 
                 locationAdapter =
-                new LocationListAdapter(getContext(), locationList);
+                        new LocationListAdapter(getContext(), locationList);
 
                 mDrawerListView.setAdapter(locationAdapter);
 
@@ -238,9 +237,9 @@ public class NavigationDrawerFragment extends Fragment {
 
 
     public void selectItem(int position) {
-        if(locationAdapter != null) {
+        if (locationAdapter != null) {
             clearChecks(locationAdapter);
-            if(locationAdapter.getLocationArrayList().size() > 0)
+            if (locationAdapter.getLocationArrayList().size() > 0)
                 locationAdapter.getLocationArrayList().get(position).setChecked(true);
 
             locationAdapter.notifyDataSetChanged();
@@ -332,8 +331,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
 
-
-    public int getCurrentSelection(){
+    public int getCurrentSelection() {
         return mCurrentSelectedPosition;
     }
 }

@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.reachndo.states.fragments.AboutUsFragment;
 import com.reachndo.R;
+import com.utilities.Theme;
 
 /**
  * Created by Francisco on 11/09/2015.
@@ -20,16 +21,8 @@ import com.reachndo.R;
 public class AboutUsActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        //Setting style according to API
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setTheme(R.style.MaterialDesign);
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.DarkMaterialPurple));
-        } else {
-            setTheme(R.style.AppTheme);
-        }
 
+        Theme.setThemeAccordingAPI(this);
         super.onCreate(savedInstanceState);
 
         // Display the fragment as the main content.

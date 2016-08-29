@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by Joao Nogueira on 09/09/2015.
  */
 public class LocationCoords implements Serializable {
-    LocationCoords(double a, double b)
+    public LocationCoords(double a, double b)
     {
         latitude = a;
         longitude = b;

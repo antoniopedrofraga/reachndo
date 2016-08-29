@@ -1,4 +1,7 @@
-package com.service;
+package com.reachndo.memory;
+
+import com.service.Location;
+import com.service.LocationCoords;
 
 import java.util.ArrayList;
 

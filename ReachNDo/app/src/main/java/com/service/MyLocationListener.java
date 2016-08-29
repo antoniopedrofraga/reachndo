@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.reachndo.R;
+import com.reachndo.memory.Singleton;
 
 /**
  * Created by Joao Nogueira on 08/09/2015.

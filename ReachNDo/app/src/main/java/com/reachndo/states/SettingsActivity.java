@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import com.reachndo.R;
 import com.reachndo.states.fragments.SettingsFragment;
 import com.service.LocationService;
+import com.utilities.Theme;
 
 /**
  * Created by Francisco on 11/09/2015.
@@ -23,8 +24,8 @@ import com.service.LocationService;
 public class SettingsActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Theme.setThemeAccordingAPI(this);
         super.onCreate(savedInstanceState);
-
         // Display the fragment as the main content.
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment())
