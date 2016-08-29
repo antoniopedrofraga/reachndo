@@ -2,36 +2,27 @@ package com.reachndo.managers;
 
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Typeface;
+import android.graphics.Color;
 import android.support.v7.app.ActionBar;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.RelativeSizeSpan;
+import android.support.v7.app.AppCompatActivity;
 
-import com.reachndo.CustomTypefaceSpan;
-import com.reachndo.R;
+import com.balysv.materialmenu.MaterialMenuDrawable;
+import com.balysv.materialmenu.extras.toolbar.MaterialMenuIconCompat;
+
 
 /**
  * Created by Pedro Fraga on 29-Aug-16.
  */
 public class ActionBarManager {
 
-    CharSequence title = "Reach N' Do";
-    ActionBar actionBar;
-    SpannableStringBuilder spannableStringBuilder;
+    private CharSequence title = "Reach N' Do";
+    private ActionBar actionBar;
+    private MaterialMenuIconCompat materialMenu;
 
-    public ActionBarManager (ActionBar actionBar, Activity activity) {
+    public ActionBarManager (ActionBar actionBar, AppCompatActivity activity) {
         this.actionBar = actionBar;
         this.title = activity.getTitle();
-        this.spannableStringBuilder = new SpannableStringBuilder(activity.getResources().getString(R.string.app_name));
-        loadTitleFont(activity);
-    }
-
-    public void loadTitleFont(Activity activity) {
-        Typeface font = Typeface.createFromAsset(activity.getAssets(), "fonts/WolfintheCity.otf");
-        spannableStringBuilder.setSpan(new RelativeSizeSpan(2f), 0, spannableStringBuilder.length(), 0);
-        spannableStringBuilder.setSpan(new CustomTypefaceSpan("", font), 0, spannableStringBuilder.length(), Spanned.SPAN_COMPOSING);
+        this.materialMenu = new MaterialMenuIconCompat(activity, Color.WHITE, MaterialMenuDrawable.Stroke.THIN);
     }
 
     public void updateTitle(CharSequence title) {
@@ -40,12 +31,19 @@ public class ActionBarManager {
         actionBar.setTitle(title);
     }
 
-    public void updateTitleToAppName() {
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(spannableStringBuilder);
-    }
-
     public CharSequence getTitle() {
         return title;
+    }
+
+    public void animateToBurger() {
+        materialMenu.animateState(MaterialMenuDrawable.IconState.BURGER);
+    }
+
+    public void animateToArrow() {
+        materialMenu.animateState(MaterialMenuDrawable.IconState.ARROW);
+    }
+
+    public MaterialMenuIconCompat getMaterialMenu() {
+        return materialMenu;
     }
 }

@@ -36,6 +36,7 @@ import com.reachndo.Contact;
 import com.reachndo.ContactsCompletionView;
 import com.reachndo.R;
 import com.reachndo.adapters.EventListAdapter;
+import com.reachndo.managers.ActionBarManager;
 import com.reachndo.states.MainMenu;
 import com.service.AlarmEvent;
 import com.service.BluetoothEvent;
@@ -71,7 +72,7 @@ public class PlaceholderFragment extends Fragment {
 
     private static ListView listView;
 
-    private MaterialMenuIconCompat materialMenu;
+    private ActionBarManager actionBarManager;
 
     private FloatingActionMenu floatingActionMenu;
     private FloatingActionButton floatingActionButtonLocals;
@@ -115,7 +116,7 @@ public class PlaceholderFragment extends Fragment {
         warningLocMainText = MainMenu.getInstance().getWarningLocMainText();
         warningLocSubText = MainMenu.getInstance().getWarningLocSubText();
 
-        materialMenu = MainMenu.getInstance().getMaterialMenu();
+        actionBarManager = MainMenu.getInstance().getActionBarManager();
 
         mCurrentSelectedPosition = NavigationDrawerFragment.getInstance().getCurrentSelection();
     }
@@ -330,7 +331,7 @@ public class PlaceholderFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        materialMenu.onSaveInstanceState(outState);
+        actionBarManager.getMaterialMenu().onSaveInstanceState(outState);
     }
 
     @Override

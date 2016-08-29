@@ -38,7 +38,6 @@ public class MainMenu extends AppCompatActivity
 
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
-    private MaterialMenuIconCompat materialMenu;
 
     public TextView warningLocMainText;
     public TextView warningLocSubText;
@@ -65,7 +64,6 @@ public class MainMenu extends AppCompatActivity
 
         actionBarManager = new ActionBarManager(getSupportActionBar(), this);
 
-        materialMenu = new MaterialMenuIconCompat(this, Color.WHITE, MaterialMenuDrawable.Stroke.THIN);
         listAdapter = new EventListAdapter(getBaseContext(), new ArrayList<Event>());
         clickListener = new AdapterView.OnItemClickListener() {
             @Override
@@ -115,13 +113,8 @@ public class MainMenu extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             getMenuInflater().inflate(R.menu.main_menu, menu);
-            materialMenu.animateState(MaterialMenuDrawable.IconState.BURGER);
             return true;
-        } else {
-            if (Singleton.getLocations().size() != 0)
-                materialMenu.animateState(MaterialMenuDrawable.IconState.ARROW);
         }
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -138,12 +131,6 @@ public class MainMenu extends AppCompatActivity
                 break;
             case R.id.about_us:
                 startActivity(new Intent(MainMenu.this, AboutUsActivity.class));
-                break;
-            case android.R.id.home:
-                if (mNavigationDrawerFragment.isDrawerOpen())
-                    materialMenu.animateState(MaterialMenuDrawable.IconState.BURGER);
-                 else
-                    materialMenu.animateState(MaterialMenuDrawable.IconState.ARROW);
                 break;
         }
 
@@ -286,10 +273,6 @@ public class MainMenu extends AppCompatActivity
 
     public TextView getWarningEvnMainText() {
         return warningEvnMainText;
-    }
-
-    public MaterialMenuIconCompat getMaterialMenu() {
-        return materialMenu;
     }
 
     public ActionBarManager getActionBarManager() {
