@@ -1,32 +1,38 @@
-package com.reachndo.states;
+package com.reachndo.activities;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.AdapterView;
-import android.widget.TextView;
+import android.widget.EditText;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.balysv.materialmenu.MaterialMenuDrawable;
-import com.balysv.materialmenu.extras.toolbar.MaterialMenuIconCompat;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.reachndo.adapters.EventListAdapter;
 import com.reachndo.managers.ActionBarManager;
-import com.reachndo.states.fragments.NavigationDrawerFragment;
+import com.reachndo.fragments.NavigationDrawerFragment;
 import com.reachndo.R;
-import com.reachndo.states.fragments.PlaceholderFragment;
+import com.reachndo.fragments.PlaceholderFragment;
+import com.reachndo.managers.EventDialogsManager;
+import com.reachndo.managers.FloatingButtonManager;
+import com.reachndo.managers.WarningTextsManager;
 import com.service.Event;
+import com.service.Location;
 import com.service.LocationService;
 import com.service.MessageEvent;
 import com.reachndo.memory.SaveAndLoad;
 import com.reachndo.memory.Singleton;
 import com.utilities.Theme;
+import com.utilities.Utilities;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,16 +40,11 @@ import java.util.ArrayList;
 public class MainMenu extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-    ActionBarManager actionBarManager;
+    private ActionBarManager actionBarManager;
+    private WarningTextsManager warningTextsManager;
+    private EventDialogsManager eventDialogsManager;
 
     private NavigationDrawerFragment mNavigationDrawerFragment;
-
-
-    public TextView warningLocMainText;
-    public TextView warningLocSubText;
-
-    public TextView warningEvnMainText;
-    public TextView warningEvnSubText;
 
     private EventListAdapter listAdapter;
     private AdapterView.OnItemClickListener clickListener;
@@ -62,8 +63,6 @@ public class MainMenu extends AppCompatActivity
         super.onCreate(savedInstanceState);
         instance = this;
 
-        actionBarManager = new ActionBarManager(getSupportActionBar(), this);
-
         listAdapter = new EventListAdapter(getBaseContext(), new ArrayList<Event>());
         clickListener = new AdapterView.OnItemClickListener() {
             @Override
@@ -71,6 +70,9 @@ public class MainMenu extends AppCompatActivity
 
             }
         };
+
+        actionBarManager = new ActionBarManager(getSupportActionBar(), this);
+        warningTextsManager = new WarningTextsManager();
 
         SaveAndLoad.loadInfo(this);
 
@@ -80,7 +82,11 @@ public class MainMenu extends AppCompatActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
         Theme.showActionOverflowMenu(this);
+
+        int currentSelection = NavigationDrawerFragment.getInstance().getCurrentSelection();
+        eventDialogsManager = new EventDialogsManager(this, currentSelection);
 
         startService(new Intent(this, LocationService.class));
     }
@@ -119,6 +125,26 @@ public class MainMenu extends AppCompatActivity
     }
 
     @Override
+    public void onActivityResult(int requestCode,
+                                 int resultCode, Intent data) {
+
+        switch (requestCode) {
+            case Utilities.REQUEST_PLACE_PICKER:
+                FloatingButtonManager.getInstance().getLocationsButton().setIndeterminate(false);
+                if (resultCode == Activity.RESULT_OK) {
+                    // The user has selected a place. Extract the name and address.
+                    final Place place = PlacePicker.getPlace(data, this);
+                    showLocationNamePicker(place);
+
+                } else {
+                    super.onActivityResult(requestCode, resultCode, data);
+                }
+                break;
+        }
+
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -127,10 +153,10 @@ public class MainMenu extends AppCompatActivity
 
         switch (id) {
             case R.id.action_settings:
-                startActivity(new Intent(MainMenu.this, SettingsActivity.class));
+                startActivity(new Intent(MainMenu.this, Settings.class));
                 break;
             case R.id.about_us:
-                startActivity(new Intent(MainMenu.this, AboutUsActivity.class));
+                startActivity(new Intent(MainMenu.this, About.class));
                 break;
         }
 
@@ -169,12 +195,7 @@ public class MainMenu extends AppCompatActivity
             return;
         }
 
-        if (warningEvnMainText != null && warningEvnSubText != null &&
-                (Singleton.getLocations().get(index).getEventsIn().size() != 0 ||
-                        Singleton.getLocations().get(index).getEventsOut().size() != 0)) {
-            warningEvnMainText.setVisibility(View.INVISIBLE);
-            warningEvnSubText.setVisibility(View.INVISIBLE);
-        }
+        warningTextsManager.setWarningEvnVisible(index);
 
         if (listAdapter != null) {
             listAdapter.clear();
@@ -231,12 +252,7 @@ public class MainMenu extends AppCompatActivity
 
                 Singleton.getLocations().get(index).removeEvent(event);
 
-                if (warningEvnMainText != null && warningEvnSubText != null &&
-                        (Singleton.getLocations().get(index).getEventsIn().size() == 0 &&
-                                Singleton.getLocations().get(index).getEventsOut().size() == 0)) {
-                    warningEvnMainText.setVisibility(View.VISIBLE);
-                    warningEvnSubText.setVisibility(View.VISIBLE);
-                }
+                warningTextsManager.setWarningEvnVisible(index);
 
                 try {
                     SaveAndLoad.saveInfo(MainMenu.this);
@@ -249,6 +265,74 @@ public class MainMenu extends AppCompatActivity
         });
     }
 
+    private void showLocationNamePicker(final Place selectedLocation) {
+        final Activity activity = this;
+        final MaterialDialog locationPicker =
+                new MaterialDialog.Builder(activity)
+                        .title(R.string.location_picker_title)
+                        .customView(R.layout.location_picker_layout, true)
+                        .positiveText(android.R.string.ok)
+                        .autoDismiss(false)
+                        .negativeText(android.R.string.cancel)
+                        .cancelable(false)
+                        .show();
+
+        View positive = locationPicker.getActionButton(DialogAction.POSITIVE);
+        positive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText radius = ((EditText) locationPicker.getView().findViewById(R.id.radiusText));
+                EditText name = ((EditText) locationPicker.getView().findViewById(R.id.nameTxt));
+                if (name.getText().length() == 0) {
+                    new MaterialDialog.Builder(activity)
+                            .title(R.string.location_picker_warning_title)
+                            .content(R.string.location_picker_warning_name_content)
+                            .neutralText(android.R.string.ok)
+                            .show();
+                    return;
+                } else if (radius.getText().length() == 0 || Integer.parseInt(radius.getText().toString()) == 0) {
+                    new MaterialDialog.Builder(activity)
+                            .title(R.string.location_picker_warning_title)
+                            .content(R.string.location_picker_warning_radius_content)
+                            .neutralText(android.R.string.ok)
+                            .show();
+                    return;
+                }
+
+                Log.d("Debug Location - add", Singleton.getLocations().size() + "");
+
+                ArrayList<Location> temp = Singleton.getLocations();
+                Location newLocation = new Location(selectedLocation.getLatLng().latitude,
+                        selectedLocation.getLatLng().longitude,
+                        name.getText().toString(),
+                        Double.parseDouble(radius.getText().toString()), false);
+                temp.add(newLocation);
+                Singleton.setLocations(temp);
+                try {
+                    SaveAndLoad.saveInfo(activity);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("Debug Location added", Singleton.getLocations().size() + "");
+                NavigationDrawerFragment nd = NavigationDrawerFragment.getInstance();
+                nd.setLocationAdapter(Singleton.getLocations());
+                nd.selectItem(Singleton.getLocations().size() - 1);
+                MainMenu.getInstance().getActionBarManager().updateTitle(name.getText().toString());
+                locationPicker.dismiss();
+            }
+        });
+
+        View negative = locationPicker.getActionButton(DialogAction.NEGATIVE);
+        negative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                locationPicker.dismiss();
+            }
+        });
+
+    }
+
     /* Getters */
 
     public EventListAdapter getListAdapter() {
@@ -259,24 +343,15 @@ public class MainMenu extends AppCompatActivity
         return clickListener;
     }
 
-    public TextView getWarningLocMainText() {
-        return warningLocMainText;
-    }
-
-    public TextView getWarningLocSubText() {
-        return warningLocSubText;
-    }
-
-    public TextView getWarningEvnSubText() {
-        return warningEvnSubText;
-    }
-
-    public TextView getWarningEvnMainText() {
-        return warningEvnMainText;
-    }
-
     public ActionBarManager getActionBarManager() {
         return actionBarManager;
     }
 
+    public WarningTextsManager getWarningTextsManager() {
+        return warningTextsManager;
+    }
+
+    public EventDialogsManager getEventDialogsManager() {
+        return eventDialogsManager;
+    }
 }

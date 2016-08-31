@@ -1,4 +1,4 @@
-package com.reachndo.states;
+package com.reachndo.activities;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -13,7 +13,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import com.reachndo.R;
-import com.reachndo.states.fragments.SettingsFragment;
+import com.reachndo.fragments.SettingsFragment;
 import com.service.LocationService;
 import com.utilities.Theme;
 
@@ -21,7 +21,7 @@ import com.utilities.Theme;
  * Created by Francisco on 11/09/2015.
  */
 
-public class SettingsActivity extends Activity {
+public class Settings extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Theme.setThemeAccordingAPI(this);
@@ -34,16 +34,8 @@ public class SettingsActivity extends Activity {
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
-        //Setting style according to API
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setTheme(R.style.MaterialDesign);
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.DarkMaterialPurple));
-        } else {
-            setTheme(R.style.AppTheme);
-        }
 
+        Theme.setThemeAccordingAPI(this);
         super.onPostCreate(savedInstanceState);
 
         LinearLayout root = (LinearLayout) findViewById(android.R.id.list).getParent().getParent().getParent();
@@ -51,7 +43,7 @@ public class SettingsActivity extends Activity {
         bar.setTitleTextColor(getResources().getColor(R.color.White));
         root.addView(bar, 0); // insert at top
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(Settings.this);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean("eventControl", LocationService.isEventControl());
         editor.commit();
@@ -59,7 +51,7 @@ public class SettingsActivity extends Activity {
         bar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(Settings.this);
                 LocationService.setEventControl(prefs.getBoolean("eventControl", false));
 
                 finish();
@@ -70,7 +62,7 @@ public class SettingsActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(Settings.this);
         LocationService.setEventControl(prefs.getBoolean("eventControl", false));
 
         finish();

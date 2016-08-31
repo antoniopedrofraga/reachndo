@@ -1,16 +1,13 @@
-package com.reachndo.states;
+package com.reachndo.activities;
 
 import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 
-import com.reachndo.states.fragments.AboutUsFragment;
+import com.reachndo.fragments.AboutUsFragment;
 import com.reachndo.R;
 import com.utilities.Theme;
 
@@ -18,7 +15,7 @@ import com.utilities.Theme;
  * Created by Francisco on 11/09/2015.
  */
 
-public class AboutUsActivity extends Activity {
+public class About extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
 

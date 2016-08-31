@@ -1,20 +1,17 @@
-package com.reachndo.states.fragments;
+package com.reachndo.fragments;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 
 import com.reachndo.R;
 
 /**
  * Created by Joao Nogueira on 12/09/2015.
  */
-public class AboutUsFragment extends PreferenceFragment {
+public class SettingsFragment extends PreferenceFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,6 +25,6 @@ public class AboutUsFragment extends PreferenceFragment {
         }
 
         // Load the preferences from an XML resource
-        addPreferencesFromResource(R.xml.about);
+        addPreferencesFromResource(R.xml.prefs);
     }
 }

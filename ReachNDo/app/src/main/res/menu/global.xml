@@ -2,6 +2,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/about_us" android:title="@string/about_us"
+    <item android:id="@+id/about_us" android:title="@string/about"
         android:orderInCategory="100" app:showAsAction="never" />
 </menu>

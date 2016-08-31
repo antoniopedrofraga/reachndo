@@ -13,6 +13,7 @@ import android.text.TextUtils;
 public class Utilities {
 
     public static final int REQUEST_PLACE_PICKER = 1;
+    public static final int REQUEST_READ_CONTACTS = 355;
 
     public static boolean isNetworkAvailable(final Context context) {
         final ConnectivityManager connectivityManager = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));

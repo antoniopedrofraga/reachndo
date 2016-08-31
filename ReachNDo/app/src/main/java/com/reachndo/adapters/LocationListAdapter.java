@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.reachndo.R;
-import com.reachndo.states.MainMenu;
+import com.reachndo.activities.MainMenu;
 import com.service.Location;
 
 import java.util.ArrayList;

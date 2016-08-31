@@ -1,4 +1,4 @@
-package com.reachndo.states.fragments;
+package com.reachndo.fragments;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
@@ -18,12 +18,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.balysv.materialmenu.MaterialMenuDrawable;
-import com.balysv.materialmenu.extras.toolbar.MaterialMenuIconCompat;
 import com.reachndo.adapters.LocationListAdapter;
 import com.reachndo.R;
 import com.reachndo.managers.ActionBarManager;
-import com.reachndo.states.MainMenu;
+import com.reachndo.activities.MainMenu;
 import com.service.Location;
 import com.reachndo.memory.Singleton;
 
