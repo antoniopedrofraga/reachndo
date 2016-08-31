@@ -2,10 +2,15 @@ package com.reachndo.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 
 import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
@@ -31,6 +37,7 @@ import com.service.LocationService;
 import com.service.MessageEvent;
 import com.reachndo.memory.SaveAndLoad;
 import com.reachndo.memory.Singleton;
+import com.utilities.CustomTypefaceSpan;
 import com.utilities.Theme;
 import com.utilities.Utilities;
 
@@ -156,7 +163,18 @@ public class MainMenu extends AppCompatActivity
                 startActivity(new Intent(MainMenu.this, Settings.class));
                 break;
             case R.id.about_us:
-                startActivity(new Intent(MainMenu.this, About.class));
+                
+                String version = getString(R.string.version) + " " + getString(R.string.versionName);
+                MaterialDialog dialog = new MaterialDialog.Builder(this)
+                        /*.typeface("WolfInTheCityLight.ttf", null)
+                        .titleColor(getColor(R.color.SlateGray))*/
+                        .icon(getDrawable(R.drawable.ic_launcher))
+                        .limitIconToDefaultSize()
+                        .title(R.string.app_name)
+                        .content(version)
+                        .contentGravity(GravityEnum.CENTER)
+                        .show();
+                //startActivity(new Intent(MainMenu.this, About.class));
                 break;
         }
 

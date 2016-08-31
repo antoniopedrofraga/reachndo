@@ -11,7 +11,7 @@ import com.reachndo.R;
 /**
  * Created by Joao Nogueira on 12/09/2015.
  */
-public class AboutUsFragment extends PreferenceFragment {
+public class AboutFragment extends PreferenceFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

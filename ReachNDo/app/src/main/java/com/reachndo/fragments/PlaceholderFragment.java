@@ -1,23 +1,16 @@
 package com.reachndo.fragments;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
 import com.reachndo.R;
 import com.reachndo.adapters.EventListAdapter;
 import com.reachndo.managers.ActionBarManager;
@@ -25,13 +18,8 @@ import com.reachndo.activities.MainMenu;
 import com.reachndo.managers.EventDialogsManager;
 import com.reachndo.managers.FloatingButtonManager;
 import com.reachndo.managers.WarningTextsManager;
-import com.service.Location;
-import com.reachndo.memory.SaveAndLoad;
-import com.reachndo.memory.Singleton;
 import com.utilities.Utilities;
 
-import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class PlaceholderFragment extends Fragment {

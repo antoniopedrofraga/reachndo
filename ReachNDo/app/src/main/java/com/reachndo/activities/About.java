@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.reachndo.fragments.AboutUsFragment;
+import com.reachndo.fragments.AboutFragment;
 import com.reachndo.R;
 import com.utilities.Theme;
 
@@ -24,7 +24,7 @@ public class About extends Activity {
 
         // Display the fragment as the main content.
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new AboutUsFragment())
+                .replace(android.R.id.content, new AboutFragment())
                 .commit();
     }
 

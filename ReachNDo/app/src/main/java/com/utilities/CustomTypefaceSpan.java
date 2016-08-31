@@ -1,4 +1,4 @@
-package com.reachndo;
+package com.utilities;
 
 import android.graphics.Paint;
 import android.graphics.Typeface;
