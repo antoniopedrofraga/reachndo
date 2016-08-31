@@ -8,7 +8,7 @@
         android:id="@+id/checkBox1"
         android:key="eventControl"
         android:summary="Turn on the events"
-        android:title="Active events" />
+        android:title="Activate events" />
 
     </PreferenceCategory>
 

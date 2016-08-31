@@ -39,9 +39,6 @@
             android:name=".activities.Settings">
         </activity>
         <activity
-            android:name=".activities.About">
-        </activity>
-        <activity
             android:name="com.service.DialogAlarm"
             android:label="Dialog"
             android:theme="@style/Theme.Transparent" >

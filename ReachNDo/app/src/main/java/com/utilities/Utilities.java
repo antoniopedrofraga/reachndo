@@ -1,6 +1,8 @@
 package com.utilities;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.provider.Settings;
@@ -40,6 +42,14 @@ public class Utilities {
         }
 
 
+    }
+    public static Drawable getDrawableAccordingToAPI(Context context, int id) {
+        Resources resources = context.getResources();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return resources.getDrawable(id, context.getTheme());
+        } else {
+            return resources.getDrawable(id);
+        }
     }
 
 }

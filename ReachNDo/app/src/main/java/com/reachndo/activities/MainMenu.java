@@ -163,18 +163,14 @@ public class MainMenu extends AppCompatActivity
                 startActivity(new Intent(MainMenu.this, Settings.class));
                 break;
             case R.id.about_us:
-                
-                String version = getString(R.string.version) + " " + getString(R.string.versionName);
-                MaterialDialog dialog = new MaterialDialog.Builder(this)
-                        /*.typeface("WolfInTheCityLight.ttf", null)
-                        .titleColor(getColor(R.color.SlateGray))*/
-                        .icon(getDrawable(R.drawable.ic_launcher))
+                String content = getString(R.string.developers) + "\n\n" + getString(R.string.version) + " " + getString(R.string.versionName);
+                new MaterialDialog.Builder(this)
+                        .icon(Utilities.getDrawableAccordingToAPI(this, R.drawable.ic_launcher))
                         .limitIconToDefaultSize()
                         .title(R.string.app_name)
-                        .content(version)
+                        .content(content)
                         .contentGravity(GravityEnum.CENTER)
                         .show();
-                //startActivity(new Intent(MainMenu.this, About.class));
                 break;
         }
 
