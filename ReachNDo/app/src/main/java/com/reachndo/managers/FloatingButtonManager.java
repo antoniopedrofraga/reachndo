@@ -125,6 +125,10 @@ public class FloatingButtonManager {
         }
     }
 
+    public void closeMenu() {
+        this.floatingActionMenu.close(true);
+    }
+
     public static FloatingButtonManager getInstance() {
         return instance;
     }

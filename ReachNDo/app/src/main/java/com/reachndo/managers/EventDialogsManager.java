@@ -62,6 +62,7 @@ public class EventDialogsManager {
 
     private Activity activity;
     private Resources resources;
+    private FloatingButtonManager floatingButtonManager;
 
     private int selectedPosition;
     private int when = UNDEFINED;
@@ -72,6 +73,7 @@ public class EventDialogsManager {
         this.instance = this;
         this.activity = activity;
         this.resources = activity.getResources();
+        this.floatingButtonManager = FloatingButtonManager.getInstance();
         this.selectedPosition = currentSelection;
     }
 
@@ -155,13 +157,21 @@ public class EventDialogsManager {
     }
 
     private void showAlarmPicker() {
-         new MaterialDialog.Builder(activity)
+        new MaterialDialog.Builder(activity)
                 .title(R.string.alarm_dialog_title)
                 .customView(R.layout.alarm_layout, true)
                 .negativeText(android.R.string.cancel)
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .neutralText(R.string.action_back)
+                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        eventDialogsStateMachine(EVENT_TYPE_STATE);
                         dialog.dismiss();
                     }
                 })
@@ -182,6 +192,7 @@ public class EventDialogsManager {
                             } else {
                                 temp.get(selectedPosition).getEventsOut().add(alarmEvent);
                             }
+
                             Singleton.setLocations(temp);
 
                             try {
@@ -193,6 +204,8 @@ public class EventDialogsManager {
                             MainMenu menu = MainMenu.getInstance();
                             menu.notifyListView(selectedPosition);
                             dialog.dismiss();
+                            floatingButtonManager.closeMenu();
+                            setDefaults();
                         }
                     }
                 })
@@ -203,6 +216,7 @@ public class EventDialogsManager {
     private void showWiFiProfilePicker() {
         if (existsProfileEvent(EventType.WIFI)) {
             Toast.makeText(activity, R.string.wifi_picker_dialog_warning, Toast.LENGTH_LONG).show();
+            eventDialogsStateMachine(EVENT_TYPE_STATE);
             return;
         }
 
@@ -234,7 +248,7 @@ public class EventDialogsManager {
                         } else {
                             temp.get(selectedPosition).getEventsOut().add(wifiEvent);
                         }
-                        Singleton.setLocations(temp);
+
                         Singleton.setLocations(temp);
 
                         try {
@@ -245,16 +259,33 @@ public class EventDialogsManager {
 
                         MainMenu main = MainMenu.getInstance();
                         main.notifyListView(selectedPosition);
+                        floatingButtonManager.closeMenu();
+                        setDefaults();
                         return true;
                     }
                 })
                 .negativeText(android.R.string.cancel)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .neutralText(R.string.action_back)
+                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        eventDialogsStateMachine(EVENT_TYPE_STATE);
+                        dialog.dismiss();
+                    }
+                })
                 .show();
     }
 
     private void showBluetoothProfilePicker() {
         if (existsProfileEvent(EventType.BLUETOOTH)) {
             Toast.makeText(activity, R.string.bluetooth_picker_dialog_warning, Toast.LENGTH_LONG).show();
+            eventDialogsStateMachine(EVENT_TYPE_STATE);
             return;
         }
 
@@ -297,16 +328,33 @@ public class EventDialogsManager {
 
                         MainMenu main = MainMenu.getInstance();
                         main.notifyListView(selectedPosition);
+                        floatingButtonManager.closeMenu();
+                        setDefaults();
                         return true;
                     }
                 })
                 .negativeText(android.R.string.cancel)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .neutralText(R.string.action_back)
+                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        eventDialogsStateMachine(EVENT_TYPE_STATE);
+                        dialog.dismiss();
+                    }
+                })
                 .show();
     }
 
     private void showMobileDataProfilePicker() {
         if (existsProfileEvent(EventType.MOBILE_DATA)) {
             Toast.makeText(activity, R.string.mobile_data_picker_dialog_warning, Toast.LENGTH_LONG).show();
+            eventDialogsStateMachine(EVENT_TYPE_STATE);
             return;
         }
 
@@ -349,16 +397,34 @@ public class EventDialogsManager {
 
                         MainMenu main = MainMenu.getInstance();
                         main.notifyListView(selectedPosition);
+                        floatingButtonManager.closeMenu();
+                        setDefaults();
                         return true;
                     }
                 })
                 .negativeText(android.R.string.cancel)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .neutralText(R.string.action_back)
+                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        eventDialogsStateMachine(EVENT_TYPE_STATE);
+                        dialog.dismiss();
+                    }
+                })
                 .show();
     }
 
     private void showSoundProfilePicker() {
+
         if (existsProfileEvent(EventType.SOUND_PROFILE)) {
             Toast.makeText(activity, R.string.sound_profile_picker_dialog_warning, Toast.LENGTH_LONG).show();
+            eventDialogsStateMachine(EVENT_TYPE_STATE);
             return;
         }
 
@@ -409,10 +475,26 @@ public class EventDialogsManager {
 
                         MainMenu menu = MainMenu.getInstance();
                         menu.notifyListView(selectedPosition);
+                        floatingButtonManager.closeMenu();
+                        setDefaults();
                         return true;
                     }
                 })
                 .negativeText(android.R.string.cancel)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .neutralText(R.string.action_back)
+                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        eventDialogsStateMachine(EVENT_TYPE_STATE);
+                        dialog.dismiss();
+                    }
+                })
                 .show();
     }
 
@@ -558,54 +640,58 @@ public class EventDialogsManager {
     }
 
     private void showReminderPicker() {
-        final MaterialDialog reminderPicker = new MaterialDialog.Builder(activity)
+        new MaterialDialog.Builder(activity)
                 .title(R.string.reminder_dialog_title)
                 .customView(R.layout.reminder_layout, true)
                 .negativeText(android.R.string.cancel)
-                .positiveText(android.R.string.ok)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .neutralText(R.string.action_back)
+                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        eventDialogsStateMachine(EVENT_TYPE_STATE);
+                        dialog.dismiss();
+                    }
+                })
+                .positiveText(R.string.action_conclude)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        TextView txtView = ((TextView) dialog.getView().findViewById(R.id.reminderTxt));
+                        if (txtView.getText().length() <= 0 || txtView.getText() == null) {
+                            Toast.makeText(activity, R.string.reminder_dialog_warning, Toast.LENGTH_SHORT).show();
+                        } else {
+                            ArrayList<Location> temp = Singleton.getLocations();
+                            NotificationEvent notificationEvent = new NotificationEvent(resources.getString(R.string.reminder_dialog_title) + "",
+                                    txtView.getText().toString());
+                            if (when == IN) {
+                                temp.get(selectedPosition).getEventsIn().add(notificationEvent);
+                            } else {
+                                temp.get(selectedPosition).getEventsOut().add(notificationEvent);
+                            }
+                            Singleton.setLocations(temp);
+
+                            try {
+                                SaveAndLoad.saveInfo(activity);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            MainMenu menu = MainMenu.getInstance();
+                            menu.notifyListView(selectedPosition);
+                            dialog.dismiss();
+                            floatingButtonManager.closeMenu();
+                            setDefaults();
+                        }
+                    }
+                })
                 .autoDismiss(false)
-                .build();
-
-        reminderPicker.show();
-
-        View negative = reminderPicker.getActionButton(DialogAction.NEGATIVE);
-        negative.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                reminderPicker.dismiss();
-            }
-        });
-
-        View positive = reminderPicker.getActionButton(DialogAction.POSITIVE);
-        positive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TextView txtView = ((TextView) reminderPicker.getView().findViewById(R.id.reminderTxt));
-                if (txtView.getText().length() <= 0 || txtView.getText() == null) {
-                    Toast.makeText(activity, R.string.reminder_dialog_warning, Toast.LENGTH_SHORT).show();
-                } else {
-                    ArrayList<Location> temp = Singleton.getLocations();
-                    NotificationEvent notificationEvent = new NotificationEvent(resources.getString(R.string.reminder_dialog_title) + "",
-                            txtView.getText().toString());
-                    if (when == IN) {
-                        temp.get(selectedPosition).getEventsIn().add(notificationEvent);
-                    } else {
-                        temp.get(selectedPosition).getEventsOut().add(notificationEvent);
-                    }
-                    Singleton.setLocations(temp);
-
-                    try {
-                        SaveAndLoad.saveInfo(activity);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    MainMenu menu = MainMenu.getInstance();
-                    menu.notifyListView(selectedPosition);
-                    reminderPicker.dismiss();
-                }
-            }
-        });
+                .show();
 
 
     }
