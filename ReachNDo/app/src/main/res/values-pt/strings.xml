@@ -8,6 +8,9 @@
 
     <string name="action_edit">Editar</string>
     <string name="action_delete">Apagar</string>
+    <string name="action_next">Seguinte</string>
+    <string name="action_back">Atrás</string>
+    <string name="action_conclude">Concluir</string>
 
     <string name="in">À entrada</string>
     <string name="out">À saída</string>
@@ -91,6 +94,7 @@
     <string name="remove_warning_title">Remover</string>
     <string name="remove_warning_content">Tem a certeza que pretende remover esta localização?</string>
 
+    <string name="selection_warning">Por favor, faz uma seleção válida</string>
 
     <string name="event_message_to">Mensagem para </string>
 

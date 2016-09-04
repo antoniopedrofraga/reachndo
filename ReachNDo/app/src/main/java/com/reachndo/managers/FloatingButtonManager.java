@@ -102,7 +102,7 @@ public class FloatingButtonManager {
                 floatingActionButtonEvents.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        EventDialogsManager.getInstance().showInOutPicker();
+                        EventDialogsManager.getInstance().startEventPick();
                     }
                 });
             }

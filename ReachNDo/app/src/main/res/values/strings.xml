@@ -6,6 +6,9 @@
 
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>
+    <string name="action_next">Next</string>
+    <string name="action_back">Back</string>
+    <string name="action_conclude">Conclude</string>
 
     <string name="sms_picker_contacts_warning">Add some contacts first</string>
 
@@ -90,6 +93,7 @@
     <string name="remove_warning_title">Remove</string>
     <string name="remove_warning_content">Are you sure you want remove this location?</string>
 
+    <string name="selection_warning">Please, make a valid selection</string>
 
     <string name="default_location">Default</string>
 

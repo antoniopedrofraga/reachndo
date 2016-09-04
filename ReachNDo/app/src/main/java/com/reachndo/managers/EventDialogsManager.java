@@ -2,11 +2,11 @@ package com.reachndo.managers;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
@@ -44,16 +44,29 @@ import java.util.ArrayList;
 
 public class EventDialogsManager {
 
+    private static final int UNDEFINED = -1;
     private static final int IN = 0;
     private static final int OUT = 1;
+
+    private static final int INITIAL_STATE = 0;
+    private static final int EVENT_TYPE_STATE = 1;
+    private static final int REMINDER = 2;
+    private static final int SMS = 3;
+    private static final int ALARM = 4;
+    private static final int SOUND_PROFILE = 5;
+    private static final int WIFI_PROFILE = 6;
+    private static final int BLUETOOTH_PROFILE = 7;
+    private static final int MOBILE_DATA_PROFILE = 8;
 
     private static EventDialogsManager instance;
 
     private Activity activity;
     private Resources resources;
 
-    private int when;
     private int selectedPosition;
+    private int when = UNDEFINED;
+    private int eventType = UNDEFINED;
+
 
     public EventDialogsManager(Activity activity, int currentSelection) {
         this.instance = this;
@@ -62,7 +75,12 @@ public class EventDialogsManager {
         this.selectedPosition = currentSelection;
     }
 
-    public void showInOutPicker() {
+    private void setDefaults() {
+        when = UNDEFINED;
+        eventType = UNDEFINED;
+    }
+
+    private void showInOutPicker() {
         String type[] = {
                 resources.getString(R.string.in_out_picker_dialog_in),
                 resources.getString(R.string.in_out_picker_dialog_out)
@@ -71,21 +89,28 @@ public class EventDialogsManager {
         new MaterialDialog.Builder(activity)
                 .title(R.string.in_out_picker_dialog_title)
                 .items(type)
-                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                .itemsCallbackSingleChoice(when, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                         when = which;
-                        showEventPicker();
+                        dialog.dismiss();
+                        eventDialogsStateMachine(EVENT_TYPE_STATE);
                         return true;
                     }
-
-
                 })
                 .negativeText(android.R.string.cancel)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        setDefaults();
+                        dialog.dismiss();
+                    }
+                })
                 .show();
     }
 
-    public void showEventPicker() {
+    private void showEventPicker(final int state) {
+        final int stateMachineOffset = 2;
         String type[] = {
                 resources.getString(R.string.event_picker_dialog_remind),
                 resources.getString(R.string.event_picker_dialog_sms),
@@ -99,93 +124,80 @@ public class EventDialogsManager {
         new MaterialDialog.Builder(activity)
                 .title(R.string.event_picker_dialog_title)
                 .items(type)
-                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                .itemsCallbackSingleChoice(eventType, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        switch (which) {
-                            case 0:
-                                showReminderPicker();
-                                break;
-                            case 1:
-                                requestContactsPermissions();
-                                break;
-                            case 2:
-                                showAlarmPicker();
-                                break;
-                            case 3:
-                                showSoundProfilePicker();
-                                break;
-                            case 4:
-                                showWiFiProfilePicker();
-                                break;
-                            case 5:
-                                showBluetoothProfilePicker();
-                                break;
-                            case 6:
-                                showMobileDataProfilePicker();
-                                break;
-                            default:
-                                return false;
-                        }
+                        eventType = which;
+                        eventDialogsStateMachine(eventType + stateMachineOffset);
+                        dialog.dismiss();
                         return true;
                     }
 
 
                 })
+                .neutralText(R.string.action_back)
+                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        eventDialogsStateMachine(state - 1);
+                        dialog.dismiss();
+                    }
+                })
                 .negativeText(android.R.string.cancel)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        setDefaults();
+                        dialog.dismiss();
+                    }
+                })
                 .show();
     }
 
-    public void showAlarmPicker() {
-        final MaterialDialog alarmPicker = new MaterialDialog.Builder(activity)
+    private void showAlarmPicker() {
+         new MaterialDialog.Builder(activity)
                 .title(R.string.alarm_dialog_title)
                 .customView(R.layout.alarm_layout, true)
                 .negativeText(android.R.string.cancel)
-                .positiveText(android.R.string.ok)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .positiveText(R.string.action_conclude)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        TextView txtView = ((TextView) dialog.getView().findViewById(R.id.alarmTxt));
+                        if (txtView.getText().length() <= 0 || txtView.getText() == null) {
+                            Toast.makeText(activity, R.string.alarm_dialog_warning, Toast.LENGTH_SHORT).show();
+                        } else {
+                            ArrayList<Location> temp = Singleton.getLocations();
+                            AlarmEvent alarmEvent = new AlarmEvent(activity, txtView.getText().toString());
+                            alarmEvent.setName(resources.getString(R.string.alarm_dialog_title));
+
+                            if (when == IN) {
+                                temp.get(selectedPosition).getEventsIn().add(alarmEvent);
+                            } else {
+                                temp.get(selectedPosition).getEventsOut().add(alarmEvent);
+                            }
+                            Singleton.setLocations(temp);
+
+                            try {
+                                SaveAndLoad.saveInfo(activity);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            MainMenu menu = MainMenu.getInstance();
+                            menu.notifyListView(selectedPosition);
+                            dialog.dismiss();
+                        }
+                    }
+                })
                 .autoDismiss(false)
-                .build();
-
-        alarmPicker.show();
-
-        View negative = alarmPicker.getActionButton(DialogAction.NEGATIVE);
-        negative.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alarmPicker.dismiss();
-            }
-        });
-
-        View positive = alarmPicker.getActionButton(DialogAction.POSITIVE);
-        positive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TextView txtView = ((TextView) alarmPicker.getView().findViewById(R.id.alarmTxt));
-                if (txtView.getText().length() <= 0 || txtView.getText() == null) {
-                    Toast.makeText(activity, R.string.alarm_dialog_warning, Toast.LENGTH_SHORT).show();
-                } else {
-                    ArrayList<Location> temp = Singleton.getLocations();
-                    AlarmEvent alarmEvent = new AlarmEvent(activity, txtView.getText().toString());
-                    alarmEvent.setName(resources.getString(R.string.alarm_dialog_title));
-
-                    if (when == IN) {
-                        temp.get(selectedPosition).getEventsIn().add(alarmEvent);
-                    } else {
-                        temp.get(selectedPosition).getEventsOut().add(alarmEvent);
-                    }
-                    Singleton.setLocations(temp);
-
-                    try {
-                        SaveAndLoad.saveInfo(activity);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    MainMenu menu = MainMenu.getInstance();
-                    menu.notifyListView(selectedPosition);
-                    alarmPicker.dismiss();
-                }
-            }
-        });
+                .show();
     }
 
     private void showWiFiProfilePicker() {
@@ -599,7 +611,6 @@ public class EventDialogsManager {
     }
 
 
-
     private boolean isAPhoneNumber(CharSequence charSequence) {
         if (charSequence.length() != 0) {
             if (charSequence.charAt(0) == '+' || Character.isDigit(charSequence.charAt(0))) {
@@ -620,14 +631,17 @@ public class EventDialogsManager {
         ArrayList<Contact> contacts = new ArrayList<>();
         Cursor phones = activity.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
 
-        if (phones != null)
+        if (phones != null) {
+
             while (phones.moveToNext()) {
                 String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                 String number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                 contacts.add(new Contact(name, number));
             }
 
-        phones.close();
+            phones.close();
+
+        }
 
         return contacts;
     }
@@ -667,6 +681,43 @@ public class EventDialogsManager {
                         Utilities.REQUEST_READ_CONTACTS);
             }
         }
+    }
+
+    public void startEventPick() {
+        eventDialogsStateMachine(INITIAL_STATE);
+    }
+
+    private void eventDialogsStateMachine(int state) {
+        switch (state) {
+            case INITIAL_STATE:
+                showInOutPicker();
+                break;
+            case EVENT_TYPE_STATE:
+                showEventPicker(state);
+                break;
+            case REMINDER:
+                showReminderPicker();
+                break;
+            case SMS:
+                requestContactsPermissions();
+                break;
+            case ALARM:
+                showAlarmPicker();
+                break;
+            case SOUND_PROFILE:
+                showSoundProfilePicker();
+                break;
+            case WIFI_PROFILE:
+                showWiFiProfilePicker();
+                break;
+            case BLUETOOTH_PROFILE:
+                showBluetoothProfilePicker();
+                break;
+            case MOBILE_DATA_PROFILE:
+                showMobileDataProfilePicker();
+                break;
+        }
+
     }
 
     public static EventDialogsManager getInstance() {

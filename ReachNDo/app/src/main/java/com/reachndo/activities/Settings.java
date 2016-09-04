@@ -2,24 +2,17 @@ package com.reachndo.activities;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import com.reachndo.R;
 import com.reachndo.fragments.SettingsFragment;
 import com.service.LocationService;
 import com.utilities.Theme;
-
-/**
- * Created by Francisco on 11/09/2015.
- */
 
 public class Settings extends Activity {
     @Override

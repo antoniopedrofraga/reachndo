@@ -6,12 +6,10 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 
-/**
- * Created by Pedro Fraga on 26-Aug-16.
- */
 public class Utilities {
 
     public static final int REQUEST_PLACE_PICKER = 1;
@@ -49,6 +47,13 @@ public class Utilities {
             return resources.getDrawable(id, context.getTheme());
         } else {
             return resources.getDrawable(id);
+        }
+    }
+    public static int getColorAccordingToAPI(Context context, int id) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return ContextCompat.getColor(context, id);
+        } else {
+            return context.getResources().getColor(id);
         }
     }
 
